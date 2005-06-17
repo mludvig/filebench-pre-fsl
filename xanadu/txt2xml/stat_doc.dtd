@@ -1,0 +1,43 @@
+<!-- Xanadu DTD -->
+<!-- Copyright (c) 2001 by Sun Microsystems, Inc. -->
+<!-- All rights reserved. -->
+
+<!-- @(#)stat_doc.dtd 1.4 01/09/12 -->
+
+<!ELEMENT stat_doc (meta*, stat_group+)>
+<!ATTLIST stat_doc
+  name CDATA #REQUIRED
+  version CDATA #IMPLIED>
+
+<!ELEMENT meta EMPTY>
+<!ATTLIST meta
+    name CDATA #REQUIRED
+    value CDATA #IMPLIED>
+
+<!ELEMENT stat_group (cell_list, dim_list)>
+<!ATTLIST stat_group
+  name CDATA #REQUIRED
+  display CDATA #IMPLIED
+  location CDATA #IMPLIED
+  type CDATA #IMPLIED>
+
+<!ELEMENT dim_list (dim+)>
+
+<!ELEMENT dim (dimval+)>
+<!ATTLIST dim
+  ordinal CDATA #IMPLIED
+  group CDATA #IMPLIED
+  level CDATA #IMPLIED
+  name CDATA #IMPLIED
+  color CDATA #IMPLIED>
+
+<!ELEMENT dimval (#PCDATA)>
+
+<!ELEMENT cell_list (cell+)>
+
+<!ELEMENT cell (#PCDATA)>
+<!ATTLIST cell
+  ordinal CDATA #IMPLIED
+  color CDATA #IMPLIED
+  type CDATA #IMPLIED>
+

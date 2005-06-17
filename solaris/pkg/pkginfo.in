@@ -1,0 +1,13 @@
+ARCH=sparc,i386
+BASEDIR=/opt
+ROOTDIR=/
+CATEGORY=application
+CLASSES=none
+MAXINST=1000
+DESC=FileBench
+EMAIL=Richard.McDougall@Sun.COM
+NAME=FileBench
+PKG=filebench
+VENDOR=Richard Mc Dougall
+PSTAMP=XXXXX
+VERSION=YYYYY

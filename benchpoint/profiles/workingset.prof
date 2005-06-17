@@ -1,0 +1,16 @@
+
+CONFIG {
+        workingset
+}
+
+DEFAULTS {
+	duration = 60;
+	filesize = 3g;
+	iosize = 1m;
+	nthreads = 128;
+        dir = /filebench;
+        stats = /home/rmc/ws/filebench-rmc/results;
+}
+
+
+

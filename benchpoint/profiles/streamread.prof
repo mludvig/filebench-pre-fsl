@@ -1,0 +1,14 @@
+
+CONFIG {
+	randomread
+	singlestreamread
+	multistreamread
+}
+
+DEFAULTS {
+        runtime = 300;
+        filesize = 50g;
+        dir = /filebench;
+        stats = /stats;
+	filesystem = ufs;
+}

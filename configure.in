@@ -1,0 +1,279 @@
+#
+# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License.
+# See the file LICENSING in this distribution for details.
+#
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+#AC_PREREQ(2.59)
+AC_INIT(Filebench, 1.0, filebench-bugs@sun.com)
+AC_CONFIG_SRCDIR([filebench])
+AC_CONFIG_HEADER([config.h])
+
+AC_CONFIG_AUX_DIR(config)
+
+ac_aux_dir=config
+ac_config_guess=config/config.guess
+ac_config_sub=config/config.sub
+
+# Checks for programs.
+AC_PROG_CC([cc gcc])
+
+# Check out this host.
+AC_CANONICAL_HOST
+case "$host_os$host_cpu" in
+ *solaris*sparc*)
+	CC=cc
+	LDLIBS="-lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread -xarch=v9"
+	LFLAGS="-t"
+	CFLAGS="-g -xO3 -xarch=v9 -DYYDEBUG=1"
+	YFLAGS="-d"
+    ;;
+ *solaris*i386*)
+	CC=cc
+	LDLIBS="-lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread"
+	LFLAGS="-t"
+	CFLAGS="-g -xO3 -DYYDEBUG=1"
+	YFLAGS="-d"
+    ;;
+  gnu*|linux*)
+	CC=cc
+	### pthread_rwlock_t is only exposed if we define __USE_UNIX98 on Linux
+	##DEFINES="-DLINUX_PORT -D_XOPEN_SOURCE=500 -D_LARGEFILE_SOURCE64 -D_FILE_OFFSET_BITS=64 -D__USE_LARGEFILE64 -D__USE_UNIX98"
+	DEFINES="-DLINUX_PORT -D_GNU_SOURCE"
+	CFLAGS="${CFLAGS=} -O -I/usr/include/nptl "
+	LDLIBS="-lm  -lm -lpthread -laio -lfl -lrt"
+	YFLAGS="-d"
+    ;;
+esac
+
+AC_SUBST(host_os)
+
+AC_MSG_CHECKING(for UINT64_MAX in limits.h)
+AC_COMPILE_IFELSE(
+[#include <inttypes.h>
+
+#define TEST UINT64_MAX;
+], [AC_MSG_RESULT(yes)
+  AC_DEFINE(HAVE_UINT64_MAX, 1,
+    [ Define if UINT64_MAX is defined. ])], 
+   AC_MSG_RESULT(no))
+
+# Checks for libraries.
+AC_CHECK_LIB([kstat], [kstat_open])
+AC_CHECK_LIB(pthread, pthread_mutex_lock,
+    [ AC_DEFINE(HAVE_PTHREAD, 1,
+      [ Define if you have POSIX threads ])
+
+      AC_CHECK_LIB(pthread, pthread_mutexattr_setrobust_np,
+        [ AC_DEFINE(HAVE_ROBUST_MUTEX, 1, 
+	  [ Define if you have robus POSIX mutexes ])])
+
+      AC_CHECK_LIB(pthread, pthread_mutexattr_setpshared,
+        [ AC_DEFINE(HAVE_PROCSCOPE_PTHREADS, 1,
+	  [ Define if you have POSIX process scope threads ])])
+
+      AC_CHECK_FUNC(_lwp_self, 
+        [ AC_DEFINE(HAVE_LWPS, 1,
+	  [ Define if you have lwps ])])
+
+])
+
+AC_CHECK_LIB(rt, aio_write,
+    [ AC_DEFINE(HAVE_AIO, 1, [ Define if you have POSIX AIO ])
+])
+
+AC_CHECK_LIB(rt, aio_waitn,
+    [ AC_DEFINE(HAVE_AIOWAITN, 1, [ Define if you have POSIX AIOWAITN ])
+])
+
+AC_CHECK_LIB(rt, nanosleep)
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS([fcntl.h inttypes.h libgen.h limits.h locale.h malloc.h memory.h stddef.h \
+	          stdint.h stdlib.h string.h strings.h sys/param.h sys/time.h \
+                  unistd.h values.h procfs.h])
+
+if test "$ac_cv_header_procfs_h" = yes ; then
+    AC_DEFINE(HAVE_PROCFS, 1,
+               [ Define if we have the /proc filesystem ])
+fi
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+#AC_HEADER_STDBOOL
+AC_TYPE_UID_T
+AC_TYPE_MODE_T
+AC_TYPE_OFF_T
+AC_TYPE_PID_T
+#AC_C_RESTRICT
+AC_TYPE_SIZE_T
+AC_CHECK_MEMBERS([struct stat.st_blksize])
+AC_STRUCT_ST_BLOCKS
+AC_CHECK_MEMBERS([struct stat.st_rdev])
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_C_VOLATILE
+AC_CHECK_TYPES([ptrdiff_t])
+
+# Checks for library functions.
+AC_FUNC_CHOWN
+AC_FUNC_FORK
+AC_FUNC_FSEEKO
+AC_FUNC_GETGROUPS
+AC_FUNC_GETPGRP
+AC_PROG_GCC_TRADITIONAL
+AC_FUNC_LSTAT
+AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
+AC_FUNC_MALLOC
+AC_FUNC_MEMCMP
+AC_FUNC_MKTIME
+AC_FUNC_MMAP
+AC_FUNC_REALLOC
+AC_FUNC_SELECT_ARGTYPES
+AC_FUNC_SETPGRP
+AC_FUNC_SETVBUF_REVERSED
+AC_TYPE_SIGNAL
+AC_FUNC_STAT
+AC_FUNC_STRCOLL
+AC_FUNC_STRFTIME
+AC_FUNC_STRTOD
+AC_FUNC_VPRINTF
+
+# Check for general functions
+AC_CHECK_FUNCS([basename close signal sigsend sleep sprintf strlen strncmp strncpy \
+                setrlimit strrchr strstr times unlink vfprintf vsprintf waitpid \
+                write stat stralloc strcat strcmp strcpy strerror pwrite \
+                read execl execname exit fflush fork fork1 fprintf free \
+                fstat fsync getpid kill malloc memcpy memset mmap nice \
+                open pread printf])
+
+# Check for POSIX thread libraries
+AC_CHECK_FUNCS([pthread_cond_broadcast pthread_cond_init pthread_cond_signal \
+                pthread_cond_wait pthread_create pthread_exit pthread_join \
+                pthread_mutex_init pthread_mutex_lock pthread_mutex_unlock \
+                pthread_rwlock_init pthread_rwlock_rdlock pthread_rwlock_unlock \
+                pthread_rwlock_wrlock])
+
+AC_CHECK_FUNCS([gethrtime],
+    [ AC_DEFINE(HAVE_HRTIME, 1, [ Define if  you have hi-res time ])
+])
+
+AC_CHECK_FUNCS([ftok semget semop],
+    [ AC_DEFINE(HAVE_SYSV_SEM, 1, [ Define if you have SYSV sems ])
+])
+
+AC_CHECK_FUNC(semtimedop,
+    [ AC_DEFINE(HAVE_SEMTIMEDOP, 1, [ Define if  you have semtimedop ])
+])
+
+################################################################################
+#                             LINUXi PORT SPECIFIC CHECKS
+################################################################################
+AC_CHECK_HEADERS([utility.h])
+AC_CHECK_HEADERS([sys/int_limits.h])
+AC_CHECK_HEADERS([libaio.h])
+AC_CHECK_HEADERS([aio.h])
+AC_CHECK_HEADERS([sys/async.h])
+AC_CHECK_HEADERS([sys/shm.h])
+AC_CHECK_TYPES([uint_t, off64_t, hrtime_t, caddr_t])
+AC_CHECK_FUNCS([cftime],
+    [ AC_DEFINE(HAVE_CFTIME, 1, [ Define if  you have cftime() ])
+])
+AC_CHECK_FUNCS([sigsend])
+AC_CHECK_FUNCS([mkstemp])
+dnl check for aiocb64
+AC_MSG_CHECKING(for aiocb64)
+AC_TRY_COMPILE([
+#define __USE_LARGEFILE64
+#if HAVE_AIO_H
+#include <aio.h>
+#endif],
+[if ((struct aiocb64 *) 0)
+  return 0;
+if (sizeof (struct aiocb64))
+  return 0;
+],[
+    AC_DEFINE(HAVE_AIOCB64_T,1,[ Define if you have the aiocb64 type. ])
+    AC_MSG_RESULT(yes)
+  ], AC_MSG_RESULT(no)
+)
+dnl check for SHM_SHARE_MMU (ipc.c)
+AC_MSG_CHECKING(for SHM_SHARE_MMU)
+AC_TRY_COMPILE([
+#if HAVE_SYS_SHM_H
+#include <sys/shm.h>
+#endif],
+[ int flag = SHM_SHARE_MMU;
+  if(flag == 0)
+  return 0;
+  else return 1;
+],[
+    AC_DEFINE(HAVE_SHM_SHARE_MMU,1,[ Define if you have SHM_SHARE_MMU in sys/shm.h. ])
+    AC_MSG_RESULT(yes)
+  ], AC_MSG_RESULT(no)
+)
+
+
+#on Linux, we can either use rdtsc or times(1)
+AC_MSG_CHECKING(whether to enable the use of rdtsc)
+rdtsc_default="yes"
+AC_ARG_ENABLE(rdtsc, [  --enable-rdtsc=[no/yes] Enable timing to use RDTSC Linux Specific
+                       [default=$rdtsc_default]],, enable_rdtsc=$rdtsc_default)
+if test "x$enable_rdtsc" = "xyes"; then
+	AC_DEFINE(USE_RDTSC,1,[ Define if you want support for RDTSC. ])
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+fi
+
+LIBS="-L/usr/lib/nptl"
+AC_CHECK_LIB(pthread, pthread_mutexattr_setprotocol,
+           [ AC_DEFINE(HAVE_PTHREAD_MUTEXATTR_SETPROTOCOL, 1, 
+           [ Checking if  you have pthread_mutexattr_setprotocol ])
+])
+AC_CHECK_LIB(pthread, pthread_mutexattr_setpshared,
+           [ AC_DEFINE(HAVE_PROCSCOPE_PTHREADS, 1, 
+           [ Checking if  you mutex with process scope])
+], [ AC_MSG_ERROR([Your thread library does not support process-scope mutex.])],[])
+
+host_os_ver=`uname -r`
+#host_os_ver="2.4"
+
+dnl Check for isainfo to get arch
+dnl for 64bit sparc, its sparcv9
+dnl for linux, we choose uname -s
+case "$host_os" in
+ gnu*|linux*)
+	minor=`echo $host_os_ver | awk -F\. '{print $2}'`
+	if test $minor -lt 6; then
+		AC_MSG_WARN([*** Filebench has only been tested on 2.6+ kernel ***])
+	fi
+        FARCH=`uname -s`
+	#echo Setting FARCH to ${FARCH}
+	#check for /proc/stat
+	AC_CHECK_FILE(/proc/stat,[ AC_DEFINE(HAVE_PROC_STAT,1, 
+		[Checking if you have /proc/stat])],
+		[AC_MSG_ERROR([Filebench requires /proc/stat to work])])
+    ;;    
+ *solaris*)
+	FARCH=`isainfo -n`
+	#echo Setting FARCH to ${FARCH}
+    ;;
+esac
+
+AC_SUBST(FARCH)
+AC_SUBST(LDLIBS)
+AC_SUBST(LFLAGS)
+AC_SUBST(CFLAGS)
+AC_SUBST(YFLAGS)
+AC_SUBST(DEFINES)
+
+AC_CONFIG_FILES([Makefile filebench/Makefile fastsu/Makefile])
+
+AC_OUTPUT

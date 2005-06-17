@@ -1,0 +1,264 @@
+body {
+	margin: 1px 10px 0px 10px;
+	background-color: white;
+	font-family: "Times New Roman", Times, serif, sans-serif;
+	color: black;
+}
+a {
+color: #0000ff;
+}
+
+a:visited {
+color: #551a8b;
+}
+a:active {
+color: #ff0000;
+}
+a:hover { color:red; }
+
+img {
+	border: none 0;
+}
+table.bordered{
+	border: 1px solid rgb(204, 204, 204);
+	vertical-align:middle;
+}
+table.indexfilelist{
+	border: 1px solid rgb(204, 204, 204);
+	vertical-align:middle;
+}
+tr.indexeven{
+  background-color:#eeeeee;
+}
+tr.indexodd{
+  background-color:#ffffff;
+}
+td {
+	vertical-align:middle;
+}
+td.neel {
+	border: 1px solid rgb(150, 150, 150);
+	vertical-align: middle;
+	background-color: rgb(248, 248, 248);
+	padding-left:2px;
+	-moz-border-radius:6px;
+}
+td.odd {
+	background-color: #eeeeee;
+}
+td.even {
+	background-color: #ffffff;
+}
+td.mergetd {
+  vertical-align: top;
+	border-right: dashed  1px #99c;
+}
+
+.myblock {
+	border: 1px solid rgb(150, 150, 150);
+	margin: 30pt;
+	padding: 0pt 1em 1em;
+	background-color: rgb(248, 248, 248);
+	vertical-align: middle;
+}
+.header {
+color: #554FA0;
+	background-color: #EEECF6;
+	background-position: center left;
+	padding: 3px;
+	border: dotted 1px #D6CCBD;
+	border-right: 0;
+	border-left: 0;
+	margin-bottom: 0;
+	text-align:center;
+	font-weight:bold;
+}
+.disabled{
+	color:rgb(211, 211, 211);
+}
+h1 { color:#0033FF; font-family:sans-serif; }
+h3,h2 {
+	border-bottom: 1px solid #99c;
+	font-size: 110%;
+}
+dt {
+	margin: 0 0 0 6px;
+	padding: 0.4em 0 0 0.7em;
+	border-bottom: dotted 1px #D6CCBD;
+	border-left: solid 2px #EEECF6;
+}
+dl {
+	margin: 0;
+}
+
+#mainleft {
+	width: 20%;
+	height: 95%;
+	border: 1px solid #dddddd;
+	float:left;
+	background:#ffffff;
+	padding-bottom:10px;
+	margin:10px;
+}
+
+#maincenter {
+	float:left;
+	width:75%;
+	background:#fff;
+  padding-bottom:10px;
+}
+
+div.float {
+  float: left;
+  margin: 0 15px 15px 0;
+  padding: 5px;
+}
+  
+div.float p {
+   text-align: center;
+   height:30px;
+}
+
+div.container {
+  border: 2px solid #ffdead;
+  background-color: #ffffff;
+}
+div.spacer {
+  clear: both;
+}
+span.customizeheader{
+	background-color:#ebc79e;
+	color: #000000;
+	font-family:sans-serif;
+	padding:4px;
+	font-weight:bold;
+  -moz-border-radius:5px;
+}
+table.customizetable{
+	vertical-align:middle;
+	padding:2px;
+}
+td.customizetablehdr{
+    background-color:#dead00;
+	padding:8px;
+}
+td.errhdr{
+    background-color:#cce;
+	  padding:8px;
+}
+
+div.errhdr {
+	border: 1px solid rgb(150, 150, 150);
+	margin: 30pt;
+	padding: 0pt 1em 1em;
+	background-color: rgb(248, 248, 248);
+	vertical-align: middle;
+}
+
+/* thanks to http://www.alistapart.com/articles/cssdropshadows/ */
+
+.p-shadow {
+    float:left;
+    background: url(http://pae.sfbay/~neel/shadowAlpha.png) no-repeat bottom right !important;
+    background: url(http://pae.sfbay/~neel/shadow.gif) no-repeat bottom right;
+    margin: 5px 0 0 5px !important;
+    margin: 5px 0 0 5px;
+}
+.p-shadow div {
+  background: none !important;
+    background: url(http://pae.sfbay/~neel/shadow2.gif) no-repeat left top;
+    padding: 0 !important;
+    padding: 0 6px 6px 0;
+}
+.p-shadow p {
+  color: #777;
+    background-color: #fff;
+    font: italic 1em georgia, serif;
+    border: 1px solid #a9a9a9;
+    padding: 4px;
+    margin: -6px 6px 6px -6px !important;
+    margin: 0;
+}
+
+input
+{
+color: #000000;
+background: #ffffcc;
+border: tan solid 1px;
+padding:2px;
+-moz-border-radius:3px;
+}
+
+#navcontainer ul
+ {
+ margin: 0;
+ padding: 0;
+ list-style-type: none;
+ width: 100%;
+}
+
+#navcontainer li { 
+  margin: 0 0 .2em 0;
+  display: inline; 
+}
+
+#navcontainer a
+ {
+ display: block;
+ color: #036;
+ background-color: #ddd;
+ width: 9em;
+ padding: .2em .8em;
+ text-decoration: none;
+ border-top: 1px solid #fff;
+ border-left: 1px solid #fff;
+ border-right: 1px solid #036;
+ border-bottom: 1px solid #036;
+}
+
+#navcontainer a:hover
+{
+ background-color: #369;
+ color: #FFF;
+ border-top: 1px solid #036;
+ border-left: 1px solid #036;
+ border-right: 1px solid #fff;
+ border-bottom: 1px solid #fff;
+}
+/*
+ #navcontainer ul
+ {
+ margin: 0;
+ padding: 0;
+ list-style-type: none;
+ color: #fff;
+ background-color: #fff;
+ width: 100%;
+ }
+
+ #navcontainer ul li { display: inline; }
+
+ #navcontainer ul li a
+ {
+ text-decoration: none;
+ padding: .2em 1em;
+ color: #036;
+ background-color: #ddd;
+ border: 1px solid #036;
+ }
+
+ #navcontainer ul li a:hover
+ {
+ color: #fff;
+ background-color: #369;
+ }
+*/
+
+#sidebar div {
+  border-bottom: 1px solid #dddddd;
+  margin: 5px 5px 5px 5px;
+}
+/* SUN COLORS */
+.sunred{background:#D12124}
+.sunblue{background:#594FBF}
+.sunyellow{background:#FBE249}

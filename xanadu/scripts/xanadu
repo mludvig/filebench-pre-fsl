@@ -1,0 +1,229 @@
+#!/bin/sh
+
+option=""
+src=""
+srcs=""
+dst=""
+last_arg=""
+runId=""
+debug=false
+cwd=`pwd`
+
+# Default value of heap size in MB unless overridden
+XANADU_HEAP=${XANADU_HEAP:=256}
+
+
+XANADU_HOME=".."
+XANADU_HOST="romulus.sfbay.sun.com"
+XANADU_URL="http://${XANADU_HOST}/xanadu/xc?action=view&file="
+
+CLASSPATH="$XANADU_HOME/WEB-INF/classes:$XANADU_HOME/WEB-INF/lib/servlet-api.jar:$XANADU_HOME/WEB-INF/lib/jaxb-rt-1.0-ea.jar:../bin:$XANADU_HOME/WEB-INF/lib/jfreechart.jar::$XANADU_HOME/WEB-INF/lib/jcommon.jar"
+
+#
+# Options should be decoded to "import", "export", "compare" or "average"
+#
+
+syntax()
+{
+    echo '\nUsage:\t xanadu [import|export|compare|average] arguments ...\n'
+    echo 'or'
+    echo '\n\t xanadu [-i|-e|-c|-a] -s srcdir(s) -d dstdir [-r runid] ...\n'
+    exit
+}
+
+## echo $# arguments
+
+if [ $# -lt 1 ]; then
+    syntax
+fi
+
+HOME_DIR=`dirname $0`
+cd $HOME_DIR
+
+argc=$#
+
+while true
+do
+  ## echo after shift ARG1 is $1
+  case $1 in
+  -*)
+    case $1 in
+    -i*)
+      option="import"
+      ;;
+    -e*)
+      option="export"
+      ;;
+    -c*)
+      option="compare"
+      ;;
+    -a*)
+      option="average"
+      ;;
+    -s*)
+      src=$2
+      if [ "$srcs" = "" ]; then
+        srcs=$src
+      else
+        srcs="$srcs $src"
+      fi
+      shift
+      argc=`expr $argc - 1`
+      ;;
+    -d*)
+      dst=$2
+      shift
+      argc=`expr $argc - 1`
+      ;;
+    -r*)
+      runId=$2
+      shift
+      argc=`expr $argc - 1`
+      ;;
+    -v)
+      debug=true
+      ;;
+    esac
+    ;;
+  *)
+    if [ "$option" = "" ]; then
+      option=$1
+    elif [ "$option" = "average" ]; then
+      osrcs=$srcs
+      if [ $argc -eq 2 ]; then
+        last_arg=$1
+        dst=$1
+        runId=$2
+        argc=0
+      else
+#      last_arg=$1
+        srcs="$srcs $1"
+      fi
+    elif [ "$option" = "compare" ]; then
+      osrcs=$srcs
+      last_arg=$1
+      srcs="$srcs $1"
+    elif [ "$src" = "" ]; then
+      src=$1
+      if [ "$srcs" = "" ]; then
+        srcs=$src
+      else
+        srcs="$srcs $src"
+      fi
+      # echo src set to $src
+    elif [ "$dst" = "" ]; then
+      dst=$1
+    elif [ "$option" = "import" -a "$runId" = "" ]; then
+      runId=$1
+    else
+      echo unexpected argument $1
+      argc=0
+    fi
+  esac
+  shift
+  argc=`expr $argc - 1`
+  if [ $argc -le 0 ]; then
+      break;
+  fi
+done
+
+if [ $debug = true ]; then
+   echo option="$option", src="$src", srcs="$srcs", dst="$dst", runId="$runId"
+fi
+
+#
+# In case of "relative" path, convert it to an absolute path
+#
+if [ "$src" != "" ]; then
+  case $src in
+  /*)
+    ;; # No change needed
+  *)
+    src="$cwd/$src"
+    ;;
+  esac
+fi
+
+if [ "$dst" = "" ]; then
+   if [ "$osrcs" != "" ]; then
+       srcs=$osrcs
+       dst=$last_arg
+   fi
+fi
+
+if [ "$dst" != "" ]; then
+  case $dst in
+  /*)
+    ;; # No change needed
+  *)
+    dst="$cwd/$dst"
+    ;;
+  esac
+fi
+
+srcs2=""
+for s in $srcs
+do
+  case $s in
+  /*)
+    srcs2="$srcs2 $s"
+    ;;
+  *)
+    srcs2="$srcs2 $cwd/$s"
+  esac
+done
+srcs=$srcs2
+
+#
+# Now, do the job
+#
+XANADU_DEFINES=" -Dxanadu.url=${XANADU_URL} -Dxanadu.basedir=${XANADU_HOME}"
+if [ $debug = true ]; then
+   echo option="$option", src="$src", srcs="$srcs", dst="$dst", runId="$runId"
+#   exit 0
+fi
+
+case $option in
+i*)
+    if [ "$src" = "" -o "$dst" = "" -o "$runId" = "" ]; then
+        echo '\nUsage:\t xanadu import srcdir(TXT) dstdir(HTML) runId\n'
+        echo 'or'
+        echo '\nUsage:\t xanadu -i -s srcdir(TXT) -d dstdir(HTML) -r runId\n'
+        exit
+    fi
+    echo cd $XANADU_HOME/scripts
+    cd $XANADU_HOME/scripts
+    echo ./import.pl -b $src $dst $runId
+    ./import.pl -b $src $dst $runId
+    ;;
+e*)
+    if [ "$src" = "" -o "$dst" = "" ]; then
+        echo '\nUsage:\t xanadu export srcdir(XML) dstdir(HTML)\n'
+        echo 'or'
+        echo '\nUsage:\t xanadu -e -s srcdir(TXT) -d dstdir(HTML)\n'
+        exit
+    fi
+    echo java -mx${XANADU_HEAP}m -classpath $CLASSPATH  ${XANADU_DEFINES} -Djava.awt.headless=true org.xanadu.cmd.ExportFromXML $src $dst
+    java -mx${XANADU_HEAP}m -classpath $CLASSPATH ${XANADU_DEFINES} -Djava.awt.headless=true org.xanadu.cmd.ExportFromXML $src $dst
+    ;;
+c*)
+    if [ "$srcs" = "" -o "$dst" = "" ]; then
+        echo '\nUsage:\t xanadu compare srcdir1(XML) srcdir2(XML) dstdir(HTML)\n'
+        echo 'or'
+        echo '\nUsage:\t xanadu -c -s srcdir1(TXT) srcdir2(TXT) -d dstdir(HTML)\n'
+        exit
+    fi
+    echo java -mx${XANADU_HEAP}m -classpath $CLASSPATH ${XANADU_DEFINES} -Djava.awt.headless=true org.xanadu.cmd.CompareXML $srcs $dst
+    java -mx${XANADU_HEAP}m -classpath $CLASSPATH ${XANADU_DEFINES} -Djava.awt.headless=true org.xanadu.cmd.CompareXML $srcs $dst
+    ;;
+a*)
+    if [ "$srcs" = "" -o "$dst" = "" ]; then
+        echo '\nUsage:\t xanadu average srcdir1(XML) srcdir2(XML) [srcdir3(XML) ...] dstdir(XML) runid\n'
+        echo 'or'
+        echo '\nUsage:\t xanadu -a -s srcdir1(TXT) srcdir2(TXT) [srcdir3(XML) ...] -d dstdir(XML) -r runid\n'
+        exit
+    fi
+    echo java -mx${XANADU_HEAP}m -classpath $CLASSPATH ${XANADU_DEFINES} -Djava.awt.headless=true org.xanadu.cmd.AverageXML $srcs $dst $runId
+    java -mx${XANADU_HEAP}m -classpath $CLASSPATH ${XANADU_DEFINES} -Djava.awt.headless=true org.xanadu.cmd.AverageXML $srcs $dst $runId
+    ;;
+esac

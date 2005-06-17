@@ -1,0 +1,15 @@
+#!/bin/sh
+
+int()
+{ 
+	echo "Int - kill $!" 
+	kill $!
+}
+
+echo "vmstat command $*"
+#truss -o vmstat.truss -f -d -p $$ &
+sleep 1
+trap "int" 2
+vmstat 10 >vmstat.$1&
+wait
+

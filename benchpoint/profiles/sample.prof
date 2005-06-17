@@ -1,0 +1,14 @@
+
+CONFIG {
+	varmail
+}
+
+DEFAULTS {
+
+	filesize = 8192;
+	nfiles = 500;
+	dir = /filebench/run;
+	stats = /filebench/stats;
+}
+
+

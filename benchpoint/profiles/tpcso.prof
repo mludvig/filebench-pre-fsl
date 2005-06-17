@@ -1,0 +1,10 @@
+
+CONFIG {
+	tpcso
+}
+
+DEFAULTS {
+        runtime = 60;
+        dir = /export/home/tpcso/filebench;
+        stats = /export/home/tpcso/filebench/stats;
+}

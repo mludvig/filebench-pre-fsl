@@ -1,0 +1,12 @@
+
+CONFIG {
+	randomread
+}
+
+DEFAULTS {
+        runtime = 300;
+        filesize = 50g;
+        dir = /filebench;
+        stats = /stats;
+	operating_system = Solaris_8;
+}

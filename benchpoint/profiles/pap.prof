@@ -1,0 +1,16 @@
+
+DEFAULTS {
+	runtime = 3600;
+        dir = /filebench;
+        stats = /home/rmc/filemicro/stats;
+	filesystem = ufslog;
+	description = "S10 UFS Logging";
+}
+
+CONFIG fmicro_create100files {
+	function = generic;
+	personality = filemicro_createfiles;
+        nfiles = 50;
+        debug = 3;
+}
+

@@ -1,0 +1,25 @@
+
+set $dir=/tmp
+set $nthreads=1
+set $iosize=8k
+set $filesize=1m
+set $workingset=0
+
+define file name=bigfile0,path=$dir,size=$filesize,prealloc,reuse,paralloc
+
+define process name=rand-read,instances=1
+{
+  thread name=rand-thread,memsize=5m,instances=$nthreads
+  {
+    flowop read name=rand-read1,filename=bigfile0,iosize=$iosize,random,workingset=$workingset
+    flowop eventlimit name=rand-rate
+  }
+}
+
+echo "Random Read Version $Revision: 1.1 $ $Date: 2005/03/30 22:08:23 $ IO personality successfully loaded"
+usage "Usage: set \$dir=<dir>"
+usage "       set \$filesize=<size>   defaults to $filesize"
+usage "       set \$iosize=<value>    defaults to $iosize"
+usage "       set \$nthreads=<value>  defaults to $nthreads"
+usage "       set \$workingset=<value>  defaults to $workingset"
+usage "       run runtime (e.g. run 60)"

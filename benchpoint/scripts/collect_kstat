@@ -1,0 +1,25 @@
+#!/bin/ksh
+
+command=$1
+file=$2
+base=$3
+runtime=$4
+PROGBASE=$5
+shift
+shift
+shift
+shift
+
+# Skip to the third argument
+# Process the arguments following (as these are to be passed to the statistical tool)
+until [[ $# -eq 0 ]]
+do
+   arguments=$arguments" "$1
+   shift
+done
+
+# Run the kstat command - assumes this is self-terminating
+echo "Running statistics gathering: $command"
+$command > $base/${command}.$file.before_run 2>&1
+sleep $runtime
+$command > $base/${command}.$file.after_run 2>&1

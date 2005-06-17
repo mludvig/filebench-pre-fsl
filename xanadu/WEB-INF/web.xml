@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <servlet>
+        <servlet-name>Query</servlet-name>
+        <servlet-class>org.xanadu.db.Query</servlet-class>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>Query</servlet-name>
+        <url-pattern>/Query</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Xml2Png</servlet-name>
+        <servlet-class>org.xanadu.view.servlet.Xml2Png</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>Xml2Png</servlet-name>
+        <url-pattern>/Xml2Png</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SampleDataGenerator</servlet-name>
+        <servlet-class>org.xanadu.view.servlet.SampleDataGenerator</servlet-class>        
+    </servlet>    
+    <servlet-mapping>
+        <servlet-name>SampleDataGenerator</servlet-name>
+        <url-pattern>/SampleDataGenerator</url-pattern>
+    </servlet-mapping>                
+    <servlet>
+        <servlet-name>XanaduController</servlet-name>
+        <servlet-class>org.xanadu.view.servlet.XanaduController</servlet-class>        
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>XanaduController</servlet-name>
+        <url-pattern>/xc</url-pattern>
+    </servlet-mapping>
+</web-app>

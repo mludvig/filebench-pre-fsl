@@ -1,0 +1,36 @@
+sub pre_run {
+        # Initialize filebench to appropriate personality, create files and processes
+        op_init();
+
+        # The op_load command automatically creates files and processes 
+        op_load(conf_reqval("personality"));
+
+        # Initialise statistics and argument arrays
+        @ext_stats=();
+        @file_stats=();
+        @arg_stats=();
+}
+
+sub post_run {
+        # Shutdown processes and quit filebench
+        op_quit();
+}
+
+sub bm_run {
+        my $runtime = conf_reqval("runtime");
+        my $fs = conf_reqval("filesystem");
+
+        @ext_stats = ("vmstat","iostat","lockstat","lockstat","mpstat","statit","cpustat","davenet","netstat","kstat");
+        @arg_stats = ("10","-xncz 10","-A -n 40000 -D 2000 sleep 10 ","-kcW -I -i 971 -n 40000 sleep 10","10","","$runtime","-a -i 10","-i 10","");
+	# The following array must not contain empty values ! This causes the statistics scripts to miss arguments !
+        @file_stats = ("$fs.out","$fs.out","locks","profile","$fs.out","$fs.out","$fs.out","$fs.out","$fs.out","$fs.out");
+
+        # Clear, run the benchmark, snap statistics and dump to raw and Xanadu XML
+        # This command will also run external statistics (supplied in an array) if desired 
+        # Statistics automatically dumped into directory matching stats profile variable
+        # <stats>/<hostname>-<date-time>/<personality>
+
+        op_stats($runtime,"stats.$fs",@ext_stats,@file_stats,@arg_stats);
+}
+
+1;

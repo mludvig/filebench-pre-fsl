@@ -1,0 +1,48 @@
+sub pre_run {
+	# Run filesystem creation script
+	system(get_PROGBASE()."/scripts/createfs ".get_PROGBASE());
+
+	# Initialize filebench to appropriate personality, create files and processes
+	op_init();
+
+	# The op_load command automatically creates files and processes 
+	op_load(conf_reqval("personality"));
+
+	# Initialise statistics and argument arrays
+	@ext_stats=();
+	@file_stats=();
+	@arg_stats=();
+}
+
+sub post_run {
+	# Shutdown processes and quit filebench
+	op_quit();
+}
+
+sub bm_run {
+	my $runtime = conf_reqval("runtime");
+	my $filesize = conf_reqval("filesize");
+	# Remove the gigabyte character from the variable
+	$filesize =~ s/m//g;
+
+	@workingset = (floor(0.1*$filesize),floor(0.2*$filesize),floor(0.3*$filesize),
+		floor(0.4*$filesize),floor(0.5*$filesize),floor(0.6*$filesize),
+		floor(0.7*$filesize),floor(0.8*$filesize),floor(0.9*$filesize),$filesize);
+	@ext_stats = ("vmstat","iostat","lockstat","lockstat","mpstat","statit","cpustat","davenet","netstat","kstat");
+	@arg_stats = ("10","-xncz 10","-A -n 40000 -D 2000 sleep 10 ","-kcW -I -i 971 -n 40000 sleep 10","10","","$runtime","-a -i 10","-i 10","");
+	foreach $w (@workingset) {
+		print "Running with workingset $w\n";
+		
+		# Set the workingset variable in filebench
+		op_set("workingset", $w.'m');
+
+		# Clear, run the benchmark, snap statistics and dump to raw and Xanadu XML
+		# This command will also run external statistics (supplied in an array) if desired 
+		# Statistics automatically dumped into directory matching stats profile variable
+		# <stats>/<hostname>-<date-time>/<personality>
+		@file_stats = ("$w","$w","$w.locks","$w.profile","$w","$w","$w","$w","$w","$w");
+		op_stats($runtime,"stats.$w",@ext_stats,@file_stats,@arg_stats);
+	}
+}
+
+1;

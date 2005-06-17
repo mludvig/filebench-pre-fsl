@@ -1,0 +1,33 @@
+
+#pragma	"@(#)Makefile.in 1.2	04/09/05 Richard Mc Dougall"
+
+# Automatically generated from Makefile.in
+# Makefile built for @host_os@, re-run configure to regenerate
+
+SRCS= fastsu.c
+OBJS= fastsu.o
+HDRS= 
+LFLAGS = @LFLAGS@
+LDLIBS = @LDLIBS@ 
+YFLAGS = @YFLAGS@
+CFLAGS = @CFLAGS@ -I.. -D_REENTRANT
+MV     = mv
+
+%.o : %.c $(HDRS) Makefile
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+fastsu: $(OBJS)
+	cc -o $@ $(OBJS) $(LDLIBS)
+	chmod 755 $@
+	mkdir -p `isainfo -n`
+	cp $@ `isainfo -n`
+
+install:
+	cp `isainfo -n`/fastsu /opt/RMCfbench/bin/`isainfo -n`
+
+
+clobber:
+	-rm -rf `isainfo -n`	
+
+clean:
+	-rm *.o

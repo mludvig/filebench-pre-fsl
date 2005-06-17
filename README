@@ -1,0 +1,59 @@
+
+Filebench - A Model Based File System Workload Generator
+
+
+$ mkdir mybench
+$ cd mybench
+$ cp /opt/filebench/config/filemicro.prof mybench.prof
+
+ or
+
+$ cp /opt/filebench/config/filemacro.prof mybench.prof
+
+$ vi mybench.prof
+<edit params>
+set your stats dir to where you want the logs to go...
+
+$ /opt/filebench/bin/benchpoint mybench
+
+$ browse the index.html in the stats dir
+
+
+
+Example individual varmail run:
+
+filebench> load varmail
+ 8395: 3.898: Varmail personality successfully loaded
+ 8395: 3.899: Usage: set $dir=<dir>
+ 8395: 3.900:        set $filesize=<size>    defaults to 16384
+ 8395: 3.900:        set $nfiles=<value>     defaults to 1000
+ 8395: 3.901:        set $dirwidth=<value>   defaults to 20
+ 8395: 3.901:        set $nthreads=<value>   defaults to 1
+ 8395: 3.902:        set $meaniosize=<value> defaults to 16384
+ 8395: 3.902:        run <runtime>
+filebench> set $dir=/tmp
+filebench> run 10
+ 8395: 14.886: Fileset mailset: 1000 files, avg dir = 20, avg depth = 2.305865, mbytes=15
+ 8395: 15.301: Preallocated fileset mailset in 1 seconds
+ 8395: 15.301: Starting 1 filereader instances
+ 8396: 16.313: Starting 1 filereaderthread threads
+ 8395: 19.323: Running for 10 seconds...
+ 8395: 29.333: Stats period = 10s
+ 8395: 29.347: IO Summary:      21272 iops 2126.0 iops/s, (1063/1063 r/w)  32.1mb/s,    338us cpu/op,   0.3ms latency
+ 8395: 29.348: Shutting down processes
+filebench> quit
+
+
+Current Workloads:
+- varmail		(file read/random append-write mail server benchmark)
+- bringover		(copy fileset of random sizes)
+- oltp  		(database simulation)
+- randomread		(random fixed size reads)
+- webserver		(reads on fileset of random sizes + random append logfile write)
+- webproxy		(reads, writes, creates, deletes  on fileset of random sizes)
+- fileserver		(reads, writes, creates, deletes  on fileset of random sizes)
+- singlestreamread	(sequential read from a large file)
+- multistreamread	(multiple stream sequential read from large files)
+- createfiles		(create and allocate files in a directory tree)
+- deletefiles		(delete files in a directory tree)
+

@@ -1,0 +1,14 @@
+
+CONFIG {
+	segkpm
+}
+
+DEFAULTS {
+        runtime = 600;
+        filesize = 12000m;
+        iosize = 1m;
+        nthreads = 32;
+        workingset = 12000m;
+        dir = /filebench;
+        stats = /stats;
+}

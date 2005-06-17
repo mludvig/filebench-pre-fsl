@@ -1,0 +1,18 @@
+
+CONFIG {
+	fileserver
+	bringover
+	createfiles
+	deletefiles
+	varmail
+	webproxy
+	webserver
+}
+
+DEFAULTS {
+        runtime = 120;
+        nfiles = 100000;
+        dir = /filebench;
+        stats = /stats;
+	filesystem = ufs;
+}

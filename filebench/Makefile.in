@@ -1,0 +1,57 @@
+#
+# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License.
+# See the file LICENSING in this distribution for details.
+#
+# Automatically generated from Makefile.in
+# Makefile built for @host_os@, re-run configure to regenerate
+
+SRCS= fileobj.c misc.c procflow.c threadflow.c utils.c flowop.c \
+      flowop_library.c ipc.c vars.c stats.c eventgen.c fileset.c
+OBJS= fileobj.o misc.o procflow.o threadflow.o parser_lex.o \
+      parser_grammar.o utils.o flowop.o flowop_library.o ipc.o \
+      vars.o stats.o eventgen.o fileset.o
+HDRS= flowop.h fileobj.h procflow.h threadflow.h filebench.h \
+      utils.h parser.h ipc.h utils.h misc.h vars.h stats.h \
+      eventgen.h fileset.h
+
+DEFINES= @DEFINES@
+GSLLD  = ../solaris/gsl-1.4/@FARCH@
+GSL    = ../solaris/gsl-1.4
+LFLAGS = @LFLAGS@
+YFLAGS = @YFLAGS@
+CFLAGS = @CFLAGS@ -I.. -D_REENTRANT -I$(GSL) $(DEFINES)
+MV     = mv
+BUILD  = ../solaris/build/@FARCH@
+LDLIBS = @LDLIBS@ $(GSLLD)/libgsl.a $(GSLLD)/libgslcblas.a
+
+.NO_PARALLEL: parser_lex.c
+.NO_PARALLEL: parser_grammar.c
+.NO_PARALLEL: parser_grammar.h
+
+%.o : %.c $(HDRS) Makefile
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+filebench: $(OBJS)
+	cc -o $@ $(OBJS) $(LDLIBS)
+	chmod 755 $@
+
+pkg: filebench
+	mkdir -p $(BUILD)
+	cp filebench $(BUILD)
+
+parser_lex.c: parser.l parser_grammar.h Makefile
+	$(LEX) $(LFLAGS) parser.l > $@
+
+parser_grammar.h parser_grammar.c: parser.y Makefile
+	$(YACC) $(YFLAGS) parser.y
+	@$(MV) y.tab.h parser_grammar.h
+	@$(MV) y.tab.c parser_grammar.c
+
+install:
+	cp $(BUILD)/filebench /opt/filebench/bin/$(FARCH)
+
+clean:
+	-rm -rf *.o

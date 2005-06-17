@@ -1,0 +1,47 @@
+#
+# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License.
+# See the file LICENSING in this distribution for details.
+#
+# Makefile built for @host_os@
+
+DIRS 		= filebench fastsu workloads
+TAR	   	= filebench.tar
+TMPDIR          = /tmp/root.$$
+SRCDIR          = $(CODEMGR_WS)/src
+
+all install lint: $(DIRS)
+
+clobber: clean 
+	cd fastsu && make clobber
+	cd filebench && make clobber
+
+clean:
+	cd fastsu && make clean
+	cd filebench && make clean
+
+$(DIRS): FRC
+	cd $@; $(MAKE) $(TARGET)
+
+package: $(DIRS)
+	cd filebench; $(MAKE) pkg
+	cd solaris; $(MAKE)
+
+.NO_PARALLEL: $(TAR)
+
+$(TAR): FRC
+	umask 000
+	rm -rf $(TMPDIR)/filebench
+	mkdir -p $(TMPDIR)/filebench
+	find Makefile.in config/config* config/inst* scripts/filebench_* scripts/collect* configure config.h.in filebench/*.[chly] filebench/Makefile.in -print |\
+	    cpio -pvd $(TMPDIR)/filebench
+	cd $(TMPDIR); tar cvf $(SRCDIR)/filebench.tar filebench
+
+archive: archive_filebench.sh $(TAR)
+	sh ./archive_filebench.sh
+
+FRC:
+
+

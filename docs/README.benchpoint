@@ -1,0 +1,193 @@
+
+Welcome to Benchpoint! 
+
+To start, you need to have filebench installed. This utility explicitly
+depends on filebench being located in /opt/filebench. There are three parts
+that you need to set up before you can successfully run and generate 
+reports using benchpoint:
+
+1. Profiles
+	
+	Profiles are the first things that benchpoint reads in. There are two
+	sections defined in a profile: CONFIG{} and DEFAULTS{}. They are placed
+	under the <...>/benchpoint/profiles. The name of the file must follow
+	the standard <profile>.prof convention.
+
+	The config section lists the configurations which to execute during 
+	this run.  A single profile can either contain only one configuration 
+	or multiple configurations. For example: you can create a profile to
+	only run the postmark benchmark. Or you could create profile to do
+	your nightly benchmarks by putting the different configurations
+	you would like to run on each line in the CONFIG{}.
+
+	The defaults section lets you specify any defaults that you would
+	like to set for this profile. The defaults are automatically pushed
+	into each configuration that is run.
+
+	Grammar:
+	
+	The "CONFIG {" token must appear on a separate line indicating
+	the start of the config section.
+
+	The "DEFAULTS {" token must appear on a separate line indicating
+	the start of the defaults section.
+
+	You must end the config and the defaults section by placing  a closing
+	bracket "}" on a separate line.
+
+	In the config section, each configuration is specified on its
+	own separate line. White spaces are removed.
+	
+	For the defaults section, look at the grammar section in
+	"2. Configuration".
+
+
+2. Configuration
+
+	All configuration files are located under <....>/benchpoint/config. The
+	name of the file must folllow the standard <configuration>.conf. A
+	required definition is "function". This specifies which function file
+	to load. All configuration files must declare this value.
+	
+	Example:
+		function = varmail;
+
+	This instructs benchpoint to load the varmail.func.
+
+	The profile specifies which configurations to execute
+	during this run. Benchpoint automatically searches for 
+	<configuration>.conf, parses the file, and stores the tokens
+	in a hash which is retrievable by the user.
+
+	The config file has strict grammar. 
+
+		Format: <var> = <val>;
+	
+	The semi-colon at the end denotes the end of the token. If you 
+	would like multiple entries for the same variable, then separate 
+	the entries with a comma.
+
+		<var> = <val>,<val>,<val>;
+
+	NOTE: Entries are translated into arrays automatically by the parser.
+	When you are parsing the CONFHASH, you need to keep this in mind!
+
+2. Functions
+
+	Once benchpoint happily loads the configuration, it then looks up
+	the function file. This is the file where you can write your own
+	perl code and either run filebench, or an external benchmark of your
+	own. All function files must be located under 
+	<....>/benchpoint/functions. The name of the file must be in the form
+	<function>.func. 
+
+	In order for your code to get executed you must define bm_run().
+	bm_run() is similar to main() for C programs. From here you can
+	call other functions at your will.
+
+
+Thats it! Modify the postmark configuration to suit your needs (esp. dir
+and log file locations) and run it!
+
+
+API
+---
+
+conf_getval()
+
+Params: string containing variable name that may or may not be defined
+Returns: value if defined in the configuration
+
+conf_reqval()
+
+Params: string containing variable name that must be defined or benchpoint
+	will exit with error!
+Returns: value defined in the configuration
+
+conf_exists()
+
+Params: string containing variable name that may or may not be defined
+Returns: 1 if hash key exists, 0 if not
+
+conf_hash()
+
+Params: none
+Returns: returns a hash containing all configuration keys and values
+
+op_init()
+
+Params: none
+Returns: none
+Description: Initializes the pipes for bidirectional communication 
+	with filebench. Must be called before calling other op_* functions.
+
+op_load()
+
+Params: string containing name of workload
+Returns: 0 if success, 1 on error
+Description: Instructs filebench to load the appropriate workload
+
+op_set()
+
+Params: string containing name of variable to set, string containing value
+	to set variable to
+Returns: 0 if success, 1 on error
+Description: Instructs filebench to set the appropriate variable to the 
+	specified value
+
+op_run()
+
+Params: string containing time after rev-up for filebench
+Returns: 0 if success, 1 on error
+Description: Instructions filebench to run the loaded workload for the 
+	time specified
+
+op_quit()
+
+Params: none
+Returns: none
+Description: Instructs filebench to quit
+
+op_stats()
+
+Params: string containg variable whose value to return
+Returns: value inside variable specified by the parameter
+Description: Obtain specific statistics variables from filebench from those
+	listed below
+
+op_statshash()
+
+Params: none
+Returns: hash containing values for all the available statistic variables
+	mentioned below.
+
+op_defaults()
+
+Params: none
+Returns none
+Description: Queries the current workload definition in filebench for
+	     customizable variables, then goes through the list of default
+	     variables available and matching variables.
+
+STATISTICS
+----------
+
+If you are running an instance of filebench, you can obtain the following
+variables by calling op_stats("<var name>");
+
+iocount
+iorate
+ioreadrate
+iowriterate
+iobandwidth
+iolatency
+iocpu
+oheadcpu
+iowait
+syscpu
+iocpusys
+
+Or you could simply call op_statshash() and obtain a hash containing
+all the defined variables above.
+
+

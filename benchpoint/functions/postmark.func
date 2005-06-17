@@ -1,0 +1,34 @@
+sub pre_run {
+
+}
+
+sub post_run {
+
+}
+
+sub bm_run {
+	my $runtime = conf_reqval("duration");
+	my $logfile = conf_reqval("log");
+	op_init();
+	op_load("postmark");
+	op_set("dir", "/filebench");
+	op_run($runtime);
+
+	my (%CONFDATA) = conf_hash();
+	
+	open(LOG, ">$logfile");
+	print LOG "\n\nConfiguration Hash\n------------------\n\n";
+	foreach my $str (keys %CONFDATA) {
+		print LOG "$str: @{$CONFDATA{$str}}\n";
+	}
+
+	print LOG "\n\n";
+	#my %hash = op_statshash();
+	#my $iorate = op_stats("iorate");
+	#print "iorate: $iorate\n\n\n";
+	close(LOG);
+	
+	op_quit();
+}
+
+1;

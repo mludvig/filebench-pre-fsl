@@ -1,0 +1,115 @@
+#!/bin/sh
+
+# Copyright (c) 2004 by Sun Microsystems, Inc.
+# All rights reserved.
+
+# Contact: zenon.fortuna@sun.com
+
+#
+# This "cpustat.opteron" script runs "cpustat" with options to generate data
+# suitable for the Workload Characterization Project processing.
+
+CPUSTAT=/usr/sbin/cpustat
+INTERVAL=1
+COUNT1=31
+REP=2
+WHOAMI=/usr/ucb/whoami
+
+user=`$WHOAMI`
+if [ "$user" != "root" ]; then
+  echo ""
+  echo This script needs to be run by root.
+  echo ""
+  exit 1
+fi
+
+if [ "$#" != 0 ]; then
+    REP=$1
+fi
+
+#
+# Test if "noedge" is among the attributes
+#
+$CPUSTAT -h | grep noedge > /dev/null 2>&1
+if [ $? = 0 ]; then
+    noedge=true
+else
+    noedge=false
+fi
+
+echo '#' cpustat script for Opteron, version=2.0.0
+echo '#' Assumed $REP cycles
+
+COUNT=`expr $COUNT1 \* $REP`
+
+if [ $noedge = true ]; then
+$CPUSTAT \
+ -c pic0=FP_dispatched_fpu_ops,umask0=1,pic1=FP_dispatched_fpu_ops,umask1=1,sys1,nouser1,pic2=FP_dispatched_fpu_ops,umask2=2,pic3=FP_dispatched_fpu_ops,umask3=2,sys3,nouser3\
+ -c pic0=FP_dispatched_fpu_ops,umask0=4,pic1=FP_dispatched_fpu_ops,umask1=4,sys1,nouser1,pic2=LS_uarch_resync_self_modify,pic3=LS_uarch_resync_self_modify,sys3,nouser3\
+ -c pic0=LS_uarch_resync_snoop,pic1=LS_uarch_resync_snoop,sys1,nouser1,pic2=LS_buffer_2_full,pic3=LS_buffer_2_full,sys3,nouser3\
+ -c pic0=LS_locked_operation,umask0=1,pic1=LS_locked_operation,umask1=1,sys1,nouser1,pic2=LS_locked_operation,umask2=2,pic3=LS_locked_operation,umask3=2,sys3,nouser3\
+ -c pic0=LS_locked_operation,umask0=4,pic1=LS_locked_operation,umask1=4,sys1,nouser1,pic2=DC_access,pic3=DC_access,sys3,nouser3\
+ -c pic0=DC_miss,pic1=DC_miss,sys1,nouser1,pic2=DC_refill_from_L2,umask2=31,pic3=DC_refill_from_L2,umask3=31,sys3,nouser3\
+ -c pic0=DC_refill_from_system,umask0=31,pic1=DC_refill_from_system,umask1=31,sys1,nouser1,pic2=DC_copyback,umask2=31,pic3=DC_copyback,umask3=31,sys3,nouser3\
+ -c pic0=DC_dtlb_L1_miss_L2_hit,pic1=DC_dtlb_L1_miss_L2_hit,sys1,nouser1,pic2=DC_dtlb_L1_miss_L2_miss,pic3=DC_dtlb_L1_miss_L2_miss,sys3,nouser3\
+ -c pic0=DC_dispatched_prefetch_instr,umask0=1,pic1=DC_dispatched_prefetch_instr,umask1=1,sys1,nouser1,pic2=DC_dispatched_prefetch_instr,umask2=2,pic3=DC_dispatched_prefetch_instr,umask3=2,sys3,nouser3\
+ -c pic0=BU_fill_req_missed_L2,umask0=1,pic1=BU_fill_req_missed_L2,umask1=1,sys1,nouser1,pic2=BU_fill_req_missed_L2,umask2=2,pic3=BU_fill_req_missed_L2,umask3=2,sys3,nouser3\
+ -c pic0=BU_fill_req_missed_L2,umask0=4,pic1=BU_fill_req_missed_L2,umask1=4,sys1,nouser1,pic2=IC_fetch,pic3=IC_fetch,sys3,nouser3\
+ -c pic0=IC_miss,pic1=IC_miss,sys1,nouser1,pic2=IC_refill_from_L2,pic3=IC_refill_from_L2,sys3,nouser3\
+ -c pic0=IC_refill_from_system,pic1=IC_refill_from_system,sys1,nouser1,pic2=IC_itlb_L1_miss_L2_hit,pic3=IC_itlb_L1_miss_L2_hit,sys3,nouser3\
+ -c pic0=IC_itlb_L1_miss_L2_miss,pic1=IC_itlb_L1_miss_L2_miss,sys1,nouser1,pic2=FR_retired_x86_instr_w_excp_intr,noedge2,pic3=FR_retired_x86_instr_w_excp_intr,sys3,nouser3,noedge3\
+ -c pic0=FR_retired_uops,noedge0,pic1=FR_retired_uops,sys1,nouser1,noedge1,pic2=FR_retired_branches_mispred,pic3=FR_retired_branches_mispred,sys3,nouser3\
+ -c pic0=FR_retired_taken_branches,pic1=FR_retired_taken_branches,sys1,nouser1,pic2=FR_retired_taken_branches_mispred,pic3=FR_retired_taken_branches_mispred,sys3,nouser3\
+ -c pic0=FR_intr_masked_cycles,pic1=FR_intr_masked_cycles,sys1,nouser1,pic2=FR_taken_hardware_intrs,pic3=FR_taken_hardware_intrs,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_branch_abort_to_retire,pic1=FR_dispatch_stall_branch_abort_to_retire,sys1,nouser1,pic2=FR_dispatch_stall_serialization,pic3=FR_dispatch_stall_serialization,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_segment_load,pic1=FR_dispatch_stall_segment_load,sys1,nouser1,pic2=FR_dispatch_stall_reorder_buffer_full,pic3=FR_dispatch_stall_reorder_buffer_full,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_resv_stations_full,pic1=FR_dispatch_stall_resv_stations_full,sys1,nouser1,pic2=FR_dispatch_stall_fpu_full,pic3=FR_dispatch_stall_fpu_full,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_ls_full,pic1=FR_dispatch_stall_ls_full,sys1,nouser1,pic2=FR_dispatch_stall_waiting_all_quiet,pic3=FR_dispatch_stall_waiting_all_quiet,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_far_ctl_trsfr_resync_branch_pend,pic1=FR_dispatch_stall_far_ctl_trsfr_resync_branch_pend,sys1,nouser1,pic2=NB_mem_ctrlr_page_access,umask2=1,sys2,pic3=NB_mem_ctrlr_page_access,umask3=2,sys3\
+ -c pic0=NB_mem_ctrlr_page_access,umask0=4,sys0,pic1=BU_cpu_clk_unhalted,noedge1,pic2=BU_cpu_clk_unhalted,sys2,nouser2,noedge2\
+ -c pic0=NB_ht_bus0_bandwidth,umask0=1,pic1=NB_ht_bus0_bandwidth,umask1=1,sys1,nouser1,pic2=NB_ht_bus0_bandwidth,umask2=2,pic3=NB_ht_bus0_bandwidth,umask3=2,sys3,nouser3\
+ -c pic0=NB_ht_bus0_bandwidth,umask0=4,pic1=NB_ht_bus0_bandwidth,umask1=4,sys1,nouser1,pic2=NB_ht_bus0_bandwidth,umask2=4,pic3=NB_ht_bus0_bandwidth,umask3=4,sys3,nouser3\
+ -c pic0=NB_ht_bus1_bandwidth,umask0=1,pic1=NB_ht_bus1_bandwidth,umask1=1,sys1,nouser1,pic2=NB_ht_bus1_bandwidth,umask2=2,pic3=NB_ht_bus1_bandwidth,umask3=2,sys3,nouser3\
+ -c pic0=NB_ht_bus1_bandwidth,umask0=4,pic1=NB_ht_bus1_bandwidth,umask1=4,sys1,nouser1,pic2=NB_ht_bus1_bandwidth,umask2=4,pic3=NB_ht_bus1_bandwidth,umask3=4,sys3,nouser3\
+ -c pic0=NB_ht_bus2_bandwidth,umask0=1,pic1=NB_ht_bus2_bandwidth,umask1=1,sys1,nouser1,pic2=NB_ht_bus2_bandwidth,umask2=2,pic3=NB_ht_bus2_bandwidth,umask3=2,sys3,nouser3\
+ -c pic0=NB_ht_bus2_bandwidth,umask0=4,pic1=NB_ht_bus2_bandwidth,umask1=4,sys1,nouser1,pic2=NB_ht_bus2_bandwidth,umask2=4,pic3=NB_ht_bus2_bandwidth,umask3=4,sys3,nouser3\
+ -c pic0=BU_internal_L2_req,umask0=1,pic1=BU_internal_L2_req,umask1=1,sys1,nouser1,pic2=BU_internal_L2_req,umask2=2,pic3=BU_internal_L2_req,umask3=2,sys3,nouser3\
+ -c pic0=BU_internal_L2_req,umask0=4,pic1=BU_internal_L2_req,umask1=4,sys1,nouser1\
+ $INTERVAL $COUNT
+
+else
+$CPUSTAT \
+ -c pic0=FP_dispatched_fpu_ops,umask0=1,pic1=FP_dispatched_fpu_ops,umask1=1,sys1,nouser1,pic2=FP_dispatched_fpu_ops,umask2=2,pic3=FP_dispatched_fpu_ops,umask3=2,sys3,nouser3\
+ -c pic0=FP_dispatched_fpu_ops,umask0=4,pic1=FP_dispatched_fpu_ops,umask1=4,sys1,nouser1,pic2=LS_uarch_resync_self_modify,pic3=LS_uarch_resync_self_modify,sys3,nouser3\
+ -c pic0=LS_uarch_resync_snoop,pic1=LS_uarch_resync_snoop,sys1,nouser1,pic2=LS_buffer_2_full,pic3=LS_buffer_2_full,sys3,nouser3\
+ -c pic0=LS_locked_operation,umask0=1,pic1=LS_locked_operation,umask1=1,sys1,nouser1,pic2=LS_locked_operation,umask2=2,pic3=LS_locked_operation,umask3=2,sys3,nouser3\
+ -c pic0=LS_locked_operation,umask0=4,pic1=LS_locked_operation,umask1=4,sys1,nouser1,pic2=DC_access,pic3=DC_access,sys3,nouser3\
+ -c pic0=DC_miss,pic1=DC_miss,sys1,nouser1,pic2=DC_refill_from_L2,umask2=31,pic3=DC_refill_from_L2,umask3=31,sys3,nouser3\
+ -c pic0=DC_refill_from_system,umask0=31,pic1=DC_refill_from_system,umask1=31,sys1,nouser1,pic2=DC_copyback,umask2=31,pic3=DC_copyback,umask3=31,sys3,nouser3\
+ -c pic0=DC_dtlb_L1_miss_L2_hit,pic1=DC_dtlb_L1_miss_L2_hit,sys1,nouser1,pic2=DC_dtlb_L1_miss_L2_miss,pic3=DC_dtlb_L1_miss_L2_miss,sys3,nouser3\
+ -c pic0=DC_dispatched_prefetch_instr,umask0=1,pic1=DC_dispatched_prefetch_instr,umask1=1,sys1,nouser1,pic2=DC_dispatched_prefetch_instr,umask2=2,pic3=DC_dispatched_prefetch_instr,umask3=2,sys3,nouser3\
+ -c pic0=BU_fill_req_missed_L2,umask0=1,pic1=BU_fill_req_missed_L2,umask1=1,sys1,nouser1,pic2=BU_fill_req_missed_L2,umask2=2,pic3=BU_fill_req_missed_L2,umask3=2,sys3,nouser3\
+ -c pic0=BU_fill_req_missed_L2,umask0=4,pic1=BU_fill_req_missed_L2,umask1=4,sys1,nouser1,pic2=IC_fetch,pic3=IC_fetch,sys3,nouser3\
+ -c pic0=IC_miss,pic1=IC_miss,sys1,nouser1,pic2=IC_refill_from_L2,pic3=IC_refill_from_L2,sys3,nouser3\
+ -c pic0=IC_refill_from_system,pic1=IC_refill_from_system,sys1,nouser1,pic2=IC_itlb_L1_miss_L2_hit,pic3=IC_itlb_L1_miss_L2_hit,sys3,nouser3\
+ -c pic0=IC_itlb_L1_miss_L2_miss,pic1=IC_itlb_L1_miss_L2_miss,sys1,nouser1,pic2=FR_retired_x86_instr_w_excp_intr,pic3=FR_retired_x86_instr_w_excp_intr,sys3,nouser3\
+ -c pic0=FR_retired_uops,pic1=FR_retired_uops,sys1,nouser1,pic2=FR_retired_branches_mispred,pic3=FR_retired_branches_mispred,sys3,nouser3\
+ -c pic0=FR_retired_taken_branches,pic1=FR_retired_taken_branches,sys1,nouser1,pic2=FR_retired_taken_branches_mispred,pic3=FR_retired_taken_branches_mispred,sys3,nouser3\
+ -c pic0=FR_intr_masked_cycles,pic1=FR_intr_masked_cycles,sys1,nouser1,pic2=FR_taken_hardware_intrs,pic3=FR_taken_hardware_intrs,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_branch_abort_to_retire,pic1=FR_dispatch_stall_branch_abort_to_retire,sys1,nouser1,pic2=FR_dispatch_stall_serialization,pic3=FR_dispatch_stall_serialization,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_segment_load,pic1=FR_dispatch_stall_segment_load,sys1,nouser1,pic2=FR_dispatch_stall_reorder_buffer_full,pic3=FR_dispatch_stall_reorder_buffer_full,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_resv_stations_full,pic1=FR_dispatch_stall_resv_stations_full,sys1,nouser1,pic2=FR_dispatch_stall_fpu_full,pic3=FR_dispatch_stall_fpu_full,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_ls_full,pic1=FR_dispatch_stall_ls_full,sys1,nouser1,pic2=FR_dispatch_stall_waiting_all_quiet,pic3=FR_dispatch_stall_waiting_all_quiet,sys3,nouser3\
+ -c pic0=FR_dispatch_stall_far_ctl_trsfr_resync_branch_pend,pic1=FR_dispatch_stall_far_ctl_trsfr_resync_branch_pend,sys1,nouser1,pic2=NB_mem_ctrlr_page_access,umask2=1,sys2,pic3=NB_mem_ctrlr_page_access,umask3=2,sys3\
+ -c pic0=NB_mem_ctrlr_page_access,umask0=4,sys0,pic1=BU_cpu_clk_unhalted,pic2=BU_cpu_clk_unhalted,sys2,nouser2\
+ -c pic0=NB_ht_bus0_bandwidth,umask0=1,pic1=NB_ht_bus0_bandwidth,umask1=1,sys1,nouser1,pic2=NB_ht_bus0_bandwidth,umask2=2,pic3=NB_ht_bus0_bandwidth,umask3=2,sys3,nouser3\
+ -c pic0=NB_ht_bus0_bandwidth,umask0=4,pic1=NB_ht_bus0_bandwidth,umask1=4,sys1,nouser1,pic2=NB_ht_bus0_bandwidth,umask2=4,pic3=NB_ht_bus0_bandwidth,umask3=4,sys3,nouser3\
+ -c pic0=NB_ht_bus1_bandwidth,umask0=1,pic1=NB_ht_bus1_bandwidth,umask1=1,sys1,nouser1,pic2=NB_ht_bus1_bandwidth,umask2=2,pic3=NB_ht_bus1_bandwidth,umask3=2,sys3,nouser3\
+ -c pic0=NB_ht_bus1_bandwidth,umask0=4,pic1=NB_ht_bus1_bandwidth,umask1=4,sys1,nouser1,pic2=NB_ht_bus1_bandwidth,umask2=4,pic3=NB_ht_bus1_bandwidth,umask3=4,sys3,nouser3\
+ -c pic0=NB_ht_bus2_bandwidth,umask0=1,pic1=NB_ht_bus2_bandwidth,umask1=1,sys1,nouser1,pic2=NB_ht_bus2_bandwidth,umask2=2,pic3=NB_ht_bus2_bandwidth,umask3=2,sys3,nouser3\
+ -c pic0=NB_ht_bus2_bandwidth,umask0=4,pic1=NB_ht_bus2_bandwidth,umask1=4,sys1,nouser1,pic2=NB_ht_bus2_bandwidth,umask2=4,pic3=NB_ht_bus2_bandwidth,umask3=4,sys3,nouser3\
+ -c pic0=BU_internal_L2_req,umask0=1,pic1=BU_internal_L2_req,umask1=1,sys1,nouser1,pic2=BU_internal_L2_req,umask2=2,pic3=BU_internal_L2_req,umask3=2,sys3,nouser3\
+ -c pic0=BU_internal_L2_req,umask0=4,pic1=BU_internal_L2_req,umask1=4,sys1,nouser1\
+ $INTERVAL $COUNT
+
+fi

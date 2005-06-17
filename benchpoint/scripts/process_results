@@ -1,0 +1,71 @@
+#!/bin/ksh
+# This script takes a particular file over multiple runs and compares the I/O Summary
+
+Usage()
+{
+    print "Usage: process_results <results_dir> <results_file_prefix> [plot]"
+    print "	Eg. process_results /tmp/results stats"
+    print "	    Where all results files are stats.[0-9]* in /tmp/results"
+    print "	Eg. process_results /tmp/results stats plot"
+    print "	    This will generate an interactive Xanadu graph instead of tabular html"
+}
+
+if [[ $# -lt 2 ]]
+then
+    Usage
+    exit 1
+fi
+
+BASE=$1
+FILE=$2
+echo "<stat_doc name=\"Filebench Comparison\">" 
+cat `ls $BASE/${FILE}*xml | head -1` | nawk '{
+	if (/meta name.*value/) { 
+		print $0
+		exit
+	}
+}' 
+
+if [[ $# -eq 3 ]]
+then
+	PLOT=$3
+	echo "<stat_group name=\"IO Summary\" display=\"gnuplot-png\">" 
+else
+	echo "<stat_group name=\"IO Summary\">" 
+fi
+echo "<cell_list>" 
+
+ls $BASE | grep $FILE | grep xml | nawk -F. '{print $2}' | sort -n | while read line
+do
+
+cat $BASE/${FILE}*${line}*xml | nawk 'BEGIN {flag=0} {
+	if (/stat_group.*IO Summary/) { 
+		getline
+		getline
+		flag=1
+	}
+	if ((/\/cell_list/) && (flag == 1)) exit
+	if (flag == 1) print $0
+}' 
+
+done
+
+echo "</cell_list>" 
+echo "<dim_list>" 
+echo "<dim>" 
+cat `ls $BASE/${FILE}*xml | head -1` | nawk 'BEGIN {flag=0} {
+	if (/stat_group.*IO Summary/) flag=1
+	if ((/dimval/) && (flag == 1)) print $0
+	if ((/<\/dim>/) && (flag == 1)) exit
+}' 
+echo "</dim>" 
+
+echo "<dim>" 
+ls $BASE | grep $FILE | grep xml | nawk -F. '{print $2}' | sort -n | while read line
+do
+	echo "<dimval>$line</dimval>" 
+done
+echo "</dim>" 
+echo "</dim_list>" 
+echo "</stat_group>" 
+echo "</stat_doc>" 

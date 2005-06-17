@@ -1,0 +1,90 @@
+#!/bin/sh
+BASE=$1
+SCRIPTS=$BASE/scripts
+for drive in /dev/rdsk/c1t2d1s0 \
+        /dev/rdsk/c3t0d0s0 \
+        /dev/rdsk/c3t1d0s0 \
+        /dev/rdsk/c3t2d0s0 \
+        /dev/rdsk/c3t3d0s0 \
+        /dev/rdsk/c3t4d0s0 \
+        /dev/rdsk/c3t5d0s0 \
+        /dev/rdsk/c3t6d0s0 \
+        /dev/rdsk/c3t9d0s0 \
+        /dev/rdsk/c3t10d0s0 \
+        /dev/rdsk/c3t16d0s0 \
+        /dev/rdsk/c3t17d0s0 \
+        /dev/rdsk/c3t18d0s0 \
+        /dev/rdsk/c3t19d0s0 \
+        /dev/rdsk/c3t20d0s0 \
+        /dev/rdsk/c3t21d0s0 \
+        /dev/rdsk/c3t22d0s0 \
+        /dev/rdsk/c3t23d0s0 \
+        /dev/rdsk/c3t24d0s0 \
+        /dev/rdsk/c3t26d0s0 \
+        /dev/rdsk/c4t0d0s0 \
+        /dev/rdsk/c4t1d0s0 \
+        /dev/rdsk/c4t2d0s0 \
+        /dev/rdsk/c4t3d0s0 \
+        /dev/rdsk/c4t4d0s0 \
+        /dev/rdsk/c4t5d0s0 \
+        /dev/rdsk/c4t6d0s0 \
+        /dev/rdsk/c4t7d0s0 \
+        /dev/rdsk/c4t8d0s0 \
+        /dev/rdsk/c4t9d0s0 \
+        /dev/rdsk/c4t10d0s0 \
+        /dev/rdsk/c4t16d0s0 \
+        /dev/rdsk/c4t17d0s0 \
+        /dev/rdsk/c4t18d0s0 \
+        /dev/rdsk/c4t19d0s0 \
+        /dev/rdsk/c4t20d0s0 \
+        /dev/rdsk/c4t21d0s0 \
+        /dev/rdsk/c4t22d0s0 \
+        /dev/rdsk/c4t23d0s0 \
+        /dev/rdsk/c4t24d0s0 \
+        /dev/rdsk/c4t25d0s0 \
+        /dev/rdsk/c4t26d0s0 \
+        /dev/rdsk/c5t0d0s0 \
+        /dev/rdsk/c5t1d0s0 \
+        /dev/rdsk/c5t2d0s0 \
+        /dev/rdsk/c5t3d0s0 \
+        /dev/rdsk/c5t4d0s0 \
+        /dev/rdsk/c5t5d0s0 \
+        /dev/rdsk/c5t6d0s0 \
+        /dev/rdsk/c5t7d0s0 \
+        /dev/rdsk/c5t8d0s0 \
+        /dev/rdsk/c5t9d0s0 \
+        /dev/rdsk/c5t10d0s0 \
+        /dev/rdsk/c5t16d0s0 \
+        /dev/rdsk/c5t17d0s0 \
+        /dev/rdsk/c5t18d0s0 \
+        /dev/rdsk/c5t20d0s0 \
+        /dev/rdsk/c5t21d0s0 \
+        /dev/rdsk/c5t22d0s0 \
+        /dev/rdsk/c5t24d0s0 \
+        /dev/rdsk/c5t25d0s0 \
+        /dev/rdsk/c5t26d0s0 \
+        /dev/rdsk/c6t0d0s0 \
+        /dev/rdsk/c6t1d0s0 \
+        /dev/rdsk/c6t2d0s0 \
+        /dev/rdsk/c6t3d0s0 \
+        /dev/rdsk/c6t4d0s0 \
+        /dev/rdsk/c6t6d0s0 \
+        /dev/rdsk/c6t7d0s0 \
+        /dev/rdsk/c6t8d0s0 \
+        /dev/rdsk/c6t9d0s0 \
+        /dev/rdsk/c6t10d0s0 \
+        /dev/rdsk/c6t16d0s0 \
+        /dev/rdsk/c6t17d0s0 \
+        /dev/rdsk/c6t18d0s0 \
+        /dev/rdsk/c6t20d0s0 \
+        /dev/rdsk/c6t21d0s0 \
+        /dev/rdsk/c6t22d0s0 \
+        /dev/rdsk/c6t23d0s0 \
+        /dev/rdsk/c6t24d0s0 \
+        /dev/rdsk/c6t25d0s0 \
+        /dev/rdsk/c6t26d0s0 \
+        /dev/rdsk/c8t1d0s0 
+do
+        echo "/usr/sbin/fmthard -s c0t0.vtoc $drive"
+        /usr/sbin/fmthard -s $SCRIPTS/c0t0.vtoc $drive
+done

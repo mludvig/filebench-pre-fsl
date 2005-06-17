@@ -1,0 +1,12 @@
+
+CONFIG {
+	oltp
+}
+
+DEFAULTS {
+        runtime = 300;
+        filesize = 5g;
+        dir = /filebench;
+        stats = /stats;
+	filesystem = ufs;
+}

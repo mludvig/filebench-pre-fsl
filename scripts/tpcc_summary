@@ -1,0 +1,283 @@
+#!/usr/bin/perl
+
+use CGI ':standard';
+
+$iopspertransaction = 8;
+$maxiops = 0;
+$maxbandwidth = 0;
+$iopsperrate = 20;
+#
+# Create html and text
+#
+printf ("\n");
+open (HTML, ">index.html");
+print HTML start_html(-title=>'Filebench');
+print HTML "<body>";
+#
+# Obtain maximum throughput from benchmark run file
+#
+open (BENCHCSV, "tpcc.csv");
+
+while (<BENCHCSV>) {
+
+    ($dataset, $runrate, $iops, $bandwidth, $latency, $cpu, $cpusys) = split(/,/, $_);
+
+    $benchmarks{$dataset, $runrate} = $runrate;
+    $rates{$runrate} = $runrate;
+    if ($iops > $maxiops{$dataset}) {
+	$maxiopsrunrate{$dataset} = $runrate;
+	$maxiops{$dataset} = $iops;
+        $iopslatency{$dataset} = $latency;
+    }
+
+    if ($bandwidth > $maxbandwidth{$dataset}) {
+	$maxbandwidthrunrate{$dataset} = $runrate;
+	$maxbandwidth{$dataset} = $bandwidth;
+    }
+
+    $cpuperiop{$dataset} += $cpu;
+    $datapoints{$dataset}++;
+}
+
+close (BENCHCSV);
+
+print HTML h1('Summary');
+print HTML "<table border=1><tr><td>Dataset</td><td>TPMS</td><td>THROUGHPUT<br>(IOP/s)</td>";
+print HTML "<td>Response time</td><td>BANDWIDTH<br></td><td>EFFICIENCY<br>(per IOP)</td></tr>";
+foreach $dataset (keys %maxiops) {
+    # Text
+    printf ("%s: ", $dataset);
+    printf ("%d tpms, ", $maxiops{$dataset} * 60 / $iopspertransaction / 2);
+    printf ("%d iops @ %.1fms, ", $maxiops{$dataset}, $iopslatency{$dataset} / 1000.0);
+    printf ("%d mb/s, ", $maxbandwidth{$dataset});
+    printf ("%dus per op\n", $cpuperiop{$dataset} / $datapoints{$dataset});
+    # HTML
+    printf HTML ("<tr>");
+    printf HTML ("<td>%s</td>", $dataset);
+    printf HTML ("<td>%d</td>", $maxiops{$dataset} * 60 / $iopspertransaction / 2);
+    printf HTML ("<td>%d</td><td>%.1fms</td>", $maxiops{$dataset}, $iopslatency{$dataset} / 1000.0);
+    printf HTML ("<td>%dMB/s</td>", $maxbandwidth{$dataset});
+    printf HTML ("<td>%dus</td>", $cpuperiop{$dataset} / $datapoints{$dataset});
+    printf HTML ("</tr>\n");
+}
+print HTML "</table>";
+printf ("\n");
+
+#
+# Print throughput, latency, efficiency graphs
+#
+print HTML h1('Scalability Curves');
+print HTML "<table><center>";
+print HTML "<tr><td>Throughput</td><td>Response Time</td><td>Efficiency</td></tr>";
+print HTML "<tr>";
+print HTML "<td><a href='iops.png'><img src='iops_small.png'</a></td>";
+print HTML "<td><a href='latency.png'><img src='latency_small.png'</a></td>";
+print HTML "<td><a href='cpu.png'><img src='cpu_small.png'</a></td>";
+print HTML "</tr>";
+print HTML "</table></center>";
+
+
+
+#
+# Print aggregate shadow, database writer and log statistics
+#
+foreach $dataset (keys %maxiops) {
+
+    open (STATS, "stats.$dataset.$maxiopsrunrate{$dataset}");
+    $tmp = <STATS>;
+    while (<STATS>) {
+	($flowop, $ops, $bandwidth, $latency, $cpu, $wait, $seconds) = split(/[ \t]+/, $_);
+
+	last if (/^$/);
+
+	$ops =~ s/ops\/s//;
+	$bandwidth =~ s/mb\/s//;
+	$latency =~ s/ms\/op//;
+	$cpu =~ s/us\/op//;
+	
+	# Collapse shadow reads into single metric
+	if ($flowop =~ /shadowread/) {
+	    $flowop = "shadow-read";
+	}
+
+	# Collapse database writes into single metric
+	if ($flowop =~ /db.*write/) {
+	    $flowop = "db-write";
+	}
+
+	# Collapse database writes into single metric
+	if ($flowop =~ /db.*write/) {
+	    $flowop = "db-write";
+	}
+
+	$flowops{$flowop} = $flowop;
+	$ops{$flowop, $dataset} += $ops;
+	$bandwidth{$flowop, $dataset} += $bandwidth;
+	$latency{$flowop, $dataset} += $latency;
+	$cpu{$flowop, $dataset} += $cpu;
+	$flowopcnt{$flowop, $dataset}++;
+    }
+    close(STATS);
+}
+
+# Text IOPS
+printf ("%-20s", "Per Second");
+foreach $dataset (keys %maxiops) {
+    printf ("%15s", $dataset);
+}
+printf ("\n------------------    -------------  -------------\n");
+foreach $flowop (sort (keys %flowops)) {
+    printf("%-20s", $flowop);
+    foreach $dataset (keys %maxiops) {
+	printf("%15d", $ops{$flowop, $dataset});
+    }
+    printf ("\n");
+}
+printf ("\n");
+# HTML IOPS
+print HTML h1('Throughput breakdown');
+print HTML "<table border=1>";
+print HTML "<td>Per Second</td>";
+foreach $dataset (keys %maxiops) {
+    print HTML "<td>$dataset</td>";
+}
+print HTML "</tr>";
+foreach $flowop (sort (keys %flowops)) {
+    print HTML "<tr><td>$flowop</td>";
+    foreach $dataset (keys %maxiops) {
+	printf HTML ("<td>%d</td>", $ops{$flowop, $dataset});
+    }
+    print HTML "</tr>";
+}
+print HTML "</table>";
+
+
+# Text Bandwidth	
+printf ("%-20s", "Bandwidth (MB/s)");
+foreach $dataset (keys %maxbandwidth) {
+    printf ("%15s", $dataset);
+}
+printf ("\n------------------    -------------  -------------");
+foreach $flowop (sort (keys %flowops)) {
+    $bandwidth = 0;
+    foreach $dataset (keys %maxbandwidth) {
+	$bandwidth +=  $bandwidth{$flowop, $dataset};
+    }
+    next if ($bandwidth == 0);
+    printf ("\n");
+    printf("%-20s", $flowop);
+    foreach $dataset (keys %maxbandwidth) {
+	printf("%15d", $bandwidth{$flowop, $dataset});
+    }
+}
+printf ("\n\n");
+
+# HTML Bandwidth
+print HTML h1('Bandwidth breakdown');
+print HTML "<table border=1>";
+print HTML "<td>Bandwidth (MB/s)</td>";
+foreach $dataset (keys %maxbandwidth) {
+    print HTML "<td>$dataset</td>";
+}
+print HTML "</tr>";
+foreach $flowop (sort (keys %flowops)) {
+    $bandwidth = 0;
+    foreach $dataset (keys %maxbandwidth) {
+	$bandwidth +=  $bandwidth{$flowop, $dataset};
+    }
+    next if ($bandwidth == 0);
+    print HTML "<tr><td>$flowop</td>";
+    foreach $dataset (keys %maxbandwidth) {
+	printf HTML ("<td>%d</td>", $bandwidth{$flowop, $dataset});
+    }
+    print HTML "</tr>";
+}
+print HTML "</table>";
+
+
+# Text Latency
+printf ("%-20s", "Latency (ms)");
+foreach $dataset (keys %maxiops) {
+    printf ("%15s", $dataset);
+}
+printf ("\n------------------    -------------  -------------\n");
+foreach $flowop (sort (keys %flowops)) {
+    printf("%-20s", $flowop);
+    foreach $dataset (keys %maxiops) {
+	printf("%15.1f", $latency{$flowop, $dataset} / $flowopcnt{$flowop, $dataset});
+    }
+    printf ("\n");
+}
+printf ("\n");
+# HTML Latency
+print HTML h1('Latency breakdown');
+print HTML "<table border=1>";
+print HTML "<td>Latency (ms)</td>";
+foreach $dataset (keys %maxiops) {
+    print HTML "<td>$dataset</td>";
+}
+print HTML "</tr>";
+foreach $flowop (sort (keys %flowops)) {
+    print HTML "<tr><td>$flowop</td>";
+    foreach $dataset (keys %maxiops) {
+	printf HTML ("<td>%d</td>", $latency{$flowop, $dataset} / $flowopcnt{$flowop, $dataset});
+    }
+    print HTML "</tr>";
+}
+print HTML "</table>";
+
+# Text Effiency
+printf ("%-20s", "Code Path Length(us)");
+foreach $dataset (keys %maxiops) {
+    printf ("%15s", $dataset);
+}
+printf ("\n------------------    -------------  -------------\n");
+foreach $flowop (sort (keys %flowops)) {
+    printf("%-20s", $flowop);
+    foreach $dataset (keys %maxiops) {
+	printf("%15.1f", $cpu{$flowop, $dataset} / $flowopcnt{$flowop, $dataset});
+    }
+    printf ("\n");
+}
+printf ("\n");
+# HTML Efficiency
+print HTML h1('Efficiency breakdown');
+print HTML "<table border=1>";
+print HTML "<td>Code Path Length(us)</td>";
+foreach $dataset (keys %maxiops) {
+    print HTML "<td>$dataset</td>";
+}
+print HTML "</tr>";
+foreach $flowop (sort (keys %flowops)) {
+    print HTML "<tr><td>$flowop</td>";
+    foreach $dataset (keys %maxiops) {
+	printf HTML ("<td>%d</td>", $cpu{$flowop, $dataset} / $flowopcnt{$flowop, $dataset});
+    }
+    print HTML "</tr>";
+}
+print HTML "</table>";
+
+
+# HTML References
+print HTML h1('Reference Data');
+print HTML "<table border=1>";
+print HTML "<td>Requested IOPS Rate</td>";
+foreach $dataset (keys %maxiops) {
+    print HTML "<td>$dataset</td>";
+}
+print HTML "</tr>";
+foreach $runrate (sort {$a <=> $b} (keys %rates)) {
+    next if ($runrate == 0);
+    printf HTML ("<tr><td>%d</td>", $runrate * $iopsperrate);
+    foreach $dataset (keys %maxiops) {
+	print HTML "<td>";
+	printf HTML ("<a href=\"stats.$dataset.%d\">stats</a>, ", $iopsperrate * $benchmarks{$dataset, $runrate});
+	printf HTML ("<a href=\"iostat.$dataset.%d\">iostat</a>, ", $iopsperrate * $benchmarks{$dataset, $runrate});
+	printf HTML ("<a href=\"vmstat.$dataset.%d\">vmstat</a>", $iopsperrate * $benchmarks{$dataset, $runrate});
+	print HTML "</td>";
+    }
+    print HTML "</tr>";
+}
+print HTML "</table>";
+
+end_html();

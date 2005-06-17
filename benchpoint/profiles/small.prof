@@ -1,0 +1,265 @@
+
+DEFAULTS {
+	runtime = 3600;
+        dir = /filebench;
+        stats = /home/rmc/filemicro/stats;
+	filesystem = ufslog;
+	description = "S10 UFS Logging";
+}
+
+CONFIG fmicro_create128k {
+	function = generic;
+	personality = filemicro_create;
+	nthreads = 1;
+	iosize = 1m;
+	count = 64;
+	nfiles = 1000;
+}
+
+CONFIG fmicro_create100files {
+	function = generic;
+	personality = filemicro_createfiles;
+}
+
+CONFIG fmicro_createsync {
+	function = generic;
+	personality = filemicro_create;
+	nthreads = 1;
+	iosize = 1m;
+	count = 1k;
+	sync = 1;
+}
+
+CONFIG fmicro_create128kdsync {
+	function = generic;
+	personality = filemicro_create;
+	nthreads = 1;
+	iosize = 1m;
+	count = 1k;
+	sync = 1;
+}
+
+CONFIG fmicro_createfsync {
+	function = generic;
+	personality = filemicro_writefsync;
+	nthreads = 1;
+}
+
+CONFIG fmicro_createfsyncrand {
+	function = generic;
+	personality = filemicro_createfsyncrand;
+	nthreads = 1;
+}
+
+CONFIG fmicro_createrand {
+	function = generic;
+	personality = filemicro_createrand;
+	nthreads = 1;
+}
+
+CONFIG fmicro_rread2k {
+	function = generic;
+	personality = filemicro_rread;
+	cached = 0;
+	iosize = 2k;
+}
+
+CONFIG fmicro_rread2kcached {
+	function = generic;
+	personality = filemicro_rread;
+	cached = 1;
+	iosize = 2k;
+}
+
+CONFIG fmicro_rwrite2kdsync {
+	function = generic;
+	personality = filemicro_rwrite;
+	iosize = 2k;
+	nthreads = 1;
+	sync = 1;
+}
+
+CONFIG fmicro_rwrite2kdsync4thread {
+	function = generic;
+	personality = filemicro_rwrite;
+	iosize = 2k;
+	nthreads = 4;
+	sync = 1;
+}
+
+CONFIG fmicro_rwrite8kfsynccached {
+	function = generic;
+	personality = filemicro_rwritefsync;
+	iosize = 8k;
+	nthreads = 1;
+	cached = 1;
+}
+
+CONFIG fmicro_seqread32k {
+	function = generic;
+	personality = filemicro_seqread;
+	iosize = 32k;
+	nthreads = 1;
+	cached = 0;
+	filesize = 100m;
+}
+
+CONFIG fmicro_seqread32kcached {
+	function = generic;
+	personality = filemicro_seqread;
+	iosize = 32k;
+	nthreads = 1;
+	cached = 1;
+	filesize = 100m;
+}
+
+CONFIG fmicro_seqwrite32k {
+	function = generic;
+	personality = filemicro_seqwrite;
+	iosize = 32k;
+	count = 32k;
+	nthreads = 1;
+	cached = 0;
+	sync = 0;
+}
+
+CONFIG fmicro_seqwrite32kdsync {
+	function = generic;
+	personality = filemicro_seqwrite;
+	iosize = 32k;
+	count = 32k;
+	nthreads = 1;
+	cached = 0;
+	sync = 1;
+}
+
+CONFIG fmicro_seqwriterand8k {
+	function = generic;
+	personality = filemicro_seqwriterand;
+	iosize = 8k;
+	count = 128k;
+	nthreads = 1;
+	cached = 0;
+	sync = 0;
+}
+
+CONFIG fmicro_unlink1g {
+	function = generic;
+	personality = filemicro_delete;
+	nthreads = 1;
+	filesize = 1g;
+	nfiles = 3;
+}
+
+CONFIG fmicro_copyfiles {
+	personality = copyfiles;
+	function = generic;
+	nfiles = 5000;
+	dirwidth = 20;
+	filesize = 16k;
+	nthreads = 1;
+}
+
+CONFIG fileserver {
+        runtime = 60;
+	function = generic;
+	personality = fileserver;
+	nfiles = 20000;
+	meandirwidth = 20;
+	filesize = 2k;
+	nthreads = 100;
+	meaniosize = 16k;
+}
+
+CONFIG varmail {
+        runtime = 60;
+	personality = varmail;
+	function = generic;
+	nfiles = 20000;
+	meandirwidth = 1000000;
+	filesize = 1k;
+	nthreads = 16;
+	meaniosize = 16k;
+}
+
+CONFIG webproxy {
+        runtime = 60;
+	personality = webproxy;
+	function = generic;
+	nfiles = 20000;
+	meandirwidth = 1000000;
+	filesize = 1k;
+	nthreads = 100;
+	meaniosize = 16k;
+}
+
+CONFIG webserver {
+        runtime = 60;
+	personality = webserver;
+	function = generic;
+	nfiles = 20000;
+	meandirwidth = 20;
+	filesize = 1k;
+	nthreads = 100;
+}
+
+CONFIG large_db_oltp_2k_cached {
+        runtime = 60;
+	personality = oltp;
+	function = generic;
+	cached = 1;
+	directio = 0;
+	iosize = 2k;
+	nshadows = 200;
+	ndbwriters = 10;
+	usermode = 20000;
+	filesize = 100m;
+	memperthread = 1m;
+	workingset = 0;
+}
+
+CONFIG large_db_oltp_2k_uncached {
+        runtime = 60;
+	personality = oltp;
+	function = generic;
+	cached = 0;
+	directio = 1;
+	iosize = 2k;
+	nshadows = 200;
+	ndbwriters = 10;
+	usermode = 20000;
+	filesize = 100m;
+	memperthread = 1m;
+	workingset = 0;
+}
+
+CONFIG large_db_oltp_8k_cached {
+        runtime = 60;
+	personality = oltp;
+	function = generic;
+	cached = 1;
+	directio = 0;
+	iosize = 8k;
+	nshadows = 200;
+	ndbwriters = 10;
+	usermode = 20000;
+	filesize = 100m;
+	memperthread = 1m;
+	workingset = 0;
+}
+
+CONFIG large_db_oltp_8k_uncached {
+        runtime = 60;
+	personality = oltp;
+	function = generic;
+	cached = 0;
+	directio = 1;
+	iosize = 8k;
+	nshadows = 200;
+	ndbwriters = 10;
+	usermode = 20000;
+	filesize = 100m;
+	memperthread = 1m;
+	workingset = 0;
+}
+

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+int()
+{ 
+	echo "Int - kill $!" 
+	kill $!
+}
+
+echo "iostat command $*"
+#truss -o iostat.truss -f -d -p $$ &
+sleep 1
+trap "int" 2
+iostat -xncz 10 >iostat.$1&
+wait

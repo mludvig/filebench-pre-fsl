@@ -1,0 +1,11 @@
+GarbageCollectionTime=hotspot.gc.collector.0.time hotspot.gc.collector.1.time
+GarbageCollectionInvocations=hotspot.gc.collector.0.invocations hotspot.gc.collector.1.invocations
+GarbageCollectionSpace=hotspot.gc.generation.0.space.0.capacity hotspot.gc.generation.0.space.1.capacity hotspot.gc.generation.0.space.2.capacity hotspot.gc.generation.0.capacity.current hotspot.gc.generation.1.capacity.current hotspot.gc.generation.2.capacity.current
+
+HeapGenerations=hotspot.gc.generation.0.space.0.used hotspot.gc.generation.1.space.0.used hotspot.gc.generation.2.space.0.used
+
+CompileInstances=hotspot.ci.CompilerThread0.compiles hotspot.ci.total.compiles hotspot.ci.AdapterThread.compiles hotspot.ci.CompilerThread1.compiles
+CompileTime=hotspot.ci.CompilerThread0.time hotspot.ci.total.time hotspot.ci.AdapterThread.time hotspot.ci.CompilerThread1.time
+
+ClassLoadingTime=hotspot.rt.cl.time
+ClassLoadingInstances=hotspot.rt.cl.classes.loaded hotspot.rt.cl.classes.unloaded

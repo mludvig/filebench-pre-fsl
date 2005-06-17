@@ -1,0 +1,28 @@
+#!/bin/ksh
+
+command=$1
+file=$2
+base=$3
+runtime=$4
+PROGBASE=$5
+arguments=""
+shift
+shift
+shift
+shift
+shift
+
+# Skip to the fifth argument
+# Process the arguments following (as these are to be passed to the statistical tool)
+until [[ $# -eq 0 ]]
+do
+   arguments=$arguments" "$1
+   shift
+done
+
+# Run the statistics command - assumes this is self-terminating
+echo "Running statistics gathering: ${command} ${arguments}"
+$command $arguments >> $base/${command}.$file 2>&1 < /dev/null &
+pid=$!
+sleep $runtime
+kill $pid

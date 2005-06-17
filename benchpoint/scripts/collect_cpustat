@@ -1,0 +1,105 @@
+#!/bin/ksh
+
+command=$1
+file=$2
+base=$3
+runtime=$4
+PROGBASE=$5
+arguments=""
+CPUSTAT=""
+CPUPOST="none"
+shift
+shift
+shift
+shift
+shift
+
+# Skip to the third argument
+# Process the arguments following (as these are to be passed to the statistical tool)
+until [[ $# -eq 0 ]]
+do
+   arguments=$arguments" "$1
+   shift
+done
+
+# Determine the architecture of the machine
+# Determine which cpustat collection script and post-processing script to use
+check_cpu() {
+tmpFile=/tmp/arch
+PRTDIAG="/usr/platform/`uname -m`/sbin/prtdiag"
+RM="rm"
+
+HW=`$PROGBASE/scripts/syshw.sh`
+if [ "$HW" != "SPARC" -a "$HW" != "Xeon" -a "$HW" != "Opteron" ]
+then
+	echo "ERROR: Unsupported Hardware ($HW) for cpustat"
+	echo "ERROR: This script expects 'SPARC', 'Xeon' or 'Opteron' CPUs"
+	exit 1
+fi
+
+if [ "$HW" = "Xeon" ]
+then
+	CPUSTAT="cpustat.xeon"
+	$RM $tmpFile
+	return
+fi
+
+if [ "$HW" = "Opteron" ]
+then
+	CPUSTAT="cpustat.opteron"
+	$RM $tmpFile
+	return
+fi
+
+${PRTDIAG} | egrep "[CS]-|V240" > $tmpFile
+
+# Check for US-IV/US-III+
+chip=`egrep "[CS]-IV|[CS]-III+" $tmpFile`
+if [[ -n $chip  ]]
+then
+        CPUSTAT="cpustat.sh.ch+"
+        CPUPOST="cpustat.sh.ch+.post"
+	$RM $tmpFile
+	return
+fi
+
+# Check for US-III/IIIi - special case for V240
+if test `grep -c V240 $tmpFile` -ge 1
+then
+        chip=`head -1 $tmpFile`
+else
+        chip=`egrep "[CS]-IIIi|[CS]-III" $tmpFile`
+fi
+
+if [[ -n $chip ]]
+then
+        CPUSTAT="cpustat.sh.us3"
+        CPUPOST="cpustat.sh.us3.post"
+	$RM $tmpFile
+	return
+fi
+
+# Check for US-II/IIe/IIi
+chip=`egrep "[CS]-IIi|[CS]-II|[CS]-IIe" $tmpFile`
+if [[ -n $chip ]]
+then
+        CPUSTAT="cpustat.sh.us2"
+        CPUPOST="cpustat.sh.us2.post"
+	$RM $tmpFile
+	return
+fi
+}
+
+# This requires root privileges to run - you may need to install fastsu
+# Check the cpu architecture
+check_cpu
+
+echo "Running statistics gathering: fastsu /usr/bin/priocntl -e -c RT $PROGBASE/scripts/$CPUSTAT $arguments"
+$PROGBASE/bin/fastsu /usr/bin/priocntl -e -c RT $PROGBASE/scripts/$CPUSTAT $arguments > $base/${command}.$file 2>&1 &
+pid=$!
+sleep $runtime
+if test $CPUPOST != "none"
+then
+	echo "Running cpustat post-processing script"
+	$PROGBASE/scripts/$CPUPOST -uk -cpu -ac -i $base/${command}.$file > $base/${command}.${file}.log
+fi

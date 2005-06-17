@@ -1,0 +1,168 @@
+
+DEFAULTS {
+	runtime = 3600;
+        dir = /home/rmc/filebench;
+        stats = /home/rmc/filemicro/stats;
+	filesystem = nfsv3_5210;
+	description = "NAS5210 nfsv3";
+}
+
+CONFIG createfiles {
+	personality = createfiles;
+	function = generic;
+	nfiles = 1000;
+	dirwidth = 20;
+	filesize = 16k;
+	nthreads = 16;
+}
+
+CONFIG copyfiles {
+	function = generic;
+	personality = copyfiles;
+	filesize = 16k;
+	nthreads = 16;
+	nfiles = 10000;
+	dirwidth = 20;
+}
+
+CONFIG deletefiles {
+	function = generic;
+	personality = deletefiles;
+	filesize = 16k;
+	nthreads = 16;
+	nfiles = 50000;
+	meandirwidth = 20;
+}
+
+CONFIG createandalloc128k {
+	function = generic;
+	personality = filemicro_create;
+	nthreads = 1;
+	iosize = 1m;
+	count = 64;
+	nfiles = 1000;
+}
+
+CONFIG createallocsync {
+	function = generic;
+	personality = filemicro_create;
+	nthreads = 1;
+	iosize = 1m;
+	count = 1k;
+	sync = 1;
+}
+
+CONFIG createallocfsync {
+	function = generic;
+	personality = filemicro_writefsync;
+	nthreads = 1;
+}
+
+CONFIG createallocfsyncappend {
+	function = generic;
+	personality = filemicro_createfsyncrand;
+	nthreads = 1;
+}
+
+CONFIG createallocappend {
+	function = generic;
+	personality = filemicro_createrand;
+	nthreads = 1;
+}
+
+CONFIG randread2k {
+	function = generic;
+	personality = filemicro_rread;
+	cached = 0;
+	iosize = 2k;
+}
+
+CONFIG randread2kcached {
+	function = generic;
+	personality = filemicro_rread;
+	cached = 1;
+	iosize = 2k;
+}
+
+CONFIG randwrite2ksync {
+	function = generic;
+	personality = filemicro_rwrite;
+	iosize = 2k;
+	nthreads = 1;
+	sync = 1;
+}
+
+CONFIG randwrite2ksync4thread {
+	function = generic;
+	personality = filemicro_rwrite;
+	iosize = 2k;
+	nthreads = 4;
+	sync = 1;
+}
+
+CONFIG randwrite8kfsynccached {
+	function = generic;
+	personality = filemicro_rwritefsync;
+	iosize = 8k;
+	nthreads = 1;
+	cached = 1;
+}
+
+CONFIG seqread32k {
+	function = generic;
+	personality = filemicro_seqread;
+	iosize = 32k;
+	nthreads = 1;
+	cached = 0;
+	filesize = 100m;
+}
+
+CONFIG seqread32kcached {
+	function = generic;
+	personality = filemicro_seqread;
+	iosize = 32k;
+	nthreads = 1;
+	cached = 1;
+	filesize = 100m;
+}
+
+CONFIG seqwrite32k {
+	function = generic;
+	personality = filemicro_seqwrite;
+	iosize = 32k;
+	count = 32k;
+	nthreads = 1;
+	cached = 0;
+	sync = 0;
+}
+
+CONFIG seqwrite32kdsync {
+	function = generic;
+	personality = filemicro_seqwrite;
+	iosize = 32k;
+	count = 32k;
+	nthreads = 1;
+	cached = 0;
+	sync = 1;
+}
+
+CONFIG seqwriterand8k {
+	function = generic;
+	personality = filemicro_seqwriterand;
+	iosize = 8k;
+	count = 128k;
+	nthreads = 1;
+	cached = 0;
+	sync = 0;
+}
+
+CONFIG unlink1g {
+	function = generic;
+	personality = filemicro_delete;
+	nthreads = 1;
+	filesize = 1g;
+	nfiles = 10;
+}
+
+
+

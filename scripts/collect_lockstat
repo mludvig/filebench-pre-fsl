@@ -1,0 +1,14 @@
+#!/bin/sh
+
+
+#echo "Usage: collect_lockstat <time> <result_file>"
+
+MEASURE=$1
+RESFILE=$2
+
+#exclusive
+/rmc/fastsu /usr/sbin/lockstat -kIi997 -n 100000 sleep $MEASURE  > $RESFILE  2>&1 
+#inclusive
+/rmc/fastsu /usr/sbin/lockstat -kgIi997 -n 100000 sleep $MEASURE  > ${RESFILE}.g  2>&1 
+#locks
+/rmc/fastsu /usr/sbin/lockstat -PA sleep $MEASURE > ${RESFILE}.A  2>&1 

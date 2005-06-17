@@ -1,0 +1,410 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+  <title>Xanadu 2</title>
+</head>
+<body>
+<font face="Arial">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody>
+    <tr>
+      <td><img src="a.gif" width="10" height="1"
+ border="0" alt=""></td>
+      <td bgcolor="#594fbf" valign="top"><font color="#ffffff"><font
+ size="+3">Xanadu 2</font></font>
+      <img src="a.gif" width="170" height="1" alt=""></td>
+      <td><img src="a.gif" width="10" height="1"
+ border="0" alt=""></td>
+      <td width="50%" bgcolor="#fbe249" valign="bottom" nowrap="nowrap">
+      <font color="#594fbf"><font size="+3">Data Selector</font></font>
+      <span class="sp5">&nbsp;</span></td>
+      <td><img src="a.gif" width="10" height="1" border="0" alt=""></td>
+      <td width="50%" bgcolor="#d12124" valign="bottom" nowrap="nowrap">
+      <br>
+      <span class="sp5">&nbsp;</span></td>
+      <td><img src="a.gif" width="10" height="1" border="0" alt=""></td>
+    </tr>
+  </tbody>
+</table>
+</font>
+<p><font face="Arial"><br>
+<br>
+</font></p>
+<form name="Standard" action="/xanadu/Query"
+ method="post">
+ <table cellspacing="2">
+  <tbody>
+    <tr>
+        <td> <h2><font face="Arial"><font color="#594fbf">DB Name</font></font></h2> </td>
+        <td> <h2><font face="Arial"><font color="#594fbf">Passwd</font></font></h2> </td>
+    </tr>
+    <tr>
+        <td> <input type="text" name="dbname" size="15"> </td>
+        <td> <input type="text" name="passwd" size="15"> </td>
+    </tr>
+   </tbody>
+ </table>
+<p><br><p>
+  <h2><font face="Arial"><font color="#594fbf">Y Values</font></font></h2>
+  <p>
+  <table border="1">
+    <thead bgcolor="#d12124"> 
+    <tr>
+    <th rowspan="2"><font color="white">Data<br>Series</font></th>
+    <th rowspan="2"><font color="white">Plot</font></th>
+    <th colspan="6"><font color="white">Filters</font></th>
+    </tr>
+    <tr>
+    <th colspan="2"><font color="white">Condition 1</font></th>
+    <th colspan="2"><font color="white">Condition 2</font></th>
+    <th colspan="2"><font color="white">Condition 3</font></th>
+    </tr>
+    </thead> 
+    <tbody>
+      <tr>
+        <td align="center"> 1 <br></td>
+        <td>
+		<select name="yplot0"> 
+		  <option>Value
+		</select>
+	</td>
+        <td>
+		<select name="ysel00"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval00" size="15"></td>
+        <td>
+		<select name="ysel01"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval01" size="15"></td>
+        <td>
+		<select name="ysel02"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval02" size="15"></td>
+      </tr>
+
+      <tr>
+        <td align="center"> 2</td>
+        <td>
+		<select name="yplot1"> 
+		  <option>Value
+		</select>
+	</td>
+        <td>
+		<select name="ysel10"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval10" size="15"></td>
+        <td>
+		<select name="ysel11"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval11" size="15"></td>
+        <td>
+		<select name="ysel12"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval12" size="15"></td>
+      </tr>
+      <tr>
+        <td align="center"> 3 </td>
+        <td>
+		<select name="yplot2"> 
+		  <option>Value
+		</select>
+	</td>
+        <td>
+		<select name="ysel20"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval20" size="15"></td>
+        <td>
+		<select name="ysel21"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval21" size="15"></td>
+        <td>
+		<select name="ysel22"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval22" size="15"></td>
+      </tr>
+      <tr>
+        <td align="center"> 4 </td>
+        <td>
+		<select name="yplot3"> 
+		  <option>Value
+		</select>
+	</td>
+        <td>
+		<select name="ysel30"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval30" size="15"></td>
+        <td>
+		<select name="ysel31"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval31" size="15"></td>
+        <td>
+		<select name="ysel32"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval32" size="15"></td>
+      </tr>
+      <tr>
+        <td align="center"> 5 </td>
+        <td>
+		<select name="yplot4"> 
+		  <option>Value
+		</select>
+	</td>
+        <td>
+		<select name="ysel40"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval40" size="15"></td>
+        <td>
+		<select name="ysel41"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval41" size="15"></td>
+        <td>
+		<select name="ysel42"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="yval42" size="15"></td>
+      </tr>
+    </tbody>
+  </table>
+  </p>
+<p><br><p>
+
+  <h2><font face="Arial"><font color="#594fbf">X Values</font></font></h2>
+  <p> <font face="Arial"><font color="red"> </font></font>
+  <table border="1" cellpadding="3">
+    <thead bgcolor="#fbe249"> 
+    <tr>
+    <th rowspan="2"><font color="#594fbf">Plot</font></th>
+    <th colspan="6"><font color="#594fbf">Filters</font></th>
+    </tr>
+    <tr>
+    <th colspan="2"><font color="#594fbf">Condition 1</font></th>
+    <th colspan="2"><font color="#594fbf">Condition 2</font></th>
+    <th colspan="2"><font color="#594fbf">Condition 3</font></th>
+    </tr>
+    </thead> 
+    <tbody>
+      <tr>
+        <td>
+		<select name="xplot0"> 
+		  <option>Value
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td>
+		<select name="xsel00"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="xval00" size="15"></td>
+        <td>
+		<select name="xsel01"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="xval01" size="15"></td>
+        <td>
+		<select name="xsel02"> 
+		  <option>Row Key
+		  <option>Col Key
+		  <option>Group Name
+		  <option>Tool Name
+		  <option>Run Ord
+		  <option>Run Desc
+		  <option>Run Mach
+		  <option>Expt Name
+		  <option>Proj Name
+		</select>
+	</td>
+        <td><input type="text" name="xval02" size="15"></td>
+      </tr>
+    </tbody>
+  </table>
+  </p>
+  <center><font face="Arial"> </font>
+  <p><font face="Arial"><input type="submit" name="SubmitButton"
+ value="Graph!"><input type="reset" name="ResetButton" value="Reset"> </font></p>
+  </center>
+</form>
+<p>
+</p>
+<p><br>
+<br>
+</p>
+<p> </p>
+<hr>
+<address>The Xanadu Team</address>
+</body>
+</html>

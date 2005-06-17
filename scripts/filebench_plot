@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# Plot a multi-dataset file, using the first column as the 
+# index to each set. I.e. one plotline per value in column 1.
+#
+TITLE=$1
+FILENAME=$2.csv
+PLOTNAME=$3
+XLABEL=$4
+YLABEL=$5
+DATUMS=$6
+CSVFORMAT=$7
+LD_LIBRARY_PATH=$HOME/local/lib
+export LD_LIBRARY_PATH
+
+echo "Running gnuplot on $FILENAME"
+
+cat >$PLOTNAME.gpl <<EOF
+set term postscript landscape "Helvetica" 12
+set size 1, 1
+set clip one
+set border
+set key top
+
+set autoscale xy
+set term png
+
+set title "$TITLE"
+set ylabel "$YLABEL"
+set xlabel "$XLABEL"
+set output "$PLOTNAME.png"
+EOF
+
+echo "plot \c" >>$PLOTNAME.gpl
+
+setname=`cat $FILENAME | head -1 | sed 's/,.*//'`
+
+index=0
+cat $FILENAME | grep . | tail +2 | sed 's/^\([^,]*,[^,]*\),.*/\1/' |uniq | while read dataset
+do
+  if [ $index -gt 0 ]
+  then
+    echo ", \\" >>$PLOTNAME.gpl
+  fi
+
+  echo " \"$FILENAME\" index $index:$index using $DATUMS '$CSVFORMAT' smooth unique title \"$dataset\"\c" >>$PLOTNAME.gpl
+  index=`expr $index + 1`
+done
+
+
+cat >>$PLOTNAME.gpl <<EOF2
+
+set size .6, .6
+set output "${PLOTNAME}_small.png"
+EOF2
+echo "plot \c" >>$PLOTNAME.gpl
+index=0
+cat $FILENAME | grep . | tail +2 | sed 's/^\([^,]*,[^,]*\),.*/\1/' |uniq | while read dataset
+do
+  if [ $index -gt 0 ]
+  then
+    echo ", \\" >>$PLOTNAME.gpl
+  fi
+
+  echo " \"$FILENAME\" index $index:$index using $DATUMS '$CSVFORMAT' smooth unique title \"$dataset\"\c" >>$PLOTNAME.gpl
+  index=`expr $index + 1`
+done
+
+/opt/filebench/bin/gnuplot <$PLOTNAME.gpl
+

@@ -1,0 +1,95 @@
+#!/bin/sh
+BASE=$1
+SCRIPTS=$BASE/scripts
+# Drop metadisk d10 if it exists
+metaclear d10
+# Format the disk VTOCs
+$SCRIPTS/fmtfs
+# Initialise the disks on the test system - may require d*
+time metainit d10 1 83     /dev/dsk/c1t2d1s2 \
+        /dev/dsk/c3t0d0s2 \
+        /dev/dsk/c3t1d0s2 \
+        /dev/dsk/c3t2d0s2 \
+        /dev/dsk/c3t3d0s2 \
+        /dev/dsk/c3t4d0s2 \
+        /dev/dsk/c3t5d0s2 \
+        /dev/dsk/c3t6d0s2 \
+        /dev/dsk/c3t9d0s2 \
+        /dev/dsk/c3t10d0s2 \
+        /dev/dsk/c3t16d0s2 \
+        /dev/dsk/c3t17d0s2 \
+        /dev/dsk/c3t18d0s2 \
+        /dev/dsk/c3t19d0s2 \
+        /dev/dsk/c3t20d0s2 \
+        /dev/dsk/c3t21d0s2 \
+        /dev/dsk/c3t22d0s2 \
+        /dev/dsk/c3t23d0s2 \
+        /dev/dsk/c3t24d0s2 \
+        /dev/dsk/c3t26d0s2 \
+        /dev/dsk/c4t0d0s2 \
+        /dev/dsk/c4t1d0s2 \
+        /dev/dsk/c4t2d0s2 \
+        /dev/dsk/c4t3d0s2 \
+        /dev/dsk/c4t4d0s2 \
+        /dev/dsk/c4t5d0s2 \
+        /dev/dsk/c4t6d0s2 \
+        /dev/dsk/c4t7d0s2 \
+        /dev/dsk/c4t8d0s2 \
+        /dev/dsk/c4t9d0s2 \
+        /dev/dsk/c4t10d0s2 \
+        /dev/dsk/c4t16d0s2 \
+        /dev/dsk/c4t17d0s2 \
+        /dev/dsk/c4t18d0s2 \
+        /dev/dsk/c4t19d0s2 \
+        /dev/dsk/c4t20d0s2 \
+        /dev/dsk/c4t21d0s2 \
+        /dev/dsk/c4t22d0s2 \
+        /dev/dsk/c4t23d0s2 \
+        /dev/dsk/c4t24d0s2 \
+        /dev/dsk/c4t25d0s2 \
+        /dev/dsk/c4t26d0s2 \
+        /dev/dsk/c5t0d0s2 \
+        /dev/dsk/c5t1d0s2 \
+        /dev/dsk/c5t2d0s2 \
+        /dev/dsk/c5t3d0s2 \
+        /dev/dsk/c5t4d0s2 \
+        /dev/dsk/c5t5d0s2 \
+        /dev/dsk/c5t6d0s2 \
+        /dev/dsk/c5t7d0s2 \
+        /dev/dsk/c5t8d0s2 \
+        /dev/dsk/c5t9d0s2 \
+        /dev/dsk/c5t10d0s2 \
+        /dev/dsk/c5t16d0s2 \
+        /dev/dsk/c5t17d0s2 \
+        /dev/dsk/c5t18d0s2 \
+        /dev/dsk/c5t20d0s2 \
+        /dev/dsk/c5t21d0s2 \
+        /dev/dsk/c5t22d0s2 \
+        /dev/dsk/c5t24d0s2 \
+        /dev/dsk/c5t25d0s2 \
+        /dev/dsk/c5t26d0s2 \
+        /dev/dsk/c6t0d0s2 \
+        /dev/dsk/c6t1d0s2 \
+        /dev/dsk/c6t2d0s2 \
+        /dev/dsk/c6t3d0s2 \
+        /dev/dsk/c6t4d0s2 \
+        /dev/dsk/c6t6d0s2 \
+        /dev/dsk/c6t7d0s2 \
+        /dev/dsk/c6t8d0s2 \
+        /dev/dsk/c6t9d0s2 \
+        /dev/dsk/c6t10d0s2 \
+        /dev/dsk/c6t16d0s2 \
+        /dev/dsk/c6t17d0s2 \
+        /dev/dsk/c6t18d0s2 \
+        /dev/dsk/c6t20d0s2 \
+        /dev/dsk/c6t21d0s2 \
+        /dev/dsk/c6t22d0s2 \
+        /dev/dsk/c6t23d0s2 \
+        /dev/dsk/c6t24d0s2 \
+        /dev/dsk/c6t25d0s2 \
+        /dev/dsk/c6t26d0s2 \
+        /dev/dsk/c8t1d0s2 -i 1024k
+mkfs -F ufs -o nsect=128,ntrack=48,bsize=8192,fragsize=8192,cgsize=143,free=1 -o rps=1,nbpi=1161051,opt=t,apc=0,nrpos=1,maxcontig=128,mtb=y /dev/md/rdsk/d10 4437262240
+mkdir /filebench
+mount /dev/md/dsk/d10 /filebench
+chmod 777 /filebench

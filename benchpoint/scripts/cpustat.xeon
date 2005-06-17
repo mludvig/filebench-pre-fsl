@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# Copyright (c) 2004 by Sun Microsystems, Inc.
+# All rights reserved.
+
+# Contact: zenon.fortuna@sun.com
+
+#
+# This "cs86.sh" scripts runs "cpustat" with options to generate data
+# suitable for the Workload Characterization Project processing.
+# There are 3 basic groups of the cpustat data collection:
+#  the "MemoryIO", the "CacheIO" and the "CPI Components" groups.
+
+CPUSTAT=/usr/sbin/cpustat
+INTERVAL=1
+COUNT1=9
+REP=2
+WHOAMI=/usr/ucb/whoami
+
+user=`$WHOAMI`
+if [ "$user" != "root" ]; then
+  echo ""
+  echo cpustat.xeon needs to be run by root.
+  echo ""
+  exit 1
+fi
+
+if [ "$#" != 0 ]; then
+    REP=$1
+fi
+echo '#' cpustat script for Xeon, version=1.0.0
+echo '#' Assumed $REP cycles
+
+COUNT=`expr $COUNT1 \* $REP`
+
+$CPUSTAT \
+ -c pic0=BSQ_cache_reference,emask0=7,\
+pic1=IOQ_allocation,emask1=61344,compare1=1,edge1=1,threshold1=0,\
+pic3=page_walk_type,emask3=3,\
+pic12=instr_retired,emask12=3 \
+ -c pic0=BSQ_cache_reference,emask0=7,\
+pic1=IOQ_allocation,emask1=61344,compare1=1,edge1=1,threshold1=0,\
+pic3=page_walk_type,emask3=3,\
+pic12=instr_retired,emask12=3,sys \
+ -c pic0=BSQ_cache_reference,emask0=7,\
+pic1=IOQ_allocation,emask1=61344,compare1=1,edge1=1,threshold1=0,\
+pic3=page_walk_type,emask3=3,\
+pic12=instr_retired,emask12=3,sys,nouser \
+ -c pic0=BSQ_cache_reference,emask0=256,\
+pic1=global_power_events,emask1=1,compare1=1,complement1=1,threshold1=15,\
+pic8=memory_cancel,emask8=2,\
+pic13=mispred_branch_retired,emask13=1 \
+ -c pic0=BSQ_cache_reference,emask0=256,\
+pic1=global_power_events,emask1=1,compare1=1,complement1=1,threshold1=15,\
+pic8=memory_cancel,emask8=2,\
+pic13=mispred_branch_retired,emask13=1,sys \
+ -c pic0=BSQ_cache_reference,emask0=256,\
+pic1=global_power_events,emask1=1,compare1=1,complement1=1,threshold1=15,\
+pic8=memory_cancel,emask8=2,\
+pic13=mispred_branch_retired,emask13=1,sys,nouser \
+ -c pic0=BSQ_cache_reference,emask0=512,\
+pic1=IOQ_allocation,emask1=61376,compare1=1,edge1=1,threshold1=0,\
+pic2=BPU_fetch_request,emask2=1,\
+pic4=TC_deliver_mode,emask4=255 \
+ -c pic0=BSQ_cache_reference,emask0=512,\
+pic1=IOQ_allocation,emask1=61376,compare1=1,edge1=1,threshold1=0,\
+pic2=BPU_fetch_request,emask2=1,\
+pic4=TC_deliver_mode,emask4=255,sys \
+ -c pic0=BSQ_cache_reference,emask0=512,\
+pic1=IOQ_allocation,emask1=61376,compare1=1,edge1=1,threshold1=0,\
+pic2=BPU_fetch_request,emask2=1,\
+pic4=TC_deliver_mode,emask4=255,sys,nouser \
+   $INTERVAL $COUNT
