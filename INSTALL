@@ -1,0 +1,29 @@
+
+Building Solaris a Solaris Package
+----------------------------------
+
+To build a full Solaris package, you will need access to a Solaris AMD64 
+and Solaris SPARC platform
+
+On each platform, in the same directory:
+
+$ ./configure
+$ make clean
+$ make package
+
+The first will cite a lack of binaries from the other platform. The package
+will be built once binaries are present for both ISA's.
+
+
+Building on Linux and Other
+---------------------------
+
+We are currently testing the build on MacOSX and Linux 2.4/2.6.
+
+These ports are dependent on the gsl libraries version 1.4 or greater.
+
+To compile:
+
+$ ./configure --with-gsl=<path to gsl>
+$ make install
+

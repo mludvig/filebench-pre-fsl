@@ -69,7 +69,7 @@ define process name=shadow,instances=$nshadows
   }
 }
 
-echo "OLTP Version $Revision: 1.14 $ $Date: 2005/06/14 21:10:51 $ personality successfully loaded"
+echo "OLTP Version $Revision: 1.16 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage " "
 usage "       set \$filesize=<size>   defaults to $filesize, n.b. there are ten files of this size"

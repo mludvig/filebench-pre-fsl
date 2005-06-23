@@ -291,7 +291,7 @@ var_ref_string(char *name)
 	return(&var->var_string);
 }
 
-static var_t *
+var_t *
 var_find(char *name)
 {
 	var_t *var;

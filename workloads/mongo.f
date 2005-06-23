@@ -30,7 +30,7 @@ define process name=filereader,instances=1
   }
 }
 
-echo  "Mongo-like Version $Revision: 1.9 $ $Date: 2005/06/14 19:36:36 $ personality successfully loaded"
+echo  "Mongo-like Version $Revision: 1.11 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>    defaults to $filesize"
 usage "       set \$nfiles=<value>     defaults to $nfiles"

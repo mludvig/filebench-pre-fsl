@@ -22,6 +22,7 @@ typedef struct procflow {
 	int               pf_running;
 	struct procflow   *pf_next;
 	pid_t             pf_pid;
+	pthread_t         pf_tid;
 	struct threadflow *pf_threads;
         int               pf_attrs;
 	var_integer_t     pf_nice;

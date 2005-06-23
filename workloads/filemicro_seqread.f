@@ -25,7 +25,7 @@ define process name=filereader,instances=1
   }
 }
 
-echo  "FileMicro-SeqRead Version $Revision: 1.6 $ $Date: 2005/06/14 21:10:50 $ personality successfully loaded"
+echo  "FileMicro-SeqRead Version $Revision: 1.8 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$iosize=<size>    defaults to $iosize"
 usage "       set \$filesize=<size>  defaults to $filesize"

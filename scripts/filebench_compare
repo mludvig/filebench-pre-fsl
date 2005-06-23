@@ -22,7 +22,6 @@ print HTML "<body>";
 #
 foreach $dir (@ARGV) {
 
-    print "dir = $dir\n";
     printf ("Generating html for $dir\n");
     open (PROFILE, "<$dir/thisrun.prof");
     $description = <PROFILE>;
@@ -36,9 +35,9 @@ foreach $dir (@ARGV) {
 	$dataset =~ s/.*\/(.+)$/$1/;
 	$dataset =~ s/\/$//;
         $desc{$dataset} = "$description";
-	print "dataset = $dataset\n";
-	print "workload = $workload\n";
-	print "fstype = $fstype\n";
+#	print "dataset = $dataset\n";
+#	print "workload = $workload\n";
+#	print "fstype = $fstype\n";
 	open (STATS, $file);
 	$tmp = <STATS>;
 	while (<STATS>) {

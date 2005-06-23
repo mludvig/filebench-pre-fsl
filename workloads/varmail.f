@@ -35,7 +35,7 @@ define process name=filereader,instances=1
   }
 }
 
-echo  "Varmail Version $Revision: 1.21 $ $Date: 2005/06/14 19:36:36 $ personality successfully loaded"
+echo  "Varmail Version $Revision: 1.24 $ $Date: 2005/06/22 08:08:30 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>    defaults to $filesize"
 usage "       set \$nfiles=<value>     defaults to $nfiles"
@@ -47,3 +47,4 @@ usage " dirdepth therefore defaults to dir depth of 1 as in postmark"
 usage " set $meandir lower to increase depth beyond 1 if desired)"
 usage " "
 usage "       run runtime (e.g. run 60)"
+

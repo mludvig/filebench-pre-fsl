@@ -28,7 +28,7 @@ define process name=filecreater,instances=1
   }
 }
 
-echo  "FileMicro-WriteFsync Version $Revision: 1.6 $ $Date: 2005/06/14 19:36:36 $ personality successfully loaded"
+echo  "FileMicro-WriteFsync Version $Revision: 1.8 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$iosize=<size>    defaults to $iosize"
 usage "       set \$count=<value>    defaults to $count"

@@ -23,7 +23,7 @@ define process name=rand-read,instances=1
   }
 }
 
-echo "Random Read Version $Revision: 1.9 $ $Date: 2005/06/09 23:25:59 $ IO personality successfully loaded"
+echo "Random Read Version $Revision: 1.11 $ $Date: 2005/06/21 21:18:52 $ IO personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>   defaults to $filesize"
 usage "       set \$iosize=<value>    defaults to $iosize"

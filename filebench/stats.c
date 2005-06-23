@@ -31,9 +31,7 @@
 /* Global statistics */
 flowstat_t *globalstats = NULL;
 
-#if defined(HAVE_LIBKSTAT) || defined(LINUX_PORT)
 static hrtime_t stats_cputime = 0;
-#endif
 
 #ifdef HAVE_LIBKSTAT
 static kstat_ctl_t *kstatp = NULL;
@@ -105,7 +103,7 @@ kstats_read_cpu()
 
 	return (10000000LL * cputime);
 }
-#endif /* HAVE_LIBKSTAT */
+#else /* HAVE_LIBKSTAT */
 #ifdef HAVE_PROC_STAT
 static FILE* statfd = 0;
 vinteger_t
@@ -138,9 +136,14 @@ kstats_read_cpu()
 	return (user+nice+system)*1000000;
 }
 
-#endif /* HAVE_PROC_STAT */
-
-
+#else /* HAVE_PROC_STAT */
+vinteger_t
+kstats_read_cpu()
+{
+	return(0);
+}
+#endif
+#endif /* HAVE_LIBKSTAT */
 
 hrtime_t
 kstats_read_cpu_relative()
@@ -150,7 +153,6 @@ kstats_read_cpu_relative()
 	cputime = kstats_read_cpu();
 	return (cputime - stats_cputime);
 }
-
 
 /*
  * IO Overhead CPU is the amount of CPU that is incurred running
@@ -317,6 +319,8 @@ stats_init()
 {
 #if defined(HAVE_LIBKSTAT) || defined(LINUX_PORT)
 	stats_cputime = kstats_read_cpu();
+#else
+	stats_cputime = 0;
 #endif /* HAVE_LIBKSTAT */
 }
 
@@ -666,6 +670,8 @@ stats_clear()
 
 #ifdef HAVE_LIBKSTAT
 	stats_cputime = kstats_read_cpu();
+#else
+	stats_cputime = 0;
 #endif /* HAVE_LIBKSTAT */
 
 	if (globalstats == NULL) {

@@ -16,7 +16,7 @@
 #include <stdint.h>
 #endif
 #include "utils.h"
-#include "parser.h"
+#include "parsertypes.h"
 
 static const char PNAME_FMT[] = "%s: ";
 static const char ERRNO_FMT[] = ": %s\n";

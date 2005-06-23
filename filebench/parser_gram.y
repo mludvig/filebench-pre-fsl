@@ -22,7 +22,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/wait.h>
-#include "parser.h"
+#include "parsertypes.h"
 #include "filebench.h"
 #include "utils.h"
 #include "stats.h"
@@ -42,7 +42,7 @@ int noproc = 0;
 var_t *var_list = NULL;
 pidlist_t *pidlist = NULL;
 char *cwd = NULL;
-FILE *parentscript;
+FILE *parentscript = NULL;
 	
 /* yacc externals */
 extern FILE *yyin;
@@ -100,6 +100,7 @@ static void parser_statssnap(cmd_t *cmd);
 static void parser_directory(cmd_t *cmd);
 static void parser_eventgen(cmd_t *cmd);
 static void parser_run(cmd_t *cmd);
+static void parser_run_variable(cmd_t *cmd);
 static void parser_help(cmd_t *cmd);
 static void arg_parse(const char *command);
 static void parser_abort(int arg);
@@ -855,7 +856,7 @@ run_command: FSC_RUN FSV_VAL_INT
 		YYERROR;
 	$$->cmd = parser_run_variable;
 	$$->cmd_tgt1 = stralloc($2);
-};
+}
 | FSC_RUN
 {
 	vinteger_t *integer;
@@ -896,7 +897,8 @@ load_command: FSC_LOAD FSV_STRING
 	strcat(loadfile, ".f");
 
         if ((newfile = fopen(loadfile, "r")) == NULL) {
-		strcpy(loadfile, "/opt/filebench/workloads/");
+		strcpy(loadfile, FILEBENCHDIR);
+		strcat(loadfile, "/workloads/");
 		strcat(loadfile, $2);
 		strcat(loadfile, ".f");
         	if ((newfile = fopen(loadfile, "r")) == NULL) {
@@ -907,11 +909,12 @@ load_command: FSC_LOAD FSV_STRING
 	
         parentscript = yyin;
 	yyin = newfile;
+	yy_switchfileparent(yyin);
 };
 
 entity: FSE_PROC {$$ = FSE_PROC;}
 | FSE_THREAD {$$ = FSE_THREAD;}
-| FSE_FILESET {$$ = FSE_FILESET;};
+| FSE_FILESET {$$ = FSE_FILESET;}
 | FSE_FILE {$$ = FSE_FILE;};
 
 value: FSV_VAL_INT { $$.i = $1;}
@@ -958,7 +961,7 @@ attr_name: attrs_define_file
 |attrs_eventgen;
 
 attrs_define_proc:
-FSA_NICE { $$ = FSA_NICE;};
+FSA_NICE { $$ = FSA_NICE;}
 |FSA_INSTANCES { $$ = FSA_INSTANCES;};
 
 attrs_define_file:
@@ -1113,7 +1116,8 @@ main(int argc, char *argv[])
 	}
 
 	filebench_init();
-	
+
+#ifdef USE_PROCESS_MODEL	
 	if (*procname) {
 		pid = getpid();
 
@@ -1130,6 +1134,7 @@ main(int argc, char *argv[])
 		}
 		exit(1);
 	}
+#endif
 
 	pid = getpid();
 	ipc_init();
@@ -2469,8 +2474,11 @@ usage(int help)
 int
 yywrap()
 {
+	char buf[1024];
+
 	if (dofile && parentscript) {
 		yyin = parentscript;
+		yy_switchfilescript(yyin);
 		parentscript = NULL;
 		return(0);
 	} else

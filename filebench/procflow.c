@@ -44,6 +44,7 @@ procflow_createproc(procflow_t *procflow)
 	pid_t pid;
 	char syscmd[1024];
 
+#ifdef USE_PROCESS_MODEL
 
 	sprintf(instance, "%d", procflow->pf_instance);
 	sprintf(procname, "%s", procflow->pf_name);
@@ -107,12 +108,20 @@ procflow_createproc(procflow_t *procflow)
 	} else {
 		procflow->pf_pid = pid;
 	}
-
+#else
+	procflow->pf_running = 1;
+        if (pthread_create(&procflow->pf_tid, NULL,
+                (void *(*)(void*))threadflow_init, procflow) != 0) {
+                filebench_log(LOG_ERROR, "proc-thread create failed");
+		procflow->pf_running = 0;
+	}
+#endif
 	filebench_log(LOG_DEBUG_IMPL, "procflow_createproc created pid %d", pid);
 
 	return(0);
 }
 
+#ifdef USE_PROCESS_MODEL
 int
 procflow_exec(char *name, int instance)
 {
@@ -157,6 +166,8 @@ procflow_exec(char *name, int instance)
 	procflow->pf_running = 0;
 	exit(0);
 }
+#endif
+
 
 int
 procflow_init()
@@ -197,6 +208,7 @@ procflow_init()
 	return(ret);
 }
 
+#ifdef USE_PROCESS_MODEL
 static void
 procflow_wait(pid_t pid)
 {
@@ -207,6 +219,7 @@ procflow_wait(pid_t pid)
 	while ((wpid = waitpid(getpid() * -1, &stat, WNOHANG)) > 0)
 		filebench_log(LOG_DEBUG_IMPL, "Waited for pid %lld", wpid);
 }
+#endif
 
 int
 procflow_delete(procflow_t *procflow)
@@ -240,6 +253,7 @@ procflow_delete(procflow_t *procflow)
 			sleep(1);
 			waits++;
 			ipc_mutex_lock(&filebench_shm->procflow_lock);				
+#ifdef USE_PROCESS_MODEL
 			if (waits > 10) {
 				kill(procflow->pf_pid, SIGKILL);
 				filebench_log(LOG_DEBUG_SCRIPT, "Had to kill process %s-%d %d!",
@@ -248,10 +262,13 @@ procflow_delete(procflow_t *procflow)
 				    procflow->pf_pid);
 				procflow->pf_running = 0;
 			}
+#endif
 
 		}
 
+#ifdef USE_PROCESS_MODEL
 		procflow_wait(procflow->pf_pid);
+#endif
 		filebench_shm->proclist = procflow->pf_next;
 		ipc_free(FILEBENCH_PROCFLOW, (char *)procflow);
 		return(0);
@@ -277,6 +294,7 @@ procflow_delete(procflow_t *procflow)
 				sleep(1);
 				waits++;
 				ipc_mutex_lock(&filebench_shm->procflow_lock);	
+#ifdef USE_PROCESS_MODEL
 				if (waits > 3) {
 					kill(entry->pf_next->pf_pid, SIGKILL);
 					filebench_log(LOG_DEBUG_SCRIPT, "Had to kill process %s-%d %d!",
@@ -285,6 +303,7 @@ procflow_delete(procflow_t *procflow)
 					    entry->pf_next->pf_pid);
 					entry->pf_next->pf_running = 0;
 				}				
+#endif
 			}
 
 			/* Delete */
@@ -293,7 +312,9 @@ procflow_delete(procflow_t *procflow)
 			    entry->pf_next->pf_name,
 			    entry->pf_next->pf_instance,
 			    entry->pf_next->pf_pid);
+#ifdef USE_PROCESS_MODEL
 			procflow_wait(entry->pf_next->pf_pid);
+#endif
 			ipc_free(FILEBENCH_PROCFLOW, (char *)procflow);
 			entry->pf_next = entry->pf_next->pf_next;
 			return(0);

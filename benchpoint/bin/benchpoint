@@ -1,55 +1,43 @@
 #!/usr/bin/perl 
+#
+# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License.
+# See the file LICENSING in this distribution for details.
+#
+
 
 use POSIX;
 
 my $QUIT = 0;
 my $USE_XANADU = 0;
 my $TIMEOUT = 60;
-my $PROGBASE = "";
+my $FILEBENCH = "DEFINE_FILEBENCHDIR";
+my $PROGDIR = "DEFINE_PROGDIR";
+my $FSCRIPT;
+my $SCRIPT_NO;
 my @CONFLIST;
 my %DEFDATA = ();
 my %CONFDATA = ();
 my %STATSHASH = ();
-my ($PHNDL);
 @ext_stats=();
 @file_stats=();
 @arg_stats=();
 @pid_arr=();
 
-## Locate the base directory
-($PROGBASE) = $0 =~ m/(.*\/).*$/;
-
 # The following if test caters for running benchpoint from an alternative path
-if (-r "$ENV{PWD}/$PROGBASE") {
-	$PROGBASE = "$ENV{PWD}/$PROGBASE";
-}
-
-if($PROGBASE =~ /bin/) {
-    ($PROGBASE) = $PROGBASE =~ m/(.*\/)bin\/$/;
-}
-
-if($PROGBASE eq "") {
-    $PROGBASE = "../";
-}
-
-push(@INC, "$PROGBASE/bin");
-
-if (-f "$PROGBASE/bin/filebench") {
-	$FILEBENCH = "$PROGBASE/bin/filebench";
-} else {
-	$FILEBENCH="/opt/filebench/bin/filebench";
-}
-
-require "Comm.pl";
-&Comm::init();
+#if (-r $ENV{"FILEBENCH") {
+#	$FILEBENCH = $ENV{"FILEBENCH"};
+#}
 
 ##############################################################################
 ## Configuration hash data operations
 ##############################################################################
 
 # This sub allows a function program to extract the base directory for benchpoint
-sub get_PROGBASE {
-    return ($PROGBASE);
+sub get_FILEBENCH {
+    return ($FILEBENCH);
 }
 
 sub get_STATSBASE {
@@ -95,114 +83,81 @@ sub conf_hash {
 ## Filebench Operations
 ##############################################################################
 
-sub check_init {
-    if($PHNDL) {
-	return(1);
-    }
-    return(0);
-}
-
-sub prompt_wait {
-    &interact("filebench>", $PHNDL, "filebench>");
-}
-
 sub op_init {
-    $PHNDL = &open_proc("$FILEBENCH");
 }
 
 sub op_load {
     my ($workload) = shift;
-    if(check_init()) {
-        if($workload ne '') {
-	    # Load the df
-            print $PHNDL "load $workload\n";
-            prompt_wait();
+    my $scriptname = conf_reqval("statsdir") . "/thisrun.f";
+    if($workload ne '') {
+      	   open (FSCRIPT, ">$scriptname");
+      	   chmod (0755, $scriptname);
+      	   print FSCRIPT "#!$PROGDIR/filebench -f\n\n";
+           # Load the df
+           print FSCRIPT "load $workload\n";
+           # Load the user defined defaults
+           op_load_defaults();
 
-	    print $PHNDL "\n";
-	    prompt_wait();
+           # Create the associated files and filesets
+           print FSCRIPT "create files\n";	
 
-	    # Load the user defined defaults
-            op_load_defaults();
+           print FSCRIPT "create filesets\n";	
 
-            # Create the associated files and filesets
-            print $PHNDL "create files\n";	
-            prompt_wait();
-
-            print $PHNDL "create filesets\n";	
-            prompt_wait();
-
-            # Create the associated processes
-            print $PHNDL "create processes\n";	
-            prompt_wait();
-        }
-        return(0);
+           # Create the associated processes
+           print FSCRIPT "create processes\n";	
     }
-    return(1);
+    $SCRIPT_NO = 1;
+    return(0);
 }
 
 sub op_set {
     my ($var, $val) = @_;
-    if(check_init()) {
-	if($var eq 'debug') {
-	    print $PHNDL "debug $val\n";
-	    prompt_wait();
-	} elsif($var ne '') {
-	    print $PHNDL "set \$$var=$val\n";
-	    prompt_wait();
-	}
-	return(0);
+    if($var eq 'debug') {
+	    print FSCRIPT "debug $val\n";
+    } elsif($var ne '') {
+	    print FSCRIPT "set \$$var=$val\n";
     }
-    return(1);
+    return(0);
 }
 
 sub op_eventrate {
     my ($eventrate) = shift;
-    if(check_init()) {
 	if ($eventrate ne '') {
-		print $PHNDL "eventgen rate=$eventrate\n";
-		prompt_wait();
+		print FSCRIPT "eventgen rate=$eventrate\n";
 		return(0);
 	}
-    }
-    return(1);
 }
 
 sub op_run {
     my ($time) = shift;
-    if(check_init()) {
-	print $PHNDL "run $time\n";
-	prompt_wait();
-	return(0);
-    }
-    return(1);
+    print FSCRIPT "run $time\n";
+    return(0);
 }
 
 sub op_quit {
     if($QUIT) {
 	# Shutdown the appropriate processes
-	print $PHNDL "shutdown processes\n";
-	prompt_wait();
+	print FSCRIPT "shutdown processes\n";
 
 	# Quit filebench
-        print $PHNDL "quit\n";
+        print FSCRIPT "quit\n";
+	close(FSCRIPT);
+	print "Running " . conf_reqval("statsdir") . "/thisrun.f\n";
+	system (conf_reqval("statsdir") . "/thisrun.f");
     } else {
         print STDOUT "ERROR: pre-mature call to op_quit\n";
     }
 }
 
 sub op_statsdir {
-    if(check_init()) {
-	print $PHNDL "stats directory ".conf_reqval("statsdir")."\n";
-	prompt_wait();
-	return(0);
-    }
-    return(1);
+    print FSCRIPT "stats directory ".conf_reqval("statsdir")."\n";
+    return(0);
 }
 
 sub op_indiv_vars {
     my ($ivar) = shift;
-    print $PHNDL "echo \"\$$ivar\"\n";
-    my ($imatch, $ierr, $ibefore, $iafter) = &expect($PHNDL,
+    print FSCRIPT "echo \"\$$ivar\"\n";
+    my ($imatch, $ierr, $ibefore, $iafter) = &expect(FSCRIPT,
 						 $TIMEOUT, "filebench>");
    
     $ibefore =~ /(.*): (.*): (-*\d+)/;
@@ -214,8 +169,8 @@ sub op_indiv_vars {
 
 sub op_indiv_stats {
     my ($var) = shift;
-    print $PHNDL "echo \"\${stats.$var}\"\n";
-    my ($match, $err, $before, $after) = &expect($PHNDL,
+    print FSCRIPT "echo \"\${stats.$var}\"\n";
+    my ($match, $err, $before, $after) = &expect(FSCRIPT,
 						 $TIMEOUT, "filebench>");
    
     $before =~ /(.*): (.*): (-*\d+)/;
@@ -228,143 +183,123 @@ sub op_indiv_stats {
 sub op_stats {
     my ($time) = shift;
     my ($statsfile) = shift;
-    if(check_init()) {
 	if (($time ne '') && ($statsfile ne '')) {
 	    # Clear the current statistics buffers
-	    print $PHNDL "stats clear\n";
-	    prompt_wait();
+	    print FSCRIPT "stats clear\n";
 
 	    # Start external statistics collection (if any)
 	    # Note all statistics arrays MUST be the same length !
+	    $script = conf_reqval("statsdir") . "/stats$SCRIPT_NO.sh";
+	    open (RUNSCRIPT, ">$script");
+	    chmod (0755, $script);
+	    print FSCRIPT "system \"$script\"\n";
+	    $SCRIPT_NO++;
 	    if (@ext_stats != ()) {
 	    	if (($#ext_stats == $#file_stats) && ($#ext_stats == $#arg_stats)) {
 			$index=0;
 			foreach my $ext (@ext_stats) {
-				system("$PROGBASE/scripts/collect_$ext $ext $file_stats[$index] ".conf_reqval("statsdir")." $time $PROGBASE $arg_stats[$index] &");
+	    			print RUNSCRIPT "$FILEBENCH/scripts/collect_$ext $ext $file_stats[$index] ";
+				print RUNSCRIPT  conf_reqval("statsdir");
+				print RUNSCRIPT " $time $FILEBENCH $arg_stats[$index] &";
 				$index++;
 			}
 		}
-	    	# Race condition - sleep for 10 secs - allows all statistics collection scripts to catch up
-	    	system("sleep 5");
 	    }
+            close(RUNSCRIPT);
 
 	    # Sleep for the run time
-	    print $PHNDL "sleep $time\n";
-	    prompt_wait();
+	    print FSCRIPT "sleep $time\n";
 
 	    # Snap the statistics
-	    print $PHNDL "stats snap\n";
-	    prompt_wait();
+	    print FSCRIPT "stats snap\n";
 
             # Dump the statistics to a raw file - out required due to filename constraint
-	    print $PHNDL "stats dump \"$statsfile.out\"\n";	
-	    prompt_wait();
+	    print FSCRIPT "stats dump \"$statsfile.out\"\n";	
 
             # Dump the statistics to a Xanadu compatible XML file
 	    if ($USE_XANADU) {
+	        $script = conf_reqval("statsdir") . "/stats$SCRIPT_NO.sh";
+	        open (RUNSCRIPT, ">$script");
+	        chmod (0755, $script);
+	        print FSCRIPT "system \"$script\"\n";
+	        $SCRIPT_NO++;
 	        op_xmlstats($statsfile.".xml");
-	        # Race condition with Xanadu 2 - need to sleep for 5 seconds - can end up with zero byte files
-	        system("sleep 5");
-
 	        # Process XML file using Xanadu 2
-    	        system("mkdir ".conf_reqval("statsdir")."/xml");
-    	        system("mkdir ".conf_reqval("statsdir")."/html");
-	        system("$PROGBASE/xanadu/scripts/xanadu import ".conf_reqval("statsdir")." ".conf_reqval("statsdir")."/xml ".conf_reqval("function")."-".conf_reqval("statsdir"));
-	        system("$PROGBASE/xanadu/scripts/xanadu export ".conf_reqval("statsdir")."/xml ".conf_reqval("statsdir")."/html");
+    	        print RUNSCRIPT "mkdir ".conf_reqval("statsdir")."/xml";
+    	        print RUNSCRIPT "mkdir ".conf_reqval("statsdir")."/html";
+	        print RUNSCRIPT "$FILEBENCH/xanadu/scripts/xanadu import ".conf_reqval("statsdir")." ".conf_reqval("statsdir")."/xml ".conf_reqval("function")."-".conf_reqval("statsdir");
+	        print RUNSCRIPT "$FILEBENCH/xanadu/scripts/xanadu export ".conf_reqval("statsdir")."/xml ".conf_reqval("statsdir")."/html";
+                close(RUNSCRIPT);
 	    }
 	}
-	print $PHNDL "\n";
-	prompt_wait();
+	print FSCRIPT "\n";
 	return(0);	
-    }	
-    return(1);
 }
 
 sub op_xmlstats {
     my ($statsfile) = shift;
-    if(check_init()) {
 	if($statsfile ne '') {
-	    	print $PHNDL "stats xmldump \"$statsfile\"\n";	
-	    	prompt_wait();
+	    	print FSCRIPT "stats xmldump \"$statsfile\"\n";	
+	    	print FSCRIPT "system \" $FILEBENCH/scripts/xmladd.pl $statsfile\"\n";	
 
-		# The following loop adds the benchpoint run parameters and statistics into the filebench XML file
-		# We capture the meta data from the start of the filebench xml file
-		$phase=1;
-		open(STATSFILE,"<".conf_reqval("statsdir")."/$statsfile");
-		open(OSTATSFILE,">".conf_reqval("statsdir")."/$statsfile.new");
-		while (<STATSFILE>) {
-			if ((!((/.*meta.*/) || (/.*stat_doc.*/))) && ($phase == 1)) {
-				$phase++;
-				%CONFHASH = conf_hash();
-				# There is no test for whether CONFHASH contains no keys 
-				# The following two lines is to obtain the stats run directory name for xanadu meta data
-				print OSTATSFILE "<meta name=\"RunId\" value=\"".conf_reqval("function")."-".conf_reqval("statsdir")."\"/>\n";
-				print OSTATSFILE "<stat_group name=\"Benchpoint Configuration\">\n";
-				print OSTATSFILE "<cell_list>\n";
-				foreach $k (keys(%CONFHASH)) {
-					print OSTATSFILE "<cell>@{ $CONFHASH{$k} }</cell>\n";
-				}
-				print OSTATSFILE "</cell_list>\n";
-				print OSTATSFILE "<dim_list>\n";
-				print OSTATSFILE "<dim>\n";
-				print OSTATSFILE "<dimval>Value</dimval>\n";
-				print OSTATSFILE "</dim>\n";
-				print OSTATSFILE "<dim>\n";
-				foreach $k (keys(%CONFHASH)) {
-					print OSTATSFILE "<dimval>$k</dimval>\n";
-				}
-				print OSTATSFILE "</dim>\n";
-				print OSTATSFILE "</dim_list>\n";
-				print OSTATSFILE "</stat_group>\n";
-
-				# The Benchpoint statistics section of XML was disabled
-#				print OSTATSFILE "<stat_group name=\"Benchpoint Statistics\">\n";
-#				print OSTATSFILE "<cell_list>\n";
-#			        %STATHASH = op_statshash();
-#				# There is no test for whether STATHASH contains no keys 
-#				foreach $k (keys(%STATHASH)) {
-#					print OSTATSFILE "<cell>$STATHASH{$k}</cell>\n";
-#				}
-#				print OSTATSFILE "</cell_list>\n";
-#				print OSTATSFILE "<dim_list>\n";
-#				print OSTATSFILE "<dim>\n";
-#				print OSTATSFILE "<dimval>Value</dimval>\n";
-#				print OSTATSFILE "</dim>\n";
-#				print OSTATSFILE "<dim>\n";
-#	
-#				foreach $k (keys(%STATHASH)) {
-#					print OSTATSFILE "<dimval>$k</dimval>\n";
-#				}
-#				print OSTATSFILE "</dim>\n";
-#				print OSTATSFILE "</dim_list>\n";
-#				print OSTATSFILE "</stat_group>\n";
-				print OSTATSFILE $_;
-			} else {
-				print OSTATSFILE $_;
-			}
+		# The following loop adds the benchpoint run parameters and statistics into a temporary XML file
+		open(OSTATSFILE,">".conf_reqval("statsdir")."/$statsfile.config.xml");
+		%CONFHASH = conf_hash();
+		# There is no test for whether CONFHASH contains no keys 
+		# The following two lines is to obtain the stats run directory name for xanadu meta data
+		print OSTATSFILE "<meta name=\"RunId\" value=\"".conf_reqval("function")."-".conf_reqval("statsdir")."\"/>\n";
+		print OSTATSFILE "<stat_group name=\"Benchpoint Configuration\">\n";
+		print OSTATSFILE "<cell_list>\n";
+		foreach $k (keys(%CONFHASH)) {
+			print OSTATSFILE "<cell>@{ $CONFHASH{$k} }</cell>\n";
 		}
-		close(STATSFILE);
-		close(OSTATSFILE);
-		unlink(conf_reqval("statsdir")."/$statsfile");
-	      	rename(conf_reqval("statsdir")."/$statsfile.new",conf_reqval("statsdir")."/$statsfile");
-		return(0);	
+		print OSTATSFILE "</cell_list>\n";
+		print OSTATSFILE "<dim_list>\n";
+		print OSTATSFILE "<dim>\n";
+		print OSTATSFILE "<dimval>Value</dimval>\n";
+		print OSTATSFILE "</dim>\n";
+		print OSTATSFILE "<dim>\n";
+		foreach $k (keys(%CONFHASH)) {
+			print OSTATSFILE "<dimval>$k</dimval>\n";
+		}
+		print OSTATSFILE "</dim>\n";
+		print OSTATSFILE "</dim_list>\n";
+		print OSTATSFILE "</stat_group>\n";
+
+		# The Benchpoint statistics section of XML was disabled
+#		print OSTATSFILE "<stat_group name=\"Benchpoint Statistics\">\n";
+#		print OSTATSFILE "<cell_list>\n";
+#	        %STATHASH = op_statshash();
+#		# There is no test for whether STATHASH contains no keys 
+#		foreach $k (keys(%STATHASH)) {
+#			print OSTATSFILE "<cell>$STATHASH{$k}</cell>\n";
+#		}
+#		print OSTATSFILE "</cell_list>\n";
+#		print OSTATSFILE "<dim_list>\n";
+#		print OSTATSFILE "<dim>\n";
+#		print OSTATSFILE "<dimval>Value</dimval>\n";
+#		print OSTATSFILE "</dim>\n";
+#		print OSTATSFILE "<dim>\n";
+#
+#			foreach $k (keys(%STATHASH)) {
+#					print OSTATSFILE "<dimval>$k</dimval>\n";
+#		}
+#		print OSTATSFILE "</dim>\n";
+#		print OSTATSFILE "</dim_list>\n";
+#		print OSTATSFILE "</stat_group>\n";
+		print OSTATSFILE $_;
 	}
-    }	
-    return(1);
+	close(OSTATSFILE);
+	return(0);	
 }
 
 sub op_command {
     my ($command) = shift;
-    if(check_init()) {
 	if($command ne '') {
-	    print $PHNDL "$command\n";	
-	    prompt_wait();
+	    print FSCRIPT "$command\n";	
 	}
-	print $PHNDL "\n";
-	prompt_wait();
+	print FSCRIPT "\n";
 	return(0);	
-    }	
-    return(1);
 }
 
 sub op_statshash {
@@ -386,8 +321,8 @@ sub op_statshash {
 sub op_load_defaults {
 # The following code causes an intermittent bug - may be fixed at a later date
 # Prevents the capture of filebench default parameters
-#    print $PHNDL "vars\n";
-#    my ($match, $err, $before, $after) = &expect($PHNDL,
+#    print FSCRIPT "vars\n";
+#    my ($match, $err, $before, $after) = &expect(FSCRIPT,
 #						 $TIMEOUT, "filebench>");
 #    chomp($before);
 #    $before =~ /(.*): (.*): (.*)/;
@@ -568,19 +503,18 @@ foreach $CONFNAME (@CONFLIST) {
     my $function = conf_reqval("function");
     if (-f "$function.func") {
 	require "$function.func";
-    } elsif (-f "$PROGBASE/config/$function.func") {
-	require "$PROGBASE/config/$function.func";
+    } else {
+	require "$FILEBENCH/config/$function.func";
     }
-    print "\n\n";
     $QUIT = 0;
-
-    # The following function is taken from the user's function file
-    pre_run();
 
     # Setup the statistics directory
     $statsdir = $STATSBASE . "/" . $CONFNAME;
     push(@{ $CONFDATA{"statsdir"} }, $statsdir);		   
     system("mkdir -p $statsdir");
+
+    # The following function is taken from the user's function file
+    pre_run();
 
     # Leave a log of the run info	
     open (RUNLOG, ">$STATSBASE/thisrun.prof");
@@ -598,4 +532,5 @@ foreach $CONFNAME (@CONFLIST) {
 
     # The following function is taken from the user's function file
     post_run();
+    print "\n";
 }

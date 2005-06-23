@@ -16,6 +16,21 @@
 #include "filebench.h"
 #include <gsl/gsl_randist.h>
 
+char *
+trunc_dirname(char *dir) 
+{
+	char *s = dir + strlen(dir);
+	int c;
+	
+	while (s != dir) {
+		c = *s;
+		*s = 0;
+		if (c == '/')
+			break;
+		s--;
+	}
+	return(dir);
+}
 
 void
 fileset_usage()
@@ -88,7 +103,7 @@ fileset_mkdir(char *path, int mode)
 		if (strlen(p) < 3)
 			break;
 		dirs[i] = strdup(p);
-		dirname(p);
+		trunc_dirname(p);
 		i++;
 	}
 
@@ -118,7 +133,7 @@ fileset_openfile(fileset_t *fileset,
 	strcat(path, pathtmp);
 	strcpy(dir, path);
 	free(pathtmp);
-	dirname(dir);
+	trunc_dirname(dir);
 
 	/* If we are going to create a file, create the parent dirs */
 	if ((flag & O_CREAT) && (stat64(dir, &sb) != 0)) {
@@ -319,7 +334,7 @@ fileset_create(fileset_t *fileset)
 		strcpy(dir, path);
 		free(pathtmp);
 
-		dirname(dir);
+		trunc_dirname(dir);
 
 		if (stat64(dir, &sb) != 0) {
 			fileset_mkdir(dir, 0755);

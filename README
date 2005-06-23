@@ -2,25 +2,29 @@
 Filebench - A Model Based File System Workload Generator
 
 
+Running a set of workloads with BenchPoint
+------------------------------------------
+
 $ mkdir mybench
 $ cd mybench
-$ cp /opt/filebench/config/filemicro.prof mybench.prof
+$ cp [prefix]/filebench/config/filemicro.prof mybench.prof
 
  or
 
-$ cp /opt/filebench/config/filemacro.prof mybench.prof
+$ cp [prefix]/filebench/config/filemacro.prof mybench.prof
 
 $ vi mybench.prof
 <edit params>
 set your stats dir to where you want the logs to go...
 
-$ /opt/filebench/bin/benchpoint mybench
+$ runbench mybench
 
 $ browse the index.html in the stats dir
 
 
 
 Example individual varmail run:
+-------------------------------
 
 filebench> load varmail
  8395: 3.898: Varmail personality successfully loaded
@@ -44,16 +48,19 @@ filebench> run 10
 filebench> quit
 
 
-Current Workloads:
+Current "filemacro" Workloads:
 - varmail		(file read/random append-write mail server benchmark)
 - bringover		(copy fileset of random sizes)
 - oltp  		(database simulation)
-- randomread		(random fixed size reads)
 - webserver		(reads on fileset of random sizes + random append logfile write)
 - webproxy		(reads, writes, creates, deletes  on fileset of random sizes)
 - fileserver		(reads, writes, creates, deletes  on fileset of random sizes)
+
+Current "filemicro" Workloads:
 - singlestreamread	(sequential read from a large file)
 - multistreamread	(multiple stream sequential read from large files)
+- randomread		(random fixed size reads)
+- randomwrite		(random fixed size writes)
 - createfiles		(create and allocate files in a directory tree)
 - deletefiles		(delete files in a directory tree)
 

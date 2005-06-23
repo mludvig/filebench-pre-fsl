@@ -28,7 +28,7 @@ define process name=filewriter,instances=1
   }
 }
 
-echo  "FileMicro-WriteRandDsync Version $Revision: 1.3 $ $Date: 2005/06/09 23:25:59 $ personality successfully loaded"
+echo  "FileMicro-WriteRandDsync Version $Revision: 1.5 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>  defaults to $filesize"
 usage "       set \$iosize=<size>    defaults to $iosize"

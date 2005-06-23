@@ -83,6 +83,7 @@ ipc_mutex_unlock(pthread_mutex_t *mutex)
 pthread_mutexattr_t *
 ipc_mutexattr(void)
 {
+#ifdef USE_PROCESS_MODEL
 	if (mutexattr == NULL) {
 		if ((mutexattr = malloc(sizeof(pthread_mutexattr_t))) == NULL) {
 			filebench_log(LOG_ERROR, "cannot alloc mutex attr");
@@ -121,6 +122,7 @@ ipc_mutexattr(void)
 #endif /* HAVE_ROBUST_MUTEX */
 
 	}
+#endif /* USE_PROCESS_MODEL */
 	return (mutexattr);
 }
 
@@ -129,6 +131,7 @@ static pthread_condattr_t *condattr = NULL;
 pthread_condattr_t *
 ipc_condattr(void)
 {
+#ifdef USE_PROCESS_MODEL
 	if (condattr == NULL) {
 		if ((condattr = malloc(sizeof(pthread_condattr_t))) == NULL) {
 			filebench_log(LOG_ERROR, "cannot alloc cond attr");
@@ -144,6 +147,7 @@ ipc_condattr(void)
 		}					
 #endif /* HAVE_PROCSCOPE_PTHREADS */			
 	}
+#endif /* USE_PROCESS_MODEL */
 	return (condattr);
 }
 
@@ -152,6 +156,7 @@ static pthread_rwlockattr_t *rwlockattr = NULL;
 pthread_rwlockattr_t *
 ipc_rwlockattr(void)
 {
+#ifdef USE_PROCESS_MODEL
 	if (rwlockattr == NULL) {
 		if ((rwlockattr = malloc(sizeof(pthread_rwlockattr_t))) == NULL) {
 			filebench_log(LOG_ERROR, "cannot alloc rwlock attr");
@@ -167,6 +172,7 @@ ipc_rwlockattr(void)
 		}					
 #endif /* HAVE_PROCSCOPE_PTHREADS */			
 	}
+#endif /* USE_PROCESS_MODEL */
 	return (rwlockattr);
 }
 
@@ -204,12 +210,15 @@ ipc_init()
 	caddr_t c2;
 
 #ifdef HAVE_MKSTEMP
-	shmpath = (char *)"/var/tmp/fbenchXXXXXX";
+	shmpath = (char *)malloc(128);
+	strcpy(shmpath, "/var/tmp/fbenchXXXXXX");
 	shmfd = mkstemp(shmpath);
 #else
-	shmpath = tempnam("/var/tmp", "fbench");
 	shmfd   = open(shmpath, O_CREAT | O_RDWR | O_TRUNC, 0666);
+	shmpath = tempnam("/var/tmp", "fbench");
 #endif
+
+#ifdef USE_PROCESS_MODEL
 
 	if (shmfd  < 0) {
 		filebench_log(LOG_FATAL, "Cannot open shm %s: %s",
@@ -225,7 +234,6 @@ ipc_init()
 		exit(1);
 	}
 	
-
 #ifdef NEVER
 	for (i = 0; i < sizeof(filebench_shm_t); i += MB) {
 		if (write(shmfd, buf, MB) != MB) {
@@ -243,6 +251,12 @@ ipc_init()
 		exit(1);
 	}
 
+#else 
+	if ((filebench_shm = (filebench_shm_t *)malloc(sizeof(filebench_shm_t))) == NULL) {
+		filebench_log(LOG_FATAL, "Cannot malloc shm");
+		exit(1);
+	}
+#endif /* USE_PROCESS_MODEL */
 
 	c1 = (caddr_t)filebench_shm;
 	c2 = (caddr_t)&filebench_shm->marker;
@@ -285,7 +299,6 @@ ipc_init()
 #endif
 	}
 
-	
 	filebench_shm->semkey = key;
 	filebench_shm->log_fd = -1;
 	filebench_shm->dump_fd = -1;
@@ -298,7 +311,10 @@ ipc_init()
 int
 ipc_cleanup()
 {
+
+#ifdef USE_PROCESS_MODEL
 	unlink(shmpath);
+#endif /* USE_PROCESS_MODEL */
 	
 }
 

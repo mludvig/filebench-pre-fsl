@@ -39,7 +39,7 @@ define process name=seqread,instances=1
   }
 }
 
-echo  "Multi Stream Read Direct Version $Revision: 1.4 $ $Date: 2005/06/09 23:25:59 $ personality successfully loaded"
+echo  "Multi Stream Read Direct Version $Revision: 1.6 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>    defaults to $filesize"
 usage "       set \$nthreads=<value>   defaults to $nthreads"

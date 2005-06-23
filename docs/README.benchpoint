@@ -10,7 +10,7 @@ reports using benchpoint:
 	
 	Profiles are the first things that benchpoint reads in. There are two
 	sections defined in a profile: CONFIG{} and DEFAULTS{}. They are placed
-	under the <...>/benchpoint/profiles. The name of the file must follow
+	under the <...>/benchpoint/config. The name of the file must follow
 	the standard <profile>.prof convention.
 
 	The config section lists the configurations which to execute during 
@@ -78,7 +78,7 @@ reports using benchpoint:
 	the function file. This is the file where you can write your own
 	perl code and either run filebench, or an external benchmark of your
 	own. All function files must be located under 
-	<....>/benchpoint/functions. The name of the file must be in the form
+	<....>/benchpoint/config. The name of the file must be in the form
 	<function>.func. 
 
 	In order for your code to get executed you must define bm_run().

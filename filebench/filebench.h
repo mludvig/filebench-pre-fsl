@@ -80,3 +80,16 @@ uint64_t filebench_randomno64();
 #endif
 
 #endif
+
+/* For MacOSX */
+#ifndef HAVE_OFF64_T
+#define mmap64 mmap
+#define off64_t off_t
+#define open64 open
+#define stat64 stat
+#define pread64 pread
+#define pwrite64 pwrite
+#define lseek64 lseek
+#define fstat64 fstat
+#endif
+

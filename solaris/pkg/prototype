@@ -25,13 +25,12 @@ s none filebench/bin/amd64=i386
 ! search ../build/amd64
 d none filebench/bin/i386 0755 root sys
 f none filebench/bin/i386/filebench 0755 root sys
-! search ../../fastsu/amd64
 f none filebench/bin/i386/fastsu 4755 root sys
-! search ../../fastsu/sparcv9
-f none filebench/bin/sparcv9/fastsu 4755 root sys
+f none filebench/bin/amd64/fastsu 4755 root sys
 ! search ../build/sparcv9
 d none filebench/bin/sparcv9 0755 root sys
 f none filebench/bin/sparcv9/filebench 0755 root sys
+f none filebench/bin/sparcv9/fastsu 4755 root sys
 ! search ../gnuplot/sparcv9
 f none filebench/bin/sparcv9/gnuplot 0755 root sys
 ! search ../gnuplot/i386

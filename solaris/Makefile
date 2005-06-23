@@ -1,6 +1,6 @@
 
 #VERSION		= 1.41_s8_sparc
-VERSION		= 1.60_s10_x86_sparc_PRERELEASE
+VERSION		= 1.61_s10_x86_sparc_PRERELEASE
 
 PSTAMP:sh	= date "+%d %b %y"
 
@@ -10,7 +10,7 @@ PSTAMP:sh	= date "+%d %b %y"
 
 all: pkg/pkginfo pkg tarball pkg/prototype pkg/copyright
 
-pkginfo: ALWAYS pkginfo.in
+pkg/pkginfo: ALWAYS pkg/pkginfo.in
 	sed 's/XXXXX/$(VERSION)/' pkg/pkginfo.in |\
 	sed 's/YYYYY/$(PSTAMP)/' >pkg/pkginfo
 

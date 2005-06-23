@@ -16,11 +16,12 @@
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
 #endif
-#include "parser.h"
+#include "parsertypes.h"
 #include "utils.h"
 #include "filebench.h"
 
-#include "parser_grammar.h"
+#include "parser_gram.h"
+
 
 int lex_lineno = 1;		/* line-number for error reporting */
 static int state = INITIAL;		/* state to be used */
@@ -257,5 +258,22 @@ yyerror(char *s)
 		}
 		(void) filebench_log(LOG_ERROR, "%s at '%s'", s, yytext);
 	}
+}
+
+struct yy_buffer_state *parent;
+struct yy_buffer_state *script;
+
+int
+yy_switchfileparent(FILE *file)
+{
+	script = YY_CURRENT_BUFFER;
+	parent = yy_create_buffer(yyin, 128);
+	yy_switch_to_buffer(parent);
+}
+
+int
+yy_switchfilescript(FILE *file)
+{
+	yy_switch_to_buffer(script);
 }
 

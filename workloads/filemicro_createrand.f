@@ -31,7 +31,7 @@ define process name=filecreater,instances=1
   }
 }
 
-echo  "FileMicro-CreateRand Version $Revision: 1.5 $ $Date: 2005/06/14 19:36:36 $ personality successfully loaded"
+echo  "FileMicro-CreateRand Version $Revision: 1.7 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$iosize=<size>    defaults to $iosize"
 usage "       set \$bytes=<value>    defaults to $bytes"

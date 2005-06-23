@@ -63,4 +63,6 @@ typedef struct pidlist {
 } pidlist_t;
 
 typedef void (*cmdfunc)(cmd_t *);
+int yy_switchfileparent(FILE *file);
+int yy_switchfilescript(FILE *file);
 

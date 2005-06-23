@@ -17,7 +17,7 @@ sub post_run {
         # Shutdown processes and quit filebench
         op_quit();
         # Create a html summary of the run
-	system ("cd $statsbase; /opt/filebench/scripts/filebench_compare $statsbase")
+	system ("cd $statsbase; " . get_FILEBENCH() . "/scripts/filebench_compare $statsbase")
 }
 
 sub bm_run {

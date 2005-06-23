@@ -26,7 +26,7 @@ define process name=filecreate,instances=1
   }
 }
 
-echo  "Createfiles Version $Revision: 1.5 $ $Date: 2005/06/14 19:36:36 $ personality successfully loaded"
+echo  "Createfiles Version $Revision: 1.7 $ $Date: 2005/06/21 21:18:52 $ personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>    defaults to $filesize"
 usage "       set \$nfiles=<value>     defaults to $nfiles"

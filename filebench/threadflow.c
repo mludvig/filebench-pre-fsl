@@ -91,8 +91,10 @@ threadflow_init(procflow_t *procflow)
 
 	ipc_mutex_lock(&filebench_shm->threadflow_lock);
 	my_procflow = procflow;
-	signal(SIGUSR1, threadflow_cancel);
 
+#ifndef USE_PROCESS_MODEL
+	signal(SIGUSR1, threadflow_cancel);
+#endif
 	while (threadflow) {
 
 		filebench_log(LOG_VERBOSE,
@@ -145,13 +147,18 @@ threadflow_kill(threadflow_t *threadflow)
 {
 	/* Tell thread to finish */
 	threadflow->tf_abort = 1;
+
+#ifdef USE_PROCES_MODEL
 #ifdef HAVE_SIGSEND
 	sigsend(P_PID, threadflow->tf_process->pf_pid, SIGUSR1);
 #else
 	kill(threadflow->tf_process->pf_pid, SIGUSR1);
 #endif
-	return (0);
+#else /* USE_PROCESS_MODEL */
+	threadflow->tf_process->pf_running = 0;
+#endif /* USE_PROCESS_MODEL */
 
+	return (0);
 }
 
 int
