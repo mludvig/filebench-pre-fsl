@@ -72,7 +72,7 @@
       <td style="vertical-align: top;"> <br>
       <div class="header"><small>Chart</small></div>
         <dl style="text-align: left;">
-         <% for(int i = 0; i< 13; i++){ %>
+         <% for(int i = 0; i< 14; i++){ %>
           <dt><%= xb.get("chart"+i) %> </dt>
           <% } %>                
       </dl>

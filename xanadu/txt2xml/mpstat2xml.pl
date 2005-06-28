@@ -1,4 +1,4 @@
-#!/bin/perl -w
+#!/usr/bin/perl -w
 
 use lib "../txt2xml";
 
@@ -9,13 +9,35 @@ open(INPUT, $ARGV[0]);
 xml_start_stat_doc(name => "\"Mpstat\"");
 xml_meta(name => "\"RunId\"", value => "\"$ARGV[1]\"");
 
-$interval = 10;
 $samples = 0;
 $firstTime = 1;
 $prevCpu = -1;
+$interval = 10;
 
 while (<INPUT>)
 {
+    if (/^Mpstat/)
+    {
+	@fields = split;
+	$interval = $fields[9];
+    }
+    elsif (/^\# iostat/)
+    {
+	@fields = split;
+	$interval = $fields[3];
+    }
+    elsif (/^(CPU|SET)/)
+    {
+        last;
+    }
+    else
+    {
+	next;
+    }
+}
+
+
+do {{
     next if /State change/;
     next if /^\n/;
 
@@ -77,7 +99,9 @@ while (<INPUT>)
 	}
 	$cpunum++;
     }
-}
+}}
+while (<INPUT>);
+
 
 # This is where the XML output happens
 

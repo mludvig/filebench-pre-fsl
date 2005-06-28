@@ -200,6 +200,9 @@
 /* Define to 1 if you have the `pthread_join' function. */
 #undef HAVE_PTHREAD_JOIN
 
+/* Define if you have POSIX setprotocol */
+#undef HAVE_PTHREAD_MUTEXATTR_SETPROTOCOL
+
 /* Define to 1 if you have the `pthread_mutex_init' function. */
 #undef HAVE_PTHREAD_MUTEX_INIT
 

@@ -11,6 +11,7 @@ set $nthreads=1
 set $iosize=8k
 set $filesize=1m
 set $workingset=0
+set $directio=0
 
 define file name=largefile1,path=$dir,size=$filesize,prealloc,reuse,paralloc
 
@@ -18,15 +19,16 @@ define process name=rand-read,instances=1
 {
   thread name=rand-thread,memsize=5m,instances=$nthreads
   {
-    flowop read name=rand-read1,filename=largefile1,iosize=$iosize,random,workingset=$workingset
+    flowop read name=rand-read1,filename=largefile1,iosize=$iosize,random,workingset=$workingset,directio=$directio
     flowop eventlimit name=rand-rate
   }
 }
 
-echo "Random Read Version $Revision: 1.11 $ $Date: 2005/06/21 21:18:52 $ IO personality successfully loaded"
+echo "Random Read Version $Revision: 1.12 $ $Date: 2005/06/25 01:03:16 $ IO personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>   defaults to $filesize"
 usage "       set \$iosize=<value>    defaults to $iosize"
 usage "       set \$nthreads=<value>  defaults to $nthreads"
 usage "       set \$workingset=<value>  defaults to $workingset"
+usage "       set \$directio=<bool>   defaults to $directio"
 usage "       run runtime (e.g. run 60)"

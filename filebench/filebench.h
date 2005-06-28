@@ -61,7 +61,7 @@ void filebench_shutdown(int error);
 #define FILEBENCH_RANDMAX64 UINT64_MAX
 #define FILEBENCH_RANDMAX32 UINT32_MAX
 
-#ifdef _LP64
+#if defined(_LP64) || (__WORDSIZE == 64)
 #define filebench_randomno filebench_randomno64
 #define FILEBENCH_RANDMAX FILEBENCH_RANDMAX64
 #else

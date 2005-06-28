@@ -311,7 +311,6 @@ flowoplib_read(threadflow_t *threadflow, flowop_t *flowop)
 		    flowop->fo_name);
 		return(-1);
 	}
-
 	memsize = *threadflow->tf_memsize;
 	round = *flowop->fo_iosize;
 	memoffset = filebench_randomno(memsize, round);
@@ -319,11 +318,11 @@ flowoplib_read(threadflow_t *threadflow, flowop_t *flowop)
 	if (*flowop->fo_random) {
 
 		offset = filebench_randomno64(wss , *flowop->fo_iosize);
-		flowop_beginop(threadflow, flowop);
+		(void)flowop_beginop(threadflow, flowop);
 		if ((ret = pread64(filedesc,
 			    threadflow->tf_mem + memoffset, 
 			    *flowop->fo_iosize, offset)) == -1) {
-			flowop_endop(threadflow, flowop);
+			(void)flowop_endop(threadflow, flowop);
 			filebench_log(LOG_ERROR, 
 			    "read file %s failed, offset %lld memoffset %zd: %s",
 			    flowop->fo_file->fo_name,
@@ -331,26 +330,26 @@ flowoplib_read(threadflow_t *threadflow, flowop_t *flowop)
 			flowop_endop(threadflow, flowop);
 			return(-1);
 		}
-		flowop_endop(threadflow, flowop);
+		(void)flowop_endop(threadflow, flowop);
 
 		if ((ret == 0))
-			lseek(filedesc, 0, SEEK_SET);
+			lseek64(filedesc, 0, SEEK_SET);
 
 	} else {
-		flowop_beginop(threadflow, flowop);
+		(void)flowop_beginop(threadflow, flowop);
 		if ((ret = read(filedesc, threadflow->tf_mem + memoffset, 
 			    *flowop->fo_iosize)) == -1) {
 			filebench_log(LOG_ERROR, 
 			    "read file %s failed, memoffset %zd: %s",
 			    flowop->fo_file->fo_name,
 			    memoffset, strerror(errno));
-			flowop_endop(threadflow, flowop);
+			(void)flowop_endop(threadflow, flowop);
 			return(-1);
 		}
-		flowop_endop(threadflow, flowop);
+		(void)flowop_endop(threadflow, flowop);
 
 		if ((ret == 0))
-			lseek(filedesc, 0, SEEK_SET);
+			lseek64(filedesc, 0, SEEK_SET);
 	}    
 
 	return(0);

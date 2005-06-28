@@ -1,6 +1,6 @@
 
 #VERSION		= 1.41_s8_sparc
-VERSION		= 1.61_s10_x86_sparc_PRERELEASE
+VERSION		= 1.61.6_s10_x86_sparc_PRERELEASE
 
 PSTAMP:sh	= date "+%d %b %y"
 

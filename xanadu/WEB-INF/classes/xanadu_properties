@@ -1,10 +1,11 @@
 ## This is the xanadu property file
+## Valid colors are any "browser safe color" or a hex value
 ##############################################################################
 #antilias: Should we antialias? (Yes/No)
-#bgc:  Background color : Valid value is a hex value (ex: ffffff)
-#rgc:  RangeGridLine color : Valid value is a hex value (ex: ffffff)
-#dgc:  DomainGridLine color : Valid value is a hex value (ex: ffffff)
-#pgc:  Plot Background color : Valid value is a hex value (ex: ffffff)
+#bgc:  Background color 
+#rgc:  RangeGridLine color 
+#dgc:  DomainGridLine color 
+#pgc:  Plot Background color
 #showLegend: Show legends? (Yes/No)
 #showShape: Show shapes(dots)? (Yes/No)
 #backgroundAlpha: Background alpha transparency. Any float value between 0 & 1
@@ -15,9 +16,9 @@
 
 antiAlias       = Yes
 bgc             = ffe4c4
-rgc             = cccccc
-dgc             = cccccc
-pgc             = ffffff
+rgc             = lightgrey
+dgc             = lightgrey
+pgc             = white
 showLegend      = Yes
 showShape       = No
 backgroundAlpha = 1.0

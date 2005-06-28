@@ -75,8 +75,14 @@ sub readWrites
 	last if (/--/);
 	next if (/^\n/);
 
+	# If the section repeats, ignore the next few rows
+	if (/IO Stats/) {
+	  <INFILE>;<INFILE>;<INFILE>;<INFILE>;<INFILE>;<INFILE>;<INFILE>;
+	  next;
+	}
+
 	@fields = split;
-	push(@rowdimlist, $fields[0]);
+	$object = $fields[0];
 
 	if (defined($fields[1]))
 	{
@@ -95,11 +101,18 @@ sub readWrites
 	    $field = trim(substr($_, $prevbound, $colbound - $prevbound));
 	    $field =~ s/,//g;
 
+	    push(@fields, $field);
+
+	    $prevbound = $colbound;
+	}
+
+	if ($fields[1] + $fields[5] > 0) {
+	  foreach $field (@fields) {
 	    xml_start_cell();
 	    print $field;
 	    xml_end_cell();
-
-	    $prevbound = $colbound;
+	  }
+	  push(@rowdimlist, $object);
 	}
     }
 
@@ -735,7 +748,7 @@ while (<INFILE>)
 	$prevbound = $colbound;
     }
 
-    if ($fields[2] > 0)
+    if ($fields[2] !~ /^#/ && $fields[2] > 0)
     {
 	push @rowdimlist, $fields[0];
 

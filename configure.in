@@ -59,11 +59,13 @@ case "$host_os$host_cpu" in
 	CC=cc
 	### pthread_rwlock_t is only exposed if we define __USE_UNIX98 on Linux
 	##DEFINES="-DLINUX_PORT -D_XOPEN_SOURCE=500 -D_LARGEFILE_SOURCE64 -D_FILE_OFFSET_BITS=64 -D__USE_LARGEFILE64 -D__USE_UNIX98"
-	DEFINES="-DLINUX_PORT -D_GNU_SOURCE"
+	DEFINES="-DLINUX_PORT -D_GNU_SOURCE -D__USE_LARGEFILE64"
 	CFLAGS="${CFLAGS=} -O -I/usr/include/nptl -DYYDEBUG=1"
 	LDLIBS="-lm  -lm -lpthread -laio -lfl -lrt"
 	LFLAGS="-t"
 	YFLAGS="-d"
+        AC_DEFINE(HAVE_OFF64_T, 1,
+               [ Define if we can use 64 bit files ])
     ;;
 esac
 

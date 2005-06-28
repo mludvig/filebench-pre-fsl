@@ -1,5 +1,4 @@
-#!/bin/perl -w
-#!/usr/local/bin/perl -w
+#!/usr/bin/perl -w
 
 sub runBatch()
 {
@@ -32,12 +31,16 @@ sub runBatch()
                     $rsOracleMeta= "tpcc-meta.xml";
                     $oraMeta = "$Converters" . "/" . "$csOracleMeta";
                     if (-x $oraMeta) {
-                        `$oraMeta $src/$fs[$i] $runId | gzip -c > $dst/$rsOracleMeta.gz`;
+                        system("$oraMeta $src/$fs[$i] $runId | gzip -c > $dst/$rsOracleMeta.gz");
                     } else {
-                        `echo Cannot execute $oraMeta | gzip -c > $dst/$rsOracleMeta.gz`;
+                        print "Cannot execute $oraMeta | gzip -c > $dst/$rsOracleMeta.gz\n";
                     }
                 }
-                `$Converters/$cs[$i] $src/$fs[$i] $runId $dst | gzip -c > $dst/$rs[$i].gz`;
+		if ($^O eq 'MSWin32') {
+		    system("perl $Converters\\$cs[$i] $src\\$fs[$i] $runId $dst > $dst/$rs[$i]");
+		} else {
+		    system("perl $Converters/$cs[$i] $src/$fs[$i] $runId $dst | gzip -c > $dst/$rs[$i].gz");
+		}
 	        exit 0;
             } else {
                 # parent branch here
@@ -621,8 +624,9 @@ sub get_default_names()
     foreach $f (@srcfiles) {
         $f =~ s#.*/##;
         $type = "unknown";
-        if ($f =~ /.xml/) {
-            $type = "copy";
+
+	if ($f =~ /xan/) {
+	    $type = "xyy";
         } elsif ($f =~ /^cpustat.*(txt|log)/) {
             if (-f "$src/cpustat.xml") {
                 next;
@@ -713,7 +717,11 @@ $noExec = 0;
 use CGI;
 use POSIX ":sys_wait_h";
 
-$Converters = "../txt2xml";
+if ($^O eq 'MSWin32') {
+    $Converters = '..\txt2xml';
+} else {
+    $Converters = "../txt2xml";
+}
 
 #
 # Get options 

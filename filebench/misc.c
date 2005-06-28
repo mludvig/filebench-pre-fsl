@@ -22,7 +22,8 @@
 /* Lets us use the rdtsc instruction to get highres time.
  * Thanks to libmicro
  */
-static double	mhz = 0;
+uint64_t	cpu_hz = 0;
+
 __inline__ long long
 rdtsc(void)
 {
@@ -34,12 +35,16 @@ rdtsc(void)
 uint64_t
 gethrtime() 
 {
-   //convert to nanosecs and return
-   return (rdtsc() / mhz / 1.0e+4);
+	uint64_t hrt;
+
+	/* convert to nanosecs and return */
+	hrt = 1000000000UL * rdtsc() / cpu_hz;
+	// printf("gethrtime = %lld (div = %lld)\n", hrt, div);
+	return (hrt);
 }
 
-static double
-parse_cpu_mhz()
+static uint64_t
+parse_cpu_hz()
 {
 	/* Parse the following from /proc/cpuinfo.
 	 * cpu MHz		: 2191.563
@@ -47,6 +52,8 @@ parse_cpu_mhz()
 	FILE *cpuinfo;
 	double hertz = -1;
 	char buffer[80], *token;
+	uint64_t hz;
+
 	if((cpuinfo = fopen("/proc/cpuinfo", "r")) == NULL){
 		 filebench_log(LOG_ERROR, "open /proc/cpuinfo failed: %s",
 			strerror(errno));
@@ -64,21 +71,25 @@ parse_cpu_mhz()
 			break;
 		}
 	}
-	//printf("CPU Mhz %9.6f, sysconf:%ld\n",hertz, sysconf(_SC_CLK_TCK));
+	printf("CPU Mhz %9.6f, sysconf:%ld\n",hertz, sysconf(_SC_CLK_TCK));
 	//filebench_log(LOG_VERBOSE, "Detected CPU Mhz as %9.6f\n", hertz);
-	return hertz;	
+	hz = hertz * 1000000;
+
+	return (hz);	
 }
 
 #elif !defined(sun)
+
 uint64_t
 gethrtime() 
 {
-	struct tms tp;
-	uint64_t hr;
+	struct timeval tv;
+	uint64_t hrt;
 
-	hr = times(&tp);
+	gettimeofday(&tv, NULL);
 	
-	return(hr);
+	hrt = (uint64_t)tv.tv_sec * 1000000000UL + (uint64_t) tv.tv_usec * 1000UL;
+	return(hrt);
 }
 #endif
 
@@ -93,8 +104,8 @@ filebench_init()
 		filebench_shutdown(1);
 	}
 #if defined(USE_RDTSC) && (LINUX_PORT)
-	mhz = parse_cpu_mhz();
-	if(mhz <= 0) {
+	cpu_hz = parse_cpu_hz();
+	if(cpu_hz <= 0) {
 		filebench_log(LOG_ERROR, "Error getting CPU Mhz: %s",
 		strerror(errno));
 		filebench_shutdown(1);

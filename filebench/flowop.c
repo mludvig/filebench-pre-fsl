@@ -82,7 +82,6 @@ flowop_endop(threadflow_t *threadflow, flowop_t *flowop)
 
 	flowop->fo_stats.fs_mstate[FLOW_MSTATE_LAT] += 
 		    (gethrtime() - threadflow->tf_stime);
-
 #ifdef HAVE_PROCFS
 	if ((r = pread(threadflow->tf_lwpusagefd,
 	    &threadflow->tf_eusage,
@@ -147,6 +146,7 @@ flowop_start(threadflow_t *threadflow)
 	int pfd;
  	long ctl[2] = {PCSET, PR_MSACCT};
 #endif
+	size_t memsize;
 
 	pid = getpid();
 
@@ -209,8 +209,9 @@ flowop_start(threadflow_t *threadflow)
 		threadflow->tf_mem = malloc((size_t)*threadflow->tf_memsize);
 	}
 
-	(void) memset(threadflow->tf_mem, 0, 
-	    *threadflow->tf_memsize);
+	memsize = *threadflow->tf_memsize;
+	(void) memset(threadflow->tf_mem, 0, memsize);
+        filebench_log(LOG_DEBUG_SCRIPT, "Thread allocated %d bytes", memsize);
 
 #ifdef HAVE_LWPS       
 	filebench_log(LOG_DEBUG_SCRIPT, "Thread %zx (%d) started",
@@ -259,7 +260,12 @@ flowop_start(threadflow_t *threadflow)
 		    threadflow->tf_name, flowop->fo_name, flowop->fo_instance);
 
 		for (i = 0; i < *flowop->fo_iters; i++) {
+		filebench_log(LOG_DEBUG_SCRIPT, "%s: executing flowop %s-%d",
+		    threadflow->tf_name, flowop->fo_name, flowop->fo_instance);
 			rtn = (*flowop->fo_func)(threadflow, flowop);
+		filebench_log(LOG_DEBUG_SCRIPT, "%s: executing flowop %s-%d",
+		    threadflow->tf_name, flowop->fo_name, flowop->fo_instance);
+
 			if (rtn > 0) {
 				filebench_log(LOG_VERBOSE,
 				    "%s: exiting flowop %s-%d",
@@ -350,9 +356,11 @@ flowop_delete(flowop_t **flowoplist, flowop_t *flowop)
 	/* Call destructor */
 	flowop_destructflow(flowop);
 
+#ifdef HAVE_PROCFS
 	/* Close /proc stats */
 	if (flowop->fo_thread)
 		close(flowop->fo_thread->tf_lwpusagefd);
+#endif
 
 	/* Delete from global list */
 	entry = filebench_shm->flowoplist;

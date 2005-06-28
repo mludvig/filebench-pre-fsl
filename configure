@@ -3364,10 +3364,16 @@ _ACEOF
 	CC=cc
 	### pthread_rwlock_t is only exposed if we define __USE_UNIX98 on Linux
 	##DEFINES="-DLINUX_PORT -D_XOPEN_SOURCE=500 -D_LARGEFILE_SOURCE64 -D_FILE_OFFSET_BITS=64 -D__USE_LARGEFILE64 -D__USE_UNIX98"
-	DEFINES="-DLINUX_PORT -D_GNU_SOURCE"
-	CFLAGS="${CFLAGS=} -O -I/usr/include/nptl "
+	DEFINES="-DLINUX_PORT -D_GNU_SOURCE -D__USE_LARGEFILE64"
+	CFLAGS="${CFLAGS=} -O -I/usr/include/nptl -DYYDEBUG=1"
 	LDLIBS="-lm  -lm -lpthread -laio -lfl -lrt"
+	LFLAGS="-t"
 	YFLAGS="-d"
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_OFF64_T 1
+_ACEOF
+
     ;;
 esac
 
@@ -12309,7 +12315,7 @@ fi
 	# On Linux, we can either use rdtsc or times(1)
 	echo "$as_me:$LINENO: checking whether to enable the use of rdtsc" >&5
 echo $ECHO_N "checking whether to enable the use of rdtsc... $ECHO_C" >&6
-	rdtsc_default="yes"
+	rdtsc_default="no"
 	# Check whether --enable-rdtsc or --disable-rdtsc was given.
 if test "${enable_rdtsc+set}" = set; then
   enableval="$enable_rdtsc"

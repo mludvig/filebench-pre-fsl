@@ -91,8 +91,16 @@ sub getHWConfig()
 	    {
 	    @fields = split;
 
+	    $cpus = $fields[1];
+	    @cpulist = split /,/, $cpus;
+	    
 	    xml_start_cell();
-	    print $online{$fields[1]};
+	    for ($c = 0; $c <= $#cpulist; $c++)
+	    {
+		$cpulist[$c] =~ s/\s+//g;
+
+		print $online{$cpulist[$c]};
+	    }
 	    xml_end_cell();
 
 	    if ($#fields == 6)
@@ -113,7 +121,7 @@ sub getHWConfig()
 		xml_end_cell();
 	    }
 
-	    push(@cpulist, $fields[1]);
+	    push(@cpulist, $cpus);
 	}
 	}
     

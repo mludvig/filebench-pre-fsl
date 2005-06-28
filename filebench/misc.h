@@ -25,10 +25,8 @@
 #ifndef HAVE_HRTIME
 uint64_t gethrtime();
 #define hrtime_t uint64_t
-#define FSECS (double)100.0
-#else
-#define FSECS (double)1000000000.0
 #endif
+#define FSECS (double)1000000000.0
 
 #define LOG_INFO 1
 #define LOG_VERBOSE 2

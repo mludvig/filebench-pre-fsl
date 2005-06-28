@@ -352,6 +352,8 @@ stats_snap()
 	flowstat_t *othstat = &globalstats[FLOW_TYPE_OTHER];
 	hrtime_t cputime;
 	flowop_t *flowop, *flowop_master;
+	char *str;
+	char line[1024];
 
 	if (globalstats == NULL) {
 		filebench_log(LOG_ERROR,
@@ -432,8 +434,43 @@ stats_snap()
 	    (cputime > gl_stats_ohead()) ?
 	    (cputime - gl_stats_ohead()) : 0;
 
+
+	flowop = filebench_shm->flowoplist;
+ 	str = malloc(1048576);
+	*str = NULL;
+	strcpy(str , "Per-Operation Breakdown\n");
+	while (flowop) {
+		
+		if (flowop->fo_instance != FLOW_MASTER) {
+			flowop = flowop->fo_next;
+			continue;
+		}
+		
+		sprintf(line, "%-20s %8.0lfops/s %5.1lfmb/s "
+		    "%8.1fms/op %8.0fus/op-cpu\n",
+		    flowop->fo_name, 
+		    flowop->fo_stats.fs_count /
+		    ((globalstats->fs_etime - 
+			globalstats->fs_stime) / FSECS),
+		    (flowop->fo_stats.fs_bytes / (1024 * 1024)) /
+		    ((globalstats->fs_etime - 
+			globalstats->fs_stime) / FSECS),
+		    flowop->fo_stats.fs_count ? 
+		    flowop->fo_stats.fs_mstate[FLOW_MSTATE_LAT] /
+		    (flowop->fo_stats.fs_count * 1000000.0) : 0,
+		    flowop->fo_stats.fs_count ? 
+		    flowop->fo_stats.fs_mstate[FLOW_MSTATE_CPU] /
+		    (flowop->fo_stats.fs_count * 1000.0) : 0);
+		strcat(str, line);
+
+		flowop = flowop->fo_next;
+	}
+
+	filebench_log(LOG_INFO, "%s", str);
+	free(str);
+
 	filebench_log(LOG_INFO, 
-	    "IO Summary:      %5d ops %5.1lf ops/s, (%0.0lf/%0.0lf r/w) "
+	    "\nIO Summary:      %5d ops %5.1lf ops/s, (%0.0lf/%0.0lf r/w) "
 	    "%5.1lfmb/s, %6.0fus cpu/op, %5.1fms latency",
 	    iostat->fs_count + aiostat->fs_count,
 	    (iostat->fs_count + aiostat->fs_count) /
@@ -457,6 +494,7 @@ stats_snap()
 	    (iostat->fs_rcount + iostat->fs_wcount) ? 
 	    iostat->fs_mstate[FLOW_MSTATE_LAT] /
 	    ((iostat->fs_rcount + iostat->fs_wcount) * 1000000.0) : 0);
+
 
 	filebench_shm->bequiet = 0;
 

@@ -1,4 +1,4 @@
-#!/bin/perl -w
+#!/usr/bin/perl -w
 
 # This should be able to handle -xnz options
 
@@ -14,7 +14,7 @@ $disknum = 0;
 
 xml_start_stat_doc(name => "\"Iostat\"");
 
-$samples = 0;
+$samples = -1;
 $firstTime = 1;
 $interval = 10;
 
@@ -25,17 +25,25 @@ while (<INFILE>)
 	@fields = split;
 	$interval = $fields[9];
     }
+    elsif (/^\# iostat/)
+    {
+	@fields = split;
+	$interval = $fields[3];
+    }
     elsif (/extended/)
     {
         last;
+    }
+    else
+    {
+	next;
     }
 }
 
 xml_meta(name => "\"RunId\"", value => "\"$ARGV[1]\"");
 xml_meta(name => "\"interval\"", value => "\"$interval\"");
 
-while (<INFILE>)
-{
+do {{
     if (/extended/)
     {
         $_ = <INFILE>;
@@ -54,29 +62,28 @@ while (<INFILE>)
 	next;
     } 
 
-
-
     # Skip the first sample
     next if $samples == 0;
 
     @fields = split;
 
     # Ignore invalid lines in input
-    next if $#fields != 10;
+    next if $#fields < 10;
 
     # The assumption that the first input cycle ($samples=1) includes 
     # all possible existing devices is not valid when -z is used
+    # Device name is always last field
 
-    $j = $devHash{$fields[10]};
+    $j = $devHash{$fields[$#fields]};
 
     unless (defined($j))
     {
 	# Must record the disks
-	$devHash{$fields[10]} = $disknum;
+	$devHash{$fields[$#fields]} = $disknum;
 
 	$j = $disknum++;
 	    
-	push @devList, $fields[10];
+	push @devList, $fields[$#fields];
     }
 
 # Record the data
@@ -87,11 +94,12 @@ while (<INFILE>)
 	$tmp[$j][$i][$samples] = $fields[$i-1];
     }
 
-} # while
+}} while (<INFILE>);
 
 
 #Each metric is a stat group
-%metrics = ( "r/s" => "Reads per second",
+%metrics = ( 
+	    "r/s" => "Reads per second",
             "w/s" => "Writes per second",
             "kr/s" => "Kilobytes read per second",
             "kw/s" => "Kilobytes written per second",
@@ -100,7 +108,12 @@ while (<INFILE>)
             "wsvc_t" => "Average wait time (ms)",
             "asvc_t" => "Average service time (ms)",
             "%w" => "Wait Time Percentage",
-            "%b" =>  "Disk Busy Percentage");
+            "%b" =>  "Disk Busy Percentage",
+	    "s/w" => "Soft Errors",
+	    "h/w" => "Hard Errors",
+	    "trn" => "Transport Errors",
+	    "tot" => "Total Errors"
+	    );
 
 $labelNum = 1;
 foreach $label (@header)
@@ -111,7 +124,6 @@ foreach $label (@header)
 
     # Now print all the data
     xml_start_cell_list();
-
 
     for ($ind = 1; $ind <= $samples; $ind++)
     {

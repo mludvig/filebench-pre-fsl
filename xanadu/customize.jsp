@@ -28,6 +28,7 @@
      formHandler.setXTickUnit(request.getParameter("xTickUnit"));
      formHandler.setYTickUnit(request.getParameter("yTickUnit"));
      if (formHandler.validate() && theme.validate()) {
+         /*
          int ibgc = Integer.parseInt(theme.getBgc(),16);
          int idgc = Integer.parseInt(theme.getDgc(),16);
          int irgc = Integer.parseInt(theme.getRgc(),16);
@@ -36,10 +37,11 @@
          java.awt.Color rgcol =  new java.awt.Color(irgc);
          java.awt.Color dgcol =  new java.awt.Color(idgc);
          java.awt.Color pgcol =  new java.awt.Color(ipgc);
-         gTheme.setBackgroundPaint(bgcol);
-         gTheme.setDomainGridlinePaint(dgcol);
-         gTheme.setRangeGridlinePaint(rgcol);  
-         gTheme.setPlotBackgroundPaint(pgcol);
+          **/
+         gTheme.setBackgroundPaint(ZChartColor.getColor(theme.getBgc()));
+         gTheme.setDomainGridlinePaint(ZChartColor.getColor(theme.getDgc()));
+         gTheme.setRangeGridlinePaint(ZChartColor.getColor(theme.getRgc()));  
+         gTheme.setPlotBackgroundPaint(ZChartColor.getColor(theme.getPgc()));
          gTheme.setForegroundAlpha(theme.getForegroundAlpha());
          gTheme.setBackgroundAlpha(theme.getBackgroundAlpha());
          gTheme.setShowShape(theme.getShowShape());

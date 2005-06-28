@@ -1088,7 +1088,7 @@ main(int argc, char *argv[])
 		case 's':
 			if (optarg == NULL)
 				usage(1);
-#ifdef _LP64
+#if defined(_LP64) || (__WORDSIZE == 64)
 			sscanf(optarg, "%llx", &shmaddr);
 #else
 			sscanf(optarg, "%x", &shmaddr);
@@ -2241,7 +2241,8 @@ parser_statssnap(cmd_t *cmd)
 		filebench_log(LOG_VERBOSE, "Killing session %d for pid %d",
 		    getsid(pidlistent->pl_pid),
 		    pidlistent->pl_pid);
-		close(pidlistent->pl_fd);
+		if (pidlistent->pl_fd)
+			close(pidlistent->pl_fd);
 #ifdef HAVE_SIGSEND
 		sigsend(P_SID, getsid(pidlistent->pl_pid), SIGTERM);
 #else
@@ -2249,7 +2250,8 @@ parser_statssnap(cmd_t *cmd)
 #endif
 		
 		/* Close pipe */
-		close(pidlistent->pl_fd);
+		if (pidlistent->pl_fd)
+			close(pidlistent->pl_fd);
 		
 		/* Wait for cmd and all its children */
 		while ((pid = waitpid(pidlistent->pl_pid * -1, &stat, 0)) > 0)

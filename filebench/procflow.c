@@ -48,7 +48,7 @@ procflow_createproc(procflow_t *procflow)
 
 	sprintf(instance, "%d", procflow->pf_instance);
 	sprintf(procname, "%s", procflow->pf_name);
-#ifdef _LP64
+#if defined(_LP64) || (__WORDSIZE == 64)
 	sprintf(shmaddr, "%llx", filebench_shm);
 #else
 	sprintf(shmaddr, "%x", filebench_shm);

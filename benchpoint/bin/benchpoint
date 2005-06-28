@@ -189,18 +189,18 @@ sub op_stats {
 
 	    # Start external statistics collection (if any)
 	    # Note all statistics arrays MUST be the same length !
-	    $script = conf_reqval("statsdir") . "/stats$SCRIPT_NO.sh";
-	    open (RUNSCRIPT, ">$script");
-	    chmod (0755, $script);
-	    print FSCRIPT "system \"$script\"\n";
-	    $SCRIPT_NO++;
 	    if (@ext_stats != ()) {
 	    	if (($#ext_stats == $#file_stats) && ($#ext_stats == $#arg_stats)) {
+		        $script = conf_reqval("statsdir") . "/stats$SCRIPT_NO.sh";
+		        open (RUNSCRIPT, ">$script");
+		        chmod (0755, $script);
+		        print FSCRIPT "system \"$script\"\n";
+  		        $SCRIPT_NO++;
 			$index=0;
 			foreach my $ext (@ext_stats) {
 	    			print RUNSCRIPT "$FILEBENCH/scripts/collect_$ext $ext $file_stats[$index] ";
 				print RUNSCRIPT  conf_reqval("statsdir");
-				print RUNSCRIPT " $time $FILEBENCH $arg_stats[$index] &";
+				print RUNSCRIPT " $time $FILEBENCH $arg_stats[$index] &\n";
 				$index++;
 			}
 		}
@@ -216,19 +216,69 @@ sub op_stats {
             # Dump the statistics to a raw file - out required due to filename constraint
 	    print FSCRIPT "stats dump \"$statsfile.out\"\n";	
 
+	    # Statistics reaping occurs here
+	    if (@ext_stats != ()) {
+	    	if (($#ext_stats == $#file_stats) && ($#ext_stats == $#arg_stats)) {
+		    $script = conf_reqval("statsdir") . "/stats$SCRIPT_NO.sh";
+		    open (RUNSCRIPT, ">$script");
+		    chmod (0755, $script);
+		    print FSCRIPT "system \"$script\"\n";
+		    $SCRIPT_NO++;
+		    foreach my $ext (@ext_stats) {
+	                print RUNSCRIPT "$FILEBENCH/scripts/kill_stats $ext &\n";
+	            }
+	            close(RUNSCRIPT);
+		}
+	    }
+	
             # Dump the statistics to a Xanadu compatible XML file
 	    if ($USE_XANADU) {
+	        op_xmlstats($statsfile);
+
+	        $script = conf_reqval("statsdir") . "/stats$SCRIPT_NO.pl";
+	        open (RUNSCRIPT, ">$script");
+	        chmod (0755, $script);
+	        print FSCRIPT "system \"$script\"\n";
+	        $SCRIPT_NO++;
+
+                # The following loop adds the benchpoint run parameters and statistics into the filebench XML file
+                # We capture the meta data from the start of the filebench xml file
+                print RUNSCRIPT "#!/usr/bin/perl\n";
+		print RUNSCRIPT "\$phase=1;\n";
+                print RUNSCRIPT "open(STATSFILE,\"<".conf_reqval("statsdir")."/$statsfile.xml\");\n";
+                print RUNSCRIPT "open(OSTATSFILE,\">".conf_reqval("statsdir")."/$statsfile.new.xml\");\n";
+                print RUNSCRIPT "while (<STATSFILE>) {\n";
+                print RUNSCRIPT "\tif ((!((/.*meta.*/) || (/.*stat_doc.*/))) && (\$phase == 1)) {\n";
+                print RUNSCRIPT "\t\topen(XMLFILE,\"<".conf_reqval("statsdir")."/$statsfile.config.xml\");\n";
+                print RUNSCRIPT "\t\twhile (<XMLFILE>) {\n";
+                print RUNSCRIPT "\t\t\tprint OSTATSFILE \$_;\n";
+                print RUNSCRIPT "\t\t}\n";
+                print RUNSCRIPT "\t\tclose(XMLFILE);\n";
+		print RUNSCRIPT "\t\t\$phase++;\n";
+                print RUNSCRIPT "\t} else {\n";
+                print RUNSCRIPT "\t\tprint OSTATSFILE \$_;\n";
+                print RUNSCRIPT "\t}\n";
+                print RUNSCRIPT "}\n";
+                print RUNSCRIPT "close(STATSFILE);\n";
+                print RUNSCRIPT "close(OSTATSFILE);\n";
+                print RUNSCRIPT "unlink(\"".conf_reqval("statsdir")."/$statsfile.xml\");\n";
+                print RUNSCRIPT "unlink(\"".conf_reqval("statsdir")."/$statsfile.config.xml\");\n";
+                print RUNSCRIPT "system(\"mv ".conf_reqval("statsdir")."/$statsfile.new.xml ".conf_reqval("statsdir")."/$statsfile.xml\");\n";
+
 	        $script = conf_reqval("statsdir") . "/stats$SCRIPT_NO.sh";
 	        open (RUNSCRIPT, ">$script");
 	        chmod (0755, $script);
 	        print FSCRIPT "system \"$script\"\n";
 	        $SCRIPT_NO++;
-	        op_xmlstats($statsfile.".xml");
+
+    	        print RUNSCRIPT "mkdir ".conf_reqval("statsdir")."/xml\n";
+    	        print RUNSCRIPT "mkdir ".conf_reqval("statsdir")."/html\n";
+
+    	        print RUNSCRIPT "mv ".conf_reqval("statsdir")."/$statsfile.xml ".conf_reqval("statsdir")."/xml/$statsfile.xml\n";
+
 	        # Process XML file using Xanadu 2
-    	        print RUNSCRIPT "mkdir ".conf_reqval("statsdir")."/xml";
-    	        print RUNSCRIPT "mkdir ".conf_reqval("statsdir")."/html";
-	        print RUNSCRIPT "$FILEBENCH/xanadu/scripts/xanadu import ".conf_reqval("statsdir")." ".conf_reqval("statsdir")."/xml ".conf_reqval("function")."-".conf_reqval("statsdir");
-	        print RUNSCRIPT "$FILEBENCH/xanadu/scripts/xanadu export ".conf_reqval("statsdir")."/xml ".conf_reqval("statsdir")."/html";
+	        print RUNSCRIPT "$FILEBENCH/xanadu/scripts/xanadu import ".conf_reqval("statsdir")." ".conf_reqval("statsdir")."/xml ".conf_reqval("function")."-".conf_reqval("statsdir")."\n";
+	        print RUNSCRIPT "$FILEBENCH/xanadu/scripts/xanadu export ".conf_reqval("statsdir")."/xml ".conf_reqval("statsdir")."/html\n";
                 close(RUNSCRIPT);
 	    }
 	}
@@ -239,8 +289,7 @@ sub op_stats {
 sub op_xmlstats {
     my ($statsfile) = shift;
 	if($statsfile ne '') {
-	    	print FSCRIPT "stats xmldump \"$statsfile\"\n";	
-	    	print FSCRIPT "system \" $FILEBENCH/scripts/xmladd.pl $statsfile\"\n";	
+	    	print FSCRIPT "stats xmldump \"$statsfile.xml\"\n";	
 
 		# The following loop adds the benchpoint run parameters and statistics into a temporary XML file
 		open(OSTATSFILE,">".conf_reqval("statsdir")."/$statsfile.config.xml");
@@ -265,32 +314,11 @@ sub op_xmlstats {
 		print OSTATSFILE "</dim>\n";
 		print OSTATSFILE "</dim_list>\n";
 		print OSTATSFILE "</stat_group>\n";
+		close(OSTATSFILE);
 
-		# The Benchpoint statistics section of XML was disabled
-#		print OSTATSFILE "<stat_group name=\"Benchpoint Statistics\">\n";
-#		print OSTATSFILE "<cell_list>\n";
-#	        %STATHASH = op_statshash();
-#		# There is no test for whether STATHASH contains no keys 
-#		foreach $k (keys(%STATHASH)) {
-#			print OSTATSFILE "<cell>$STATHASH{$k}</cell>\n";
-#		}
-#		print OSTATSFILE "</cell_list>\n";
-#		print OSTATSFILE "<dim_list>\n";
-#		print OSTATSFILE "<dim>\n";
-#		print OSTATSFILE "<dimval>Value</dimval>\n";
-#		print OSTATSFILE "</dim>\n";
-#		print OSTATSFILE "<dim>\n";
-#
-#			foreach $k (keys(%STATHASH)) {
-#					print OSTATSFILE "<dimval>$k</dimval>\n";
-#		}
-#		print OSTATSFILE "</dim>\n";
-#		print OSTATSFILE "</dim_list>\n";
-#		print OSTATSFILE "</stat_group>\n";
-		print OSTATSFILE $_;
+		return(0);	
 	}
-	close(OSTATSFILE);
-	return(0);	
+	return(1);	
 }
 
 sub op_command {

@@ -365,7 +365,6 @@ fileset_create(fileset_t *fileset)
 			}
 
 			entry->fse_flags |= FSE_EXISTS;
-			close(fd);
 			ipc_mutex_unlock(&entry->fse_lock);
 			continue;
 		}

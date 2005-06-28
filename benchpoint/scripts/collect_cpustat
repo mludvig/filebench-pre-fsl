@@ -98,6 +98,8 @@ echo "Running statistics gathering: fastsu /usr/bin/priocntl -e -c RT $PROGBASE/
 $PROGBASE/bin/fastsu /usr/bin/priocntl -e -c RT $PROGBASE/scripts/$CPUSTAT $arguments > $base/${command}.$file 2>&1 &
 pid=$!
 sleep $runtime
+cpustat_pid=`ps -ef | grep "/usr/sbin/cpustat" | grep -v grep | nawk '{print $2}'`
+kill -9 $cpustat_pid
 if test $CPUPOST != "none"
 then
 	echo "Running cpustat post-processing script"
