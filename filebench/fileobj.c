@@ -59,6 +59,7 @@ fileobj_prealloc(fileobj_t *fileobj)
 	int fd;
 	char *buf;
 	int ret;
+	int exists;
 	struct stat64 sb;
 	char name[MAXPATHLEN];
 
@@ -71,7 +72,7 @@ fileobj_prealloc(fileobj_t *fileobj)
 	mkdir(name, 0777);
 	strcat(name, "/");
 	strcat(name, fileobj->fo_name);
-	
+
 	if ((fd = open64(name, O_RDWR)) < 0) {
 		filebench_log(LOG_ERROR,
 		    "Failed to pre-allocate file %s: %s",
@@ -79,8 +80,15 @@ fileobj_prealloc(fileobj_t *fileobj)
 		return(-1);	
 	}
 
+	/* If it's a raw device */
+	exists = (fstat64(fd, &sb) == 0);
+#ifdef RAW
+	if (exists && sb.st_rdev)
+		return(0);
+#endif
+	
 	if (integer_isset(fileobj->fo_reuse) &&
-	    (fstat64(fd, &sb) == 0) && (sb.st_size ==
+	    exists && (sb.st_size ==
 		(off64_t)*fileobj->fo_size)) {
 		filebench_log(LOG_INFO,
 		    "Re-using file %s", name);
@@ -122,6 +130,7 @@ fileobj_createfile(fileobj_t *fileobj)
 {
 	int fd;
 	struct stat64 sb;
+	int exists;
 	char name[MAXPATHLEN];
 
 	if (*fileobj->fo_path == NULL) {
@@ -134,8 +143,15 @@ fileobj_createfile(fileobj_t *fileobj)
 	strcat(name, "/");
 	strcat(name, fileobj->fo_name);
 
-	if (integer_isset(fileobj->fo_reuse) &&
-	    (stat64(name, &sb) == 0)) {
+	/* If it's a raw device */
+	exists = (stat64(name, &sb) == 0);
+#ifdef RAW
+	if (exists && sb.st_rdev)
+		return(0);
+#endif
+
+	/* If we are re-using the file, then just free up the cache and return */
+	if (integer_isset(fileobj->fo_reuse) && exists) {
 		fd = open64(name, O_RDWR);
 		fsync(fd);
 		fileobj_freemem(fd, *fileobj->fo_size);

@@ -7,7 +7,7 @@ and Solaris SPARC platform
 
 On each platform, in the same directory:
 
-$ ./configure
+$ ./configure --prefix=/opt
 $ make clean
 $ make package
 

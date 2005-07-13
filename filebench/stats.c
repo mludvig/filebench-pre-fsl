@@ -519,7 +519,6 @@ stats_dump(char *filename)
 	if (filebench_shm->dump_fd > 0) {
 		close(filebench_shm->dump_fd);
 		filebench_shm->dump_fd = -1;
-		filebench_log(LOG_ERROR, "closed dump fd");
 	}
 
 	filebench_log(LOG_DUMP, "Flowop totals:");

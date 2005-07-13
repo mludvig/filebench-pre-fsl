@@ -134,6 +134,18 @@ sub op_run {
     return(0);
 }
 
+sub op_sleep {
+    my ($time) = shift;
+    print FSCRIPT "sleep $time\n";
+    return(0);
+}
+
+sub op_msg {
+    my ($msg) = shift;
+    print FSCRIPT "echo \"$msg\"\n";
+    return(0);
+}
+
 sub op_quit {
     if($QUIT) {
 	# Shutdown the appropriate processes
@@ -248,6 +260,7 @@ sub op_stats {
                 print RUNSCRIPT "open(STATSFILE,\"<".conf_reqval("statsdir")."/$statsfile.xml\");\n";
                 print RUNSCRIPT "open(OSTATSFILE,\">".conf_reqval("statsdir")."/$statsfile.new.xml\");\n";
                 print RUNSCRIPT "while (<STATSFILE>) {\n";
+		print RUNSCRIPT "\t\$temp=\$_;\n";
                 print RUNSCRIPT "\tif ((!((/.*meta.*/) || (/.*stat_doc.*/))) && (\$phase == 1)) {\n";
                 print RUNSCRIPT "\t\topen(XMLFILE,\"<".conf_reqval("statsdir")."/$statsfile.config.xml\");\n";
                 print RUNSCRIPT "\t\twhile (<XMLFILE>) {\n";
@@ -255,9 +268,8 @@ sub op_stats {
                 print RUNSCRIPT "\t\t}\n";
                 print RUNSCRIPT "\t\tclose(XMLFILE);\n";
 		print RUNSCRIPT "\t\t\$phase++;\n";
-                print RUNSCRIPT "\t} else {\n";
-                print RUNSCRIPT "\t\tprint OSTATSFILE \$_;\n";
                 print RUNSCRIPT "\t}\n";
+                print RUNSCRIPT "\tprint OSTATSFILE \$temp;\n";
                 print RUNSCRIPT "}\n";
                 print RUNSCRIPT "close(STATSFILE);\n";
                 print RUNSCRIPT "close(OSTATSFILE);\n";
@@ -282,7 +294,6 @@ sub op_stats {
                 close(RUNSCRIPT);
 	    }
 	}
-	print FSCRIPT "\n";
 	return(0);	
 }
 
@@ -326,7 +337,6 @@ sub op_command {
 	if($command ne '') {
 	    print FSCRIPT "$command\n";	
 	}
-	print FSCRIPT "\n";
 	return(0);	
 }
 

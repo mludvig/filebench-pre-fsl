@@ -1,0 +1,55 @@
+sub pre_run {
+	# Run filesystem creation script
+#	system(get_PROGBASE()."/scripts/createfs ".get_PROGBASE());
+
+	# Initialize filebench to appropriate personality, create files and processes
+	op_init();
+
+	# The op_load command automatically creates files and processes 
+	op_load(conf_reqval("personality"));
+
+	# Initialise statistics and argument arrays
+	@ext_stats=();
+	@file_stats=();
+	@arg_stats=();
+}
+
+sub post_run {
+        my $statsbase = get_STATSBASE();
+        # Shutdown processes and quit filebench
+        op_quit();
+        # Create a html summary of the run
+	system ("cd $statsbase; " . get_FILEBENCH() . "/scripts/filebench_compare $statsbase")
+}
+
+sub bm_run {
+	my $runtime = conf_reqval("runtime");
+	my $maxrate = conf_reqval("maxrate");
+	my $warmuptime = conf_reqval("warmuptime");
+	# Remove the gigabyte character from the variable
+
+	@rate = (floor(0.1*$maxrate),floor(0.2*$maxrate),floor(0.3*$maxrate),
+		floor(0.4*$maxrate),floor(0.5*$maxrate),floor(0.6*$maxrate),
+		floor(0.7*$maxrate),floor(0.8*$maxrate),floor(0.9*$maxrate),$maxrate);
+	foreach $r (@rate) {
+		op_msg("Running with rate $r");
+		
+		# Set the event rate in filebench
+		op_eventrate("$r");
+
+		# Wait for warm up if desired
+		op_sleep($warmuptime);
+
+		# Clear, run the benchmark, snap statistics and dump to raw and Xanadu XML
+		# This command will also run external statistics (supplied in an array) if desired 
+		# Statistics automatically dumped into directory matching stats profile variable
+		# <stats>/<hostname>-<date-time>/<personality>
+		op_stats($runtime,"stats.$r",@ext_stats,@file_stats,@arg_stats);
+	}
+}
+
+1;
+
+
+
+

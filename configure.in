@@ -30,7 +30,7 @@ AC_PROG_INSTALL
 AC_CANONICAL_HOST
 case "$host_os$host_cpu" in
  *solaris*sparc*)
-        ac_default_prefix=/opt
+        ac_default_prefix="/opt"
 	CC=cc
 	LDLIBS="-lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread -xarch=v9"
 	LFLAGS="-t"
@@ -38,8 +38,11 @@ case "$host_os$host_cpu" in
 	YFLAGS="-d"
         AC_DEFINE(USE_PROCESS_MODEL, 1,
                [ Define if we have can use a process model ])
+        FILEBENCHDIR=${prefix}/filebench
+        FILEBENCHBIN=${prefix}/filebench/bin
     ;;
  *solaris*i386*)
+        ac_default_prefix="/opt"
 	CC=cc
 	LDLIBS="-lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread"
 	LFLAGS="-t"
@@ -47,6 +50,8 @@ case "$host_os$host_cpu" in
 	YFLAGS="-d"
         AC_DEFINE(USE_PROCESS_MODEL, 1,
                [ Define if we have can use a process model ])
+        FILEBENCHDIR=${prefix}/filebench
+        FILEBENCHBIN=${prefix}/filebench/bin
     ;;
  *darwin*)
 	CC=cc
@@ -54,6 +59,8 @@ case "$host_os$host_cpu" in
 	LFLAGS="-t"
 	CFLAGS="-g -DYYDEBUG=1"
 	YFLAGS="-d"
+        FILEBENCHDIR=${prefix}/filebench
+        FILEBENCHBIN=${prefix}/bin
     ;;
   gnu*|linux*)
 	CC=cc
@@ -66,6 +73,8 @@ case "$host_os$host_cpu" in
 	YFLAGS="-d"
         AC_DEFINE(HAVE_OFF64_T, 1,
                [ Define if we can use 64 bit files ])
+        FILEBENCHDIR=${prefix}/filebench
+        FILEBENCHBIN=${prefix}/bin
     ;;
 esac
 
@@ -94,6 +103,10 @@ AC_CHECK_LIB(pthread, pthread_mutex_lock,
       AC_CHECK_LIB(pthread, pthread_mutexattr_setpshared,
         [ AC_DEFINE(HAVE_PROCSCOPE_PTHREADS, 1,
 	  [ Define if you have POSIX process scope threads ])])
+
+      AC_CHECK_LIB(pthread, pthread_mutexattr_setprotocol,
+        [ AC_DEFINE(HAVE_PTHREAD_MUTEXATTR_SETPROTOCOL, 1,
+	  [ Define if you have POSIX setprotocol ])])
 
       AC_CHECK_FUNC(_lwp_self, 
         [ AC_DEFINE(HAVE_LWPS, 1,
@@ -308,6 +321,8 @@ AC_SUBST(YACC)
 AC_SUBST(DEFINES)
 AC_SUBST(BUILD)
 AC_SUBST(SRCDIR)
+AC_SUBST(FILEBENCHDIR)
+AC_SUBST(FILEBENCHBIN)
 
 AC_CONFIG_FILES([Makefile filebench/Makefile fastsu/Makefile workloads/Makefile workloads/build/Makefile scripts/Makefile benchpoint/Makefile benchpoint/bin/Makefile benchpoint/config/Makefile benchpoint/functions/Makefile benchpoint/profiles/Makefile])
 

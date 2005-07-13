@@ -1,0 +1,18 @@
+DEFAULTS {
+        runtime = 10;
+        dir = /Users/rmc/filebench/data;
+        stats = /Users/rmc/filebench/stats;
+        filesystem = hfs;
+        description = "hfs";
+}
+
+CONFIG randomread {
+        function = rateloop;
+        personality = randomread;
+        nthreads = 2;
+        iosize = 8k;
+        warmuptime = 10;
+        filesize = 100m;
+        maxrate = 10000;
+}
+

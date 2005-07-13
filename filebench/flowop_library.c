@@ -300,12 +300,6 @@ flowoplib_read(threadflow_t *threadflow, flowop_t *flowop)
 			wss = *flowop->fo_wss;
 	}
 
-	if (*flowop->fo_wss == 0)
-		wss = *flowop->fo_file->fo_size;
-	else
-		wss = *flowop->fo_wss;
-
-
 	if (*flowop->fo_iosize == 0) {
 		filebench_log(LOG_ERROR, "zero iosize for thread %s", 
 		    flowop->fo_name);
@@ -1670,11 +1664,6 @@ flowoplib_write(threadflow_t *threadflow, flowop_t *flowop)
 	round = *flowop->fo_iosize;
 	memoffset = filebench_randomno(memsize, round);
 	
-	if (*flowop->fo_wss == 0)
-		wss = file->fse_size;
-	else
-		wss = *flowop->fo_wss;
-
 	if (*flowop->fo_iosize == 0) {
 		filebench_log(LOG_ERROR, "zero iosize for thread %s", 
 		    flowop->fo_name);

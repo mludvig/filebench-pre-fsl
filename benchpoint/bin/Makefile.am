@@ -9,5 +9,5 @@
 bin_SCRIPTS = runbench
 
 runbench: benchpoint Makefile.in
-	sed 's:DEFINE_FILEBENCHDIR:$(prefix)/filebench:g' benchpoint | \
-	sed 's:DEFINE_PROGDIR:$(prefix)/bin:g' >runbench
+	sed 's:DEFINE_FILEBENCHDIR:@FILEBENCHDIR@:g' benchpoint | \
+	sed 's:DEFINE_PROGDIR:@FILEBENCHBIN@:g' >runbench
