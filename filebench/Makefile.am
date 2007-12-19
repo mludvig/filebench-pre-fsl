@@ -6,14 +6,13 @@
 # See the file LICENSING in this distribution for details.
 #
 
-bin_PROGRAMS = filebench
-filebench_SOURCES = fileobj.c misc.c procflow.c threadflow.c \
+bin_PROGRAMS = go_filebench
+filebench_SOURCES = gamma_dist.c misc.c procflow.c threadflow.c \
                     utils.c flowop.c flowop_library.c ipc.c \
 		    vars.c stats.c eventgen.c fileset.c \
 		    parser_gram.y parser_lex.l
-filebench_LDADD = @GSLLIB@/libgsl.a @GSLCBLAS@/libgslcblas.a @LDLIBS@
 filebenchdir = $(datadir)/filebench
-INCLUDES = -I../intl -I@GSLINC@ -DFILEBENCHDIR=\"$(prefix)/filebench\"
+INCLUDES = -I../intl -DFILEBENCHDIR=\"$(prefix)/filebench\"
 
 MV=@MV@
 LEX=@LEX@
@@ -31,7 +30,7 @@ parser_gram.h parser_gram.c: parser_gram.y Makefile
 	@mv y.tab.h parser_gram.h
 	@mv y.tab.c parser_gram.c
 
-pkg: filebench
+pkg: go_filebench
 	mkdir -p $(BUILD)
-	cp filebench $(BUILD)
+	cp go_filebench $(BUILD)
 

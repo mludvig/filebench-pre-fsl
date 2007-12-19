@@ -9,5 +9,5 @@
 filebenchdir = $(prefix)/filebench
 scriptsdir = $(filebenchdir)/scripts
 
-scripts_SCRIPTS = filebench_compare filebench_summary filebench_plot
+scripts_SCRIPTS = filebench_compare filebench_summary filebench_plot fs_flush
 

@@ -1,12 +1,31 @@
 /*
- * Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+ * CDDL HEADER START
  *
  * The contents of this file are subject to the terms of the
- * Common Development and Distribution License.
- * See the file LICENSING in this distribution for details.
+ * Common Development and Distribution License (the "License").
+ * You may not use this file except in compliance with the License.
+ *
+ * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+ * or http://www.opensolaris.org/os/licensing.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL HEADER in each
+ * file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+ * If applicable, add the following below this CDDL HEADER, with the
+ * fields enclosed by brackets "[]" replaced with your own identifying
+ * information: Portions Copyright [yyyy] [name of copyright owner]
+ *
+ * CDDL HEADER END
+ */
+/*
+ * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Use is subject to license terms.
  */
 
-#include <config.h>
+#pragma ident	"@(#)ipc.c	1.2	07/12/03 SMI"
+
+#include "config.h"
 
 #include <stdio.h>
 #include <fcntl.h>
@@ -24,10 +43,21 @@
 static int shmfd;
 filebench_shm_t *filebench_shm = NULL;
 static pthread_mutexattr_t *mutexattr = NULL;
-char *null=NULL;
 
-static int ipc_ismattach();
+/*
+ * Interprocess Communication mechanisms. If multiple processes
+ * are used, filebench opens a shared file in memory mapped mode to hold
+ * a variety of global variables and data structures. If only using
+ * multiple threads, it just allocates a region of local memory. A
+ * region of interprocess shared memory and a set of shared semaphores
+ * are also created. Routines are provided to manage the creation,
+ * destruction, and allocation of these resoures.
+ */
 
+
+/*
+ * Locks a mutex and logs any errors.
+ */
 int
 ipc_mutex_lock(pthread_mutex_t *mutex)
 {
@@ -38,11 +68,11 @@ ipc_mutex_lock(pthread_mutex_t *mutex)
 #ifdef HAVE_ROBUST_MUTEX
 	if (error == EOWNERDEAD) {
 		if (pthread_mutex_consistent_np(mutex) != 0) {
-			filebench_log(LOG_FATAL, "mutex make consistent failed: %s",
-			    strerror(error));			
-			return(-1);
+			filebench_log(LOG_FATAL, "mutex make consistent "
+			    "failed: %s", strerror(error));
+			return (-1);
 		}
-		return(0);
+		return (0);
 	}
 #endif /* HAVE_ROBUST_MUTEX */
 
@@ -51,9 +81,12 @@ ipc_mutex_lock(pthread_mutex_t *mutex)
 		    strerror(error));
 	}
 
-	return(error);
+	return (error);
 }
 
+/*
+ * Unlocks a mutex and logs any errors.
+ */
 int
 ipc_mutex_unlock(pthread_mutex_t *mutex)
 {
@@ -64,11 +97,11 @@ ipc_mutex_unlock(pthread_mutex_t *mutex)
 #ifdef HAVE_ROBUST_MUTEX
 	if (error == EOWNERDEAD) {
 		if (pthread_mutex_consistent_np(mutex) != 0) {
-			filebench_log(LOG_FATAL, "mutex make consistent failed: %s",
-			    strerror(error));			
-			return(-1);
+			filebench_log(LOG_FATAL, "mutex make consistent "
+			    "failed: %s", strerror(error));
+			return (-1);
 		}
-		return(0);
+		return (0);
 	}
 #endif /* HAVE_ROBUST_MUTEX */
 
@@ -77,48 +110,54 @@ ipc_mutex_unlock(pthread_mutex_t *mutex)
 		    strerror(error));
 	}
 
-	return(error);
+	return (error);
 }
 
+/*
+ * On first invocation, allocates a mutex attributes structure
+ * and initializes it with appropriate attributes. In all cases,
+ * returns a pointer to the structure.
+ */
 pthread_mutexattr_t *
 ipc_mutexattr(void)
 {
 #ifdef USE_PROCESS_MODEL
 	if (mutexattr == NULL) {
-		if ((mutexattr = malloc(sizeof(pthread_mutexattr_t))) == NULL) {
+		if ((mutexattr =
+		    malloc(sizeof (pthread_mutexattr_t))) == NULL) {
 			filebench_log(LOG_ERROR, "cannot alloc mutex attr");
 			filebench_shutdown(1);
 		}
 #ifdef HAVE_PROCSCOPE_PTHREADS
-		pthread_mutexattr_init(mutexattr);
-		if (pthread_mutexattr_setpshared(mutexattr, 
+		(void) pthread_mutexattr_init(mutexattr);
+		if (pthread_mutexattr_setpshared(mutexattr,
 		    PTHREAD_PROCESS_SHARED) != 0) {
-			filebench_log(LOG_ERROR,
-			    "cannot set mutex attr PROCESS_SHARED on this platform");
+			filebench_log(LOG_ERROR, "cannot set mutex attr "
+			    "PROCESS_SHARED on this platform");
 			filebench_shutdown(1);
 		}
 #ifdef HAVE_PTHREAD_MUTEXATTR_SETPROTOCOL
-		if (pthread_mutexattr_setprotocol(mutexattr, 
+		if (pthread_mutexattr_setprotocol(mutexattr,
 		    PTHREAD_PRIO_INHERIT) != 0) {
-			filebench_log(LOG_ERROR,
-			    "cannot set mutex attr PTHREAD_PRIO_INHERIT on this platform");
+			filebench_log(LOG_ERROR, "cannot set mutex attr "
+			    "PTHREAD_PRIO_INHERIT on this platform");
 			filebench_shutdown(1);
-		}      		
+		}
 #endif /* HAVE_PTHREAD_MUTEXATTR_SETPROTOCOL */
-#endif /* HAVE_PROCSCOPE_PTHREADS */			
+#endif /* HAVE_PROCSCOPE_PTHREADS */
 #ifdef HAVE_ROBUST_MUTEX
-		if (pthread_mutexattr_setrobust_np(mutexattr, 
+		if (pthread_mutexattr_setrobust_np(mutexattr,
 		    PTHREAD_MUTEX_ROBUST_NP) != 0) {
-			filebench_log(LOG_ERROR,
-			    "cannot set mutex attr PTHREAD_MUTEX_ROBUST_NP on this platform");
+			filebench_log(LOG_ERROR, "cannot set mutex attr "
+			    "PTHREAD_MUTEX_ROBUST_NP on this platform");
 			filebench_shutdown(1);
-		}      					
-		if (pthread_mutexattr_settype(mutexattr, 
+		}
+		if (pthread_mutexattr_settype(mutexattr,
 		    PTHREAD_MUTEX_ERRORCHECK) != 0) {
-			filebench_log(LOG_ERROR,
-			    "cannot set mutex attr PTHREAD_MUTEX_ERRORCHECK on this platform");
+			filebench_log(LOG_ERROR, "cannot set mutex attr "
+			    "PTHREAD_MUTEX_ERRORCHECK on this platform");
 			filebench_shutdown(1);
-		}      					
+		}
 #endif /* HAVE_ROBUST_MUTEX */
 
 	}
@@ -128,24 +167,29 @@ ipc_mutexattr(void)
 
 static pthread_condattr_t *condattr = NULL;
 
+/*
+ * On first invocation, allocates a condition variable attributes
+ * structure and initializes it with appropriate attributes. In
+ * all cases, returns a pointer to the structure.
+ */
 pthread_condattr_t *
 ipc_condattr(void)
 {
 #ifdef USE_PROCESS_MODEL
 	if (condattr == NULL) {
-		if ((condattr = malloc(sizeof(pthread_condattr_t))) == NULL) {
+		if ((condattr = malloc(sizeof (pthread_condattr_t))) == NULL) {
 			filebench_log(LOG_ERROR, "cannot alloc cond attr");
 			filebench_shutdown(1);
 		}
 #ifdef HAVE_PROCSCOPE_PTHREADS
-		pthread_condattr_init(condattr);
-		if (pthread_condattr_setpshared(condattr, 
-			PTHREAD_PROCESS_SHARED) != 0) {
-			filebench_log(LOG_ERROR, 
+		(void) pthread_condattr_init(condattr);
+		if (pthread_condattr_setpshared(condattr,
+		    PTHREAD_PROCESS_SHARED) != 0) {
+			filebench_log(LOG_ERROR,
 			    "cannot set cond attr PROCESS_SHARED");
 			filebench_shutdown(1);
-		}					
-#endif /* HAVE_PROCSCOPE_PTHREADS */			
+		}
+#endif /* HAVE_PROCSCOPE_PTHREADS */
 	}
 #endif /* USE_PROCESS_MODEL */
 	return (condattr);
@@ -153,24 +197,30 @@ ipc_condattr(void)
 
 static pthread_rwlockattr_t *rwlockattr = NULL;
 
-pthread_rwlockattr_t *
+/*
+ * On first invocation, allocates a readers/writers attributes
+ * structure and initializes it with appropriate attributes.
+ * In all cases, returns a pointer to the structure.
+ */
+static pthread_rwlockattr_t *
 ipc_rwlockattr(void)
 {
 #ifdef USE_PROCESS_MODEL
 	if (rwlockattr == NULL) {
-		if ((rwlockattr = malloc(sizeof(pthread_rwlockattr_t))) == NULL) {
+		if ((rwlockattr =
+		    malloc(sizeof (pthread_rwlockattr_t))) == NULL) {
 			filebench_log(LOG_ERROR, "cannot alloc rwlock attr");
 			filebench_shutdown(1);
 		}
 #ifdef HAVE_PROCSCOPE_PTHREADS
-		pthread_rwlockattr_init(rwlockattr);
-		if (pthread_rwlockattr_setpshared(rwlockattr, 
-			PTHREAD_PROCESS_SHARED) != 0) {
-			filebench_log(LOG_ERROR, 
+		(void) pthread_rwlockattr_init(rwlockattr);
+		if (pthread_rwlockattr_setpshared(rwlockattr,
+		    PTHREAD_PROCESS_SHARED) != 0) {
+			filebench_log(LOG_ERROR,
 			    "cannot set rwlock attr PROCESS_SHARED");
 			filebench_shutdown(1);
-		}					
-#endif /* HAVE_PROCSCOPE_PTHREADS */			
+		}
+#endif /* HAVE_PROCSCOPE_PTHREADS */
 	}
 #endif /* USE_PROCESS_MODEL */
 	return (rwlockattr);
@@ -178,45 +228,62 @@ ipc_rwlockattr(void)
 
 char *shmpath = NULL;
 
+/*
+ * Calls semget() to get a set of shared system V semaphores.
+ */
 void
-ipc_seminit()
+ipc_seminit(void)
 {
 	key_t key = filebench_shm->semkey;
-	int semid;
 
 	/* Already done? */
 	if (filebench_shm->seminit)
 		return;
 
-	if ((semid = semget(key, FILEBENCH_NSEMS, IPC_CREAT |
-		 S_IRUSR | S_IWUSR)) == -1) {
-		filebench_log(LOG_ERROR, 
-		    "could not create sysv semaphore set (need to increase sems?): %s", 
+	if ((semget(key, FILEBENCH_NSEMS, IPC_CREAT |
+	    S_IRUSR | S_IWUSR)) == -1) {
+		filebench_log(LOG_ERROR,
+		    "could not create sysv semaphore set "
+		    "(need to increase sems?): %s",
 		    strerror(errno));
 		exit(1);
 	}
-	return;
 }
 
+/*
+ * Initialize the Interprocess Communication system and its
+ * associated shared memory structure. It first creates a
+ * temporary file using either the mkstemp() function or the
+ * tempnam() and open() functions. If the process model is in
+ * use,it than sets the file large enough to hold the
+ * filebench_shm and an additional Megabyte. The file is then
+ * memory mapped. If the process model is not in use, it simply
+ * mallocs a region of sizeof (filebench_shm_t).
+ *
+ * Once the shared memory region / file is created, ipc_init
+ * initializes various locks pointers, and variables in the
+ * shared memory. It also uses ftok() to get a shared memory
+ * semaphore key for later use in allocating shared semaphores.
+ */
 void
-ipc_init()
+ipc_init(void)
 {
-	int semid;
-
 	filebench_shm_t *buf = malloc(MB);
-	int i;
 	key_t key;
 	caddr_t c1;
 	caddr_t c2;
+#ifdef HAVE_SEM_RMID
+	int semid;
+#endif
 
 #ifdef HAVE_MKSTEMP
 	shmpath = (char *)malloc(128);
-	strcpy(shmpath, "/var/tmp/fbenchXXXXXX");
+	(void) strcpy(shmpath, "/var/tmp/fbenchXXXXXX");
 	shmfd = mkstemp(shmpath);
 #else
 	shmfd   = open(shmpath, O_CREAT | O_RDWR | O_TRUNC, 0666);
 	shmpath = tempnam("/var/tmp", "fbench");
-#endif
+#endif	/* HAVE_MKSTEMP */
 
 #ifdef USE_PROCESS_MODEL
 
@@ -227,32 +294,24 @@ ipc_init()
 		exit(1);
 	}
 
-	lseek(shmfd, sizeof(filebench_shm_t), SEEK_SET);
+	(void) lseek(shmfd, sizeof (filebench_shm_t), SEEK_SET);
 	if (write(shmfd, buf, MB) != MB) {
-		filebench_log(LOG_FATAL, 
+		filebench_log(LOG_FATAL,
 		    "Cannot allocate shm: %s", strerror(errno));
 		exit(1);
 	}
-	
-#ifdef NEVER
-	for (i = 0; i < sizeof(filebench_shm_t); i += MB) {
-		if (write(shmfd, buf, MB) != MB) {
-			filebench_log(LOG_FATAL, 
-			    "Cannot allocate shm: %s", strerror(errno));
-			exit(1);
-		}
-	}
-#endif
 
-	if ((filebench_shm = (filebench_shm_t *)mmap(0, sizeof(filebench_shm_t), 
-		PROT_READ | PROT_WRITE,
-		MAP_SHARED, shmfd, 0)) == NULL) {
+	/* LINTED E_BAD_PTR_CAST_ALIGN */
+	if ((filebench_shm = (filebench_shm_t *)mmap((caddr_t)0,
+	    sizeof (filebench_shm_t), PROT_READ | PROT_WRITE,
+	    MAP_SHARED, shmfd, 0)) == NULL) {
 		filebench_log(LOG_FATAL, "Cannot mmap shm");
 		exit(1);
 	}
 
-#else 
-	if ((filebench_shm = (filebench_shm_t *)malloc(sizeof(filebench_shm_t))) == NULL) {
+#else
+	if ((filebench_shm =
+	    (filebench_shm_t *)malloc(sizeof (filebench_shm_t))) == NULL) {
 		filebench_log(LOG_FATAL, "Cannot malloc shm");
 		exit(1);
 	}
@@ -261,7 +320,7 @@ ipc_init()
 	c1 = (caddr_t)filebench_shm;
 	c2 = (caddr_t)&filebench_shm->marker;
 
-	memset(filebench_shm, 0, c2 - c1);
+	(void) memset(filebench_shm, 0, c2 - c1);
 	filebench_shm->epoch = gethrtime();
 	filebench_shm->debug_level = 2;
 	filebench_shm->string_ptr = &filebench_shm->strings[0];
@@ -269,35 +328,37 @@ ipc_init()
 	filebench_shm->path_ptr = &filebench_shm->filesetpaths[0];
 
 	/* Setup mutexes for object lists */
-	pthread_mutex_init(&filebench_shm->fileobj_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->fileset_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->procflow_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->threadflow_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->flowop_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->msg_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->eventgen_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->malloc_lock, ipc_mutexattr());
-	pthread_mutex_init(&filebench_shm->ism_lock, ipc_mutexattr());
-	pthread_cond_init(&filebench_shm->eventgen_cv, ipc_condattr());
-	pthread_rwlock_init(&filebench_shm->flowop_find_lock, ipc_rwlockattr());
-	pthread_rwlock_init(&filebench_shm->run_lock, ipc_rwlockattr());
-	pthread_rwlock_rdlock(&filebench_shm->run_lock);
+	(void) pthread_mutex_init(&filebench_shm->fileset_lock,
+	    ipc_mutexattr());
+	(void) pthread_mutex_init(&filebench_shm->procflow_lock,
+	    ipc_mutexattr());
+	(void) pthread_mutex_init(&filebench_shm->threadflow_lock,
+	    ipc_mutexattr());
+	(void) pthread_mutex_init(&filebench_shm->flowop_lock, ipc_mutexattr());
+	(void) pthread_mutex_init(&filebench_shm->msg_lock, ipc_mutexattr());
+	(void) pthread_mutex_init(&filebench_shm->eventgen_lock,
+	    ipc_mutexattr());
+	(void) pthread_mutex_init(&filebench_shm->malloc_lock, ipc_mutexattr());
+	(void) pthread_mutex_init(&filebench_shm->ism_lock, ipc_mutexattr());
+	(void) pthread_cond_init(&filebench_shm->eventgen_cv, ipc_condattr());
+	(void) pthread_rwlock_init(&filebench_shm->flowop_find_lock,
+	    ipc_rwlockattr());
+	(void) pthread_rwlock_init(&filebench_shm->run_lock, ipc_rwlockattr());
+	(void) pthread_rwlock_rdlock(&filebench_shm->run_lock);
 
-	ipc_mutex_lock(&filebench_shm->ism_lock);
+	(void) ipc_mutex_lock(&filebench_shm->ism_lock);
 
 	/* Create semaphore */
 	if ((key = ftok(shmpath, 1)) < 0) {
-		filebench_log(LOG_ERROR, "cannot create sem: %s", 
+		filebench_log(LOG_ERROR, "cannot create sem: %s",
 		    strerror(errno));
 		exit(1);
 	}
 
-	if ((semid = semget(key, 0, 0)) != -1) {
-#define HAVE_SEM_RMID
 #ifdef HAVE_SEM_RMID
-		semctl(semid, 0, IPC_RMID);
+	if ((semid = semget(key, 0, 0)) != -1)
+		(void) semctl(semid, 0, IPC_RMID);
 #endif
-	}
 
 	filebench_shm->semkey = key;
 	filebench_shm->log_fd = -1;
@@ -308,115 +369,144 @@ ipc_init()
 	free(buf);
 }
 
-int
-ipc_cleanup()
+/*
+ * If compiled to use process model, just unlinks the shmpath.
+ * Otherwise a no-op.
+ */
+void
+ipc_cleanup(void)
 {
-
 #ifdef USE_PROCESS_MODEL
-	unlink(shmpath);
+	(void) unlink(shmpath);
 #endif /* USE_PROCESS_MODEL */
-	
 }
 
+/*
+ * Attach to shared memory. Used by worker processes to open
+ * and mmap the shared memory region. If successful, it
+ * initializes the worker process' filebench_shm to point to
+ * the region and returns 0. Otherwise it returns -1.
+ */
 int
 ipc_attach(caddr_t shmaddr)
 {
 	if ((shmfd = open(shmpath, O_RDWR, 0666)) < 0) {
 		filebench_log(LOG_ERROR, "Cannot open shm");
-		return(-1);
+		return (-1);
 	}
 
-	if ((filebench_shm = (filebench_shm_t *)mmap(shmaddr, sizeof(filebench_shm_t), 
-		PROT_READ | PROT_WRITE,
-		MAP_SHARED | MAP_FIXED, shmfd, 0)) == NULL) {
+	/* LINTED E_BAD_PTR_CAST_ALIGN */
+	if ((filebench_shm = (filebench_shm_t *)mmap(shmaddr,
+	    sizeof (filebench_shm_t), PROT_READ | PROT_WRITE,
+	    MAP_SHARED | MAP_FIXED, shmfd, 0)) == NULL) {
 		filebench_log(LOG_ERROR, "Cannot mmap shm");
-		return(-1);
+		return (-1);
 	}
 
 	filebench_log(LOG_DEBUG_IMPL, "addr = %zx", filebench_shm);
 
-	return(0);
+	return (0);
 }
 
-int filebench_sizes[] = {
-	FILEBENCH_NFILEOBJS,
+static int filebench_sizes[] = {
 	FILEBENCH_NPROCFLOWS,
 	FILEBENCH_NTHREADFLOWS,
 	FILEBENCH_NFLOWOPS,
 	FILEBENCH_NVARS,
 	FILEBENCH_NVARS,
 	FILEBENCH_NVARS,
-	FILEBENCH_NVARS,
-        FILEBENCH_NFILESETENTRIES};
+	FILEBENCH_NFILESETS,
+	FILEBENCH_NFILESETENTRIES};
 
-char *
+/*
+ * Allocates filebench objects from pre allocated region of
+ * shareable memory. The memory region is partitioned into sets
+ * of objects during initialization. This routine scans for
+ * the first unallocated object of type "type" in the set of
+ * available objects, and makes it as allocated. The routine
+ * returns a pointer to the object, or NULL if all objects have
+ * been allocated.
+ */
+void *
 ipc_malloc(int type)
 {
 	int i;
 	int max = filebench_sizes[type];
 
-	ipc_mutex_lock(&filebench_shm->malloc_lock);
+	(void) ipc_mutex_lock(&filebench_shm->malloc_lock);
 
-        for (i = 0; filebench_shm->bitmap[type][i] == 1; i++) {
-		if (i == max)
-			goto ipc_malloc_outofmemory;
+	for (i = 0; i < max; i++) {
+		if (filebench_shm->bitmap[type][i] == 0)
+			break;
 	}
+
+	if (i >= max) {
+		filebench_log(LOG_ERROR, "Out of shared memory (%d)!", type);
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return (NULL);
+	}
+
 	filebench_shm->bitmap[type][i] = 1;
 
-
 	switch (type) {
-	case FILEBENCH_FILEOBJ:
-		memset((char *)&filebench_shm->fileobj[i], 0, sizeof(fileobj_t));
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->fileobj[i]);
-		
 	case FILEBENCH_FILESET:
-		memset((char *)&filebench_shm->fileset[i], 0, sizeof(fileset_t));
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->fileset[i]);
-		
+		(void) memset((char *)&filebench_shm->fileset[i], 0,
+		    sizeof (fileset_t));
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->fileset[i]);
+
 	case FILEBENCH_FILESETENTRY:
-		memset((char *)&filebench_shm->filesetentry[i], 0, sizeof(filesetentry_t));
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->filesetentry[i]);
-		
+		(void) memset((char *)&filebench_shm->filesetentry[i], 0,
+		    sizeof (filesetentry_t));
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->filesetentry[i]);
+
 	case FILEBENCH_PROCFLOW:
-		memset((char *)&filebench_shm->procflow[i], 0, sizeof(procflow_t));
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->procflow[i]);
+		(void) memset((char *)&filebench_shm->procflow[i], 0,
+		    sizeof (procflow_t));
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->procflow[i]);
 
 	case FILEBENCH_THREADFLOW:
-		memset((char *)&filebench_shm->threadflow[i], 0, sizeof(threadflow_t));
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->threadflow[i]);
+		(void) memset((char *)&filebench_shm->threadflow[i], 0,
+		    sizeof (threadflow_t));
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->threadflow[i]);
 
 	case FILEBENCH_FLOWOP:
-		memset((char *)&filebench_shm->flowop[i], 0, sizeof(flowop_t));
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->flowop[i]);
-	
+		(void) memset((char *)&filebench_shm->flowop[i], 0,
+		    sizeof (flowop_t));
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->flowop[i]);
+
 	case FILEBENCH_INTEGER:
 		filebench_shm->integer_ptrs[i] = NULL;
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->integer_ptrs[i]);
-	
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->integer_ptrs[i]);
+
 	case FILEBENCH_STRING:
 		filebench_shm->string_ptrs[i] = NULL;
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->string_ptrs[i]);
-	
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->string_ptrs[i]);
+
 	case FILEBENCH_VARIABLE:
-		memset((char *)&filebench_shm->var[i], 0, sizeof(var_t));
-		ipc_mutex_unlock(&filebench_shm->malloc_lock);
-		return((char *)&filebench_shm->var[i]);
+		(void) memset((char *)&filebench_shm->var[i], 0,
+		    sizeof (var_t));
+		(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
+		return ((char *)&filebench_shm->var[i]);
 	}
 
-ipc_malloc_outofmemory:
-	filebench_log(LOG_ERROR, "Out of shared memory (%d)!", type);
-	ipc_mutex_unlock(&filebench_shm->malloc_lock);
-	return(NULL);
+	filebench_log(LOG_ERROR, "Attempt to ipc_malloc unknown type (%d)!",
+	    type);
+	return (NULL);
 }
 
+/*
+ * Frees a filebench object of type "type" at the location
+ * pointed to by "addr". It uses the type and address to
+ * calculate which object is being freed, and clears its
+ * allocation map entry.
+ */
 void
 ipc_free(int type, char *addr)
 {
@@ -431,74 +521,90 @@ ipc_free(int type, char *addr)
 	}
 
 	switch (type) {
-	case FILEBENCH_FILEOBJ:
-		base = (caddr_t)&filebench_shm->fileobj[0];
-		size = sizeof(fileobj_t);
-		break;
-		
+
 	case FILEBENCH_FILESET:
 		base = (caddr_t)&filebench_shm->fileset[0];
-		size = sizeof(fileset_t);
+		size = sizeof (fileset_t);
 		break;
-		
+
 	case FILEBENCH_FILESETENTRY:
 		base = (caddr_t)&filebench_shm->filesetentry[0];
-		size = sizeof(filesetentry_t);
+		size = sizeof (filesetentry_t);
 		break;
-		
+
 	case FILEBENCH_PROCFLOW:
 		base = (caddr_t)&filebench_shm->procflow[0];
-		size = sizeof(procflow_t);
+		size = sizeof (procflow_t);
 		break;
 
 	case FILEBENCH_THREADFLOW:
 		base = (caddr_t)&filebench_shm->threadflow[0];
-		size = sizeof(threadflow_t);
+		size = sizeof (threadflow_t);
 		break;
 
 	case FILEBENCH_FLOWOP:
 		base = (caddr_t)&filebench_shm->flowop[0];
-		size = sizeof(flowop_t);
+		size = sizeof (flowop_t);
 		break;
-	
+
 	case FILEBENCH_INTEGER:
 		base = (caddr_t)&filebench_shm->integer_ptrs[0];
-		size = sizeof(caddr_t);
+		size = sizeof (caddr_t);
 		break;
-	
+
 	case FILEBENCH_STRING:
 		base = (caddr_t)&filebench_shm->string_ptrs[0];
-		size = sizeof(caddr_t);
+		size = sizeof (caddr_t);
 		break;
-	
+
 	case FILEBENCH_VARIABLE:
 		base = (caddr_t)&filebench_shm->var[0];
-		size = sizeof(var_t);
+		size = sizeof (var_t);
 		break;
 	}
-	
+
 	offset = ((size_t)addr - (size_t)base);
 	item = offset / size;
 
-	ipc_mutex_lock(&filebench_shm->malloc_lock);
-	filebench_shm->bitmap[type][item] = 0; 
-	ipc_mutex_unlock(&filebench_shm->malloc_lock);
-	return;
+	(void) ipc_mutex_lock(&filebench_shm->malloc_lock);
+	filebench_shm->bitmap[type][item] = 0;
+	(void) ipc_mutex_unlock(&filebench_shm->malloc_lock);
 }
 
-/* Allocate string */
+/*
+ * Allocate a string from filebench string memory. The length
+ * of the allocated string is the same as the length of the
+ * supplied string "string", and the contents of string are
+ * copied to the newly allocated string.
+ */
 char *
 ipc_stralloc(char *string)
 {
 	char *allocstr = filebench_shm->string_ptr;
 
 	filebench_shm->string_ptr += strlen(string) + 1;
-	strncpy(allocstr, string, strlen(string));
 
-	return(allocstr);
+	if ((filebench_shm->string_ptr - &filebench_shm->strings[0]) >
+	    FILEBENCH_STRINGMEMORY) {
+		filebench_log(LOG_ERROR, "Out of ipc string memory");
+		return (NULL);
+	}
+
+	(void) strncpy(allocstr, string, strlen(string));
+
+	return (allocstr);
 }
 
-/* Allocate fileset path */
+/*
+ * Allocate a path string from filebench path string memory.
+ * Specifically used for allocating fileset paths. The length
+ * of the allocated path string is the same as the length of
+ * the supplied path string "path", and the contents of path
+ * are copied to the newly allocated path string. Checks for
+ * out-of-path-string-memory condition and returns NULL if so.
+ * Otherwise it returns a pointer to the newly allocated path
+ * string.
+ */
 char *
 ipc_pathalloc(char *path)
 {
@@ -506,29 +612,35 @@ ipc_pathalloc(char *path)
 
 	filebench_shm->path_ptr += strlen(path) + 1;
 
-/*
 	if ((filebench_shm->path_ptr - &filebench_shm->filesetpaths[0]) >
-	    FILEBENCH_NFILESETENTRIES * FSE_MAXPATHLEN) {
+	    FILEBENCH_FILESETPATHMEMORY) {
 		filebench_log(LOG_ERROR, "Out of fileset path memory");
-		return(NULL);
+		return (NULL);
 	}
-*/
 
-	strncpy(allocpath, path, strlen(path));
+	(void) strncpy(allocpath, path, strlen(path));
 
-	return(allocpath);
+	return (allocpath);
 }
 
 /*
- * This is a limited functionallity allocator for strings - it can only
- * free all strings at once (to avoid fragmentation
+ * This is a limited functionality deallocator for path
+ * strings - it can only free all path strings at once,
+ * in order to avoid fragmentation.
  */
 void
-ipc_freepaths()
+ipc_freepaths(void)
 {
 	filebench_shm->path_ptr = &filebench_shm->filesetpaths[0];
 }
 
+/*
+ * Allocates a semid from the table of semids for pre intialized
+ * semaphores. Searches for the first available semaphore, and
+ * sets the entry in the table to "1" to indicate allocation.
+ * Returns the allocated semid. Stops the run if all semaphores
+ * are already in use.
+ */
 int
 ipc_semidalloc(void)
 {
@@ -537,21 +649,33 @@ ipc_semidalloc(void)
 	for (semid = 0; filebench_shm->semids[semid] == 1; semid++)
 		;
 	if (semid == FILEBENCH_NSEMS) {
-		filebench_log(LOG_ERROR, 
+		filebench_log(LOG_ERROR,
 		    "Out of semaphores, increase system tunable limit");
 		filebench_shutdown(1);
 	}
 	filebench_shm->semids[semid] = 1;
-	return(semid);
+	return (semid);
 }
 
-int
+/*
+ * Frees up the supplied semid by seting its position in the
+ * allocation table to "0".
+ */
+void
 ipc_semidfree(int semid)
 {
 	filebench_shm->semids[semid] = 0;
 }
 
-/* Create a pool of shared memory to fit the per-thread allocations */
+/*
+ * Create a pool of shared memory to fit the per-thread
+ * allocations. Uses shmget() to create a shared memory region
+ * of size "size", attaches to it using shmat(), and stores
+ * the returned address of the region in filebench_shm->shm_addr.
+ * The pool is only created on the first call. The routine
+ * returns 0 if successful or the pool already exists,
+ * -1 otherwise.
+ */
 int
 ipc_ismcreate(size_t size)
 {
@@ -563,38 +687,49 @@ ipc_ismcreate(size_t size)
 
 	/* Already done? */
 	if (filebench_shm->shm_id != -1)
-		return(0);
+		return (0);
 
-	filebench_log(LOG_VERBOSE, 
+	filebench_log(LOG_VERBOSE,
 	    "Creating %zd bytes of ISM Shared Memory...", size);
 
-	filebench_shm->shm_id = shmget(0, size, IPC_CREAT | 0666);
-
-	if ((filebench_shm->shm_addr = (caddr_t )shmat(filebench_shm->shm_id,
-		    0, flag)) == (void *)-1) {
+	if ((filebench_shm->shm_id =
+	    shmget(0, size, IPC_CREAT | 0666)) == -1) {
 		filebench_log(LOG_ERROR,
-		    "Failed to allocate %zd bytes of ISM shared memory", size);
-		return(-1);
+		    "Failed to create %zd bytes of ISM shared memory", size);
+		return (-1);
+	}
+
+	if ((filebench_shm->shm_addr = (caddr_t)shmat(filebench_shm->shm_id,
+	    0, flag)) == (void *)-1) {
+		filebench_log(LOG_ERROR,
+		    "Failed to attach %zd bytes of created ISM shared memory",
+		    size);
+		return (-1);
 	}
 
 	filebench_shm->shm_ptr = (char *)filebench_shm->shm_addr;
 
-	filebench_log(LOG_VERBOSE, 
+	filebench_log(LOG_VERBOSE,
 	    "Allocated %zd bytes of ISM Shared Memory... at %zx",
 	    size, filebench_shm->shm_addr);
 
 	/* Locked until allocated to block allocs */
-	ipc_mutex_unlock(&filebench_shm->ism_lock);
+	(void) ipc_mutex_unlock(&filebench_shm->ism_lock);
 
-	return(0);
+	return (0);
 }
 
 /* Per addr space ism */
-int ism_attached = 0;
+static int ism_attached = 0;
 
-/* Attach to shared memory */
+/*
+ * Attach to interprocess shared memory. If already attached
+ * just return, otherwise use shmat() to attached to the region
+ * with ID of filebench_shm->shm_id. Returns -1 if shmat()
+ * fails, otherwise 0.
+ */
 static int
-ipc_ismattach()
+ipc_ismattach(void)
 {
 #ifdef HAVE_SHM_SHARE_MMU
 	int flag = SHM_SHARE_MMU;
@@ -603,56 +738,68 @@ ipc_ismattach()
 #endif /* HAVE_SHM_SHARE_MMU */
 
 
-        if (ism_attached)
-		return(0);
+	if (ism_attached)
+		return (0);
 
 	/* Does it exist? */
 	if (filebench_shm->shm_id == 999)
-		return(0);
+		return (0);
 
-	if (shmat(filebench_shm->shm_id,
-		    filebench_shm->shm_addr, flag) == NULL)
-		return(-1);
+	if (shmat(filebench_shm->shm_id, filebench_shm->shm_addr,
+	    flag) == NULL)
+		return (-1);
 
 	ism_attached = 1;
 
-	return(0);
+	return (0);
 }
 
-/* Allocate from ISM */
+/*
+ * Allocate from interprocess shared memory. Attaches to ism
+ * if necessary, then allocates "size" bytes, updates allocation
+ * information and returns a pointer to the allocated memory.
+ */
+/*
+ * XXX No check is made for out-of-memory condition
+ */
 char *
 ipc_ismmalloc(size_t size)
 {
 	char *allocstr;
 
-	ipc_mutex_lock(&filebench_shm->ism_lock);
+	(void) ipc_mutex_lock(&filebench_shm->ism_lock);
 
 	/* Map in shared memory */
-	ipc_ismattach();
+	(void) ipc_ismattach();
 
 	allocstr = filebench_shm->shm_ptr;
 
 	filebench_shm->shm_ptr += size;
 	filebench_shm->shm_allocated += size;
 
-	ipc_mutex_unlock(&filebench_shm->ism_lock);
+	(void) ipc_mutex_unlock(&filebench_shm->ism_lock);
 
-	return(allocstr);
+	return (allocstr);
 }
 
+/*
+ * Deletes shared memory region and resets shared memory region
+ * information in filebench_shm.
+ */
 void
-ipc_ismdelete()
+ipc_ismdelete(void)
 {
 	if (filebench_shm->shm_id == -1)
 		return;
 
 	filebench_log(LOG_VERBOSE, "Deleting ISM...");
 
-	ipc_mutex_lock(&filebench_shm->ism_lock);
-	shmctl(filebench_shm->shm_id, IPC_RMID, 0);
+	(void) ipc_mutex_lock(&filebench_shm->ism_lock);
+#ifdef HAVE_SEM_RMID
+	(void) shmctl(filebench_shm->shm_id, IPC_RMID, 0);
+#endif
 	filebench_shm->shm_ptr = (char *)filebench_shm->shm_addr;
 	filebench_shm->shm_id = -1;
 	filebench_shm->shm_allocated = 0;
-
-	return;
+	(void) ipc_mutex_unlock(&filebench_shm->ism_lock);
 }

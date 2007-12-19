@@ -1,5 +1,32 @@
 #!/usr/bin/perl
 #
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# ident	"@(#)filebench_compare.pl	1.1	07/10/03 SMI"
+#
+
+#
 # Compare filebench results
 #
 # Usage: filebench_summary <dir1> <dir2> ...
@@ -114,7 +141,7 @@ foreach $workload (sort (keys %workloads)) {
         if ($last && ($this - $last) > ($last * 0.1)) {
 		$color = "green";
 	}
-        printf HTML ("<td><a href=\"$dataset/$workload/html/index.html\">%d</a></td>\n", $this);
+	printf HTML ("<td>%d</td\n", $this);
 	$last = $ops{$workload, $dataset};
     }
     print HTML "</b></tr>";

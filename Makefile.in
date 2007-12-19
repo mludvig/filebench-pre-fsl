@@ -104,7 +104,7 @@ am__quote = @am__quote@
 host_os = @host_os@
 install_sh = @install_sh@
 
-SUBDIRS = filebench fastsu workloads scripts benchpoint
+SUBDIRS = filebench fastsu workloads scripts benchpoint bin
 
 TAR = filebench.tar
 TMPDIR = /tmp/root.$$

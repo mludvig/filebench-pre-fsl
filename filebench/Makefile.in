@@ -83,9 +83,6 @@ DEPDIR = @DEPDIR@
 FARCH = @FARCH@
 FILEBENCHBIN = @FILEBENCHBIN@
 FILEBENCHDIR = @FILEBENCHDIR@
-GSLCBLAS = @GSLCBLAS@
-GSLINC = @GSLINC@
-GSLLIB = @GSLLIB@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LDLIBS = @LDLIBS@
 LEX = @LEX@
@@ -105,30 +102,28 @@ am__quote = @am__quote@
 host_os = @host_os@
 install_sh = @install_sh@
 
-bin_PROGRAMS = filebench
-filebench_SOURCES = fileobj.c misc.c procflow.c threadflow.c \
+bin_PROGRAMS = go_filebench
+filebench_SOURCES = gamma_dist.c misc.c procflow.c threadflow.c \
                     utils.c flowop.c flowop_library.c ipc.c \
 		    vars.c stats.c eventgen.c fileset.c \
 		    parser_gram.y parser_lex.l
 
-filebench_LDADD = @GSLLIB@/libgsl.a @GSLCBLAS@/libgslcblas.a @LDLIBS@
 filebenchdir = $(datadir)/filebench
-INCLUDES = -I../intl -I@GSLINC@ -DFILEBENCHDIR=\"$(prefix)/filebench\"
+INCLUDES = -I../intl -DFILEBENCHDIR=\"$(prefix)/filebench\"
 DEFS = -D_REENTRANT @DEFINES@
 subdir = filebench
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-bin_PROGRAMS = filebench$(EXEEXT)
+bin_PROGRAMS = go_filebench$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_filebench_OBJECTS = fileobj.$(OBJEXT) misc.$(OBJEXT) \
+am_filebench_OBJECTS = gamma_dist.$(OBJEXT) misc.$(OBJEXT) \
 	procflow.$(OBJEXT) threadflow.$(OBJEXT) utils.$(OBJEXT) \
 	flowop.$(OBJEXT) flowop_library.$(OBJEXT) ipc.$(OBJEXT) \
 	vars.$(OBJEXT) stats.$(OBJEXT) eventgen.$(OBJEXT) \
 	fileset.$(OBJEXT) parser_gram.$(OBJEXT) parser_lex.$(OBJEXT)
 filebench_OBJECTS = $(am_filebench_OBJECTS)
-filebench_DEPENDENCIES = @GSLLIB@/libgsl.a @GSLCBLAS@/libgslcblas.a
 filebench_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 CPPFLAGS = @CPPFLAGS@
@@ -136,7 +131,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/eventgen.Po ./$(DEPDIR)/fileobj.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/eventgen.Po ./$(DEPDIR)/gamma_dist.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/fileset.Po ./$(DEPDIR)/flowop.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/flowop_library.Po ./$(DEPDIR)/ipc.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/misc.Po ./$(DEPDIR)/parser_gram.Po \
@@ -186,7 +181,7 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-filebench$(EXEEXT): $(filebench_OBJECTS) $(filebench_DEPENDENCIES) 
+go_filebench$(EXEEXT): $(filebench_OBJECTS) $(filebench_DEPENDENCIES) 
 	@rm -f filebench$(EXEEXT)
 	$(LINK) $(filebench_LDFLAGS) $(filebench_OBJECTS) $(filebench_LDADD) $(LIBS)
 
@@ -197,7 +192,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventgen.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fileobj.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gamma_dist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fileset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flowop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flowop_library.Po@am__quote@
@@ -403,9 +398,9 @@ parser_gram.h parser_gram.c: parser_gram.y Makefile
 	@mv y.tab.h parser_gram.h
 	@mv y.tab.c parser_gram.c
 
-pkg: filebench
+pkg: go_filebench
 	mkdir -p $(BUILD)
-	cp filebench $(BUILD)
+	cp go_filebench $(BUILD)
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

@@ -6,7 +6,7 @@
 # See the file LICENSING in this distribution for details.
 #
 
-SUBDIRS 	= filebench fastsu workloads scripts benchpoint
+SUBDIRS 	= filebench fastsu workloads scripts benchpoint bin
 
 TAR	   	= filebench.tar
 TMPDIR          = /tmp/root.$$

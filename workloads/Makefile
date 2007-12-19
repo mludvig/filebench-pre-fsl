@@ -46,13 +46,13 @@ pkglibdir = $(libdir)/fastsu
 pkgincludedir = $(includedir)/fastsu
 top_builddir = ..
 
-ACLOCAL = ${SHELL} /home/rmc/cvs/filebench/config/missing --run aclocal-1.6
-AUTOCONF = ${SHELL} /home/rmc/cvs/filebench/config/missing --run autoconf
-AUTOMAKE = ${SHELL} /home/rmc/cvs/filebench/config/missing --run automake-1.6
-AUTOHEADER = ${SHELL} /home/rmc/cvs/filebench/config/missing --run autoheader
+ACLOCAL = ${SHELL} /home/ek110237/TMP/fb_builds/new/filebench-1.1.0-builds/config/missing --run aclocal-1.6
+AUTOCONF = ${SHELL} /home/ek110237/TMP/fb_builds/new/filebench-1.1.0-builds/config/missing --run autoconf
+AUTOMAKE = ${SHELL} /home/ek110237/TMP/fb_builds/new/filebench-1.1.0-builds/config/missing --run automake-1.6
+AUTOHEADER = ${SHELL} /home/ek110237/TMP/fb_builds/new/filebench-1.1.0-builds/config/missing --run autoheader
 
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
-INSTALL = ../config/install-sh -c
+INSTALL = /ws/onnv-tools/onbld/bin/i386//install -c
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA = ${INSTALL} -m 644
 install_sh_DATA = $(install_sh) -c -m 644
@@ -68,26 +68,26 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_alias = 
-host_triplet = sparc-sun-solaris2.10
+host_triplet = i386-pc-solaris2.11
 
 EXEEXT = 
 OBJEXT = o
 PATH_SEPARATOR = :
-AMTAR = ${SHELL} /home/rmc/cvs/filebench/config/missing --run tar
+AMTAR = ${SHELL} /home/ek110237/TMP/fb_builds/new/filebench-1.1.0-builds/config/missing --run tar
 AWK = nawk
-BUILD = ../solaris/build/sparcv9
+BUILD = ../solaris/build/amd64
 CC = cc
-CFLAGS = -g -xO3 -xarch=v9 -DYYDEBUG=1
+CFLAGS = -g -xO3 -DYYDEBUG=1
 DEFINES = 
 DEPDIR = .deps
-FARCH = sparcv9
+FARCH = amd64
 FILEBENCHBIN = /opt/filebench/bin
 FILEBENCHDIR = /opt/filebench
-GSLCBLAS = ../solaris/gsl-1.4/sparcv9
+GSLCBLAS = ../solaris/gsl-1.4/amd64
 GSLINC = ../solaris/gsl-1.4
-GSLLIB = ../solaris/gsl-1.4/sparcv9
+GSLLIB = ../solaris/gsl-1.4/amd64
 INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
-LDLIBS = -lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread -xarch=v9
+LDLIBS = -lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread
 LEX = flex
 LEXLIB = -ll
 LEX_OUTPUT_ROOT = lex.yy
@@ -101,8 +101,8 @@ YACC = bison -y
 YFLAGS = -d
 am__include = include
 am__quote = 
-host_os = solaris2.10
-install_sh = /home/rmc/cvs/filebench/config/install-sh
+host_os = solaris2.11
+install_sh = /home/ek110237/TMP/fb_builds/new/filebench-1.1.0-builds/config/install-sh
 
 filebenchdir = $(datadir)/filebench
 

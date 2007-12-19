@@ -3394,7 +3394,7 @@ if test $ac_cv_lib_kstat_kstat_open = yes; then
 #define HAVE_LIBKSTAT 1
 _ACEOF
 
-  LIBS="-lkstat $LIBS"
+  LIBS="-lkstat -lm $LIBS"
 
 fi
 

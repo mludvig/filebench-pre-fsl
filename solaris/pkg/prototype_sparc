@@ -1,0 +1,350 @@
+#!search <pathname pathname ...>	# where to find pkg objects
+#!include <filename>			# include another 'prototype' file
+#!default <mode> <owner> <group>	# default used if not specified on entry
+#!<param>=<value>			# puts parameter in pkg environment
+
+# packaging files
+i pkginfo
+i copyright
+#i request
+#
+# source locations relative to the prototype file
+#
+# filebench
+#
+d none filebench 0755 root sys
+! search /usr/lib
+d none filebench/bin 0755 root sys
+l none filebench/bin/go_filebench=/usr/lib/isaexec
+l none filebench/bin/gnuplot=/usr/lib/isaexec
+l none filebench/bin/fastsu=/usr/lib/isaexec
+l none filebench/bin/statit=/usr/lib/isaexec
+l none filebench/bin/davenet=/usr/lib/isaexec
+#s none filebench/bin/i386=amd64
+#! search ../build/amd64
+#d none filebench/bin/amd64 0755 root sys
+#f none filebench/bin/amd64/go_filebench 0755 root sys
+#f none filebench/bin/i386/fastsu 4755 root sys
+! search ../build/sparcv9
+d none filebench/bin/sparcv9 0755 root sys
+f none filebench/bin/sparcv9/go_filebench 0755 root sys
+f none filebench/bin/sparcv9/fastsu 4755 root sys
+! search ../gnuplot/sparcv9
+f none filebench/bin/sparcv9/gnuplot 0755 root sys
+#! search ../gnuplot/i386
+#f none filebench/bin/amd64/gnuplot 0755 root sys
+#! search ../statit/i386
+#f none filebench/bin/amd64/statit 0755 root sys
+! search ../statit/sparcv9
+f none filebench/bin/sparcv9/statit 0755 root sys
+! search ../davenet/sparcv9
+f none filebench/bin/sparcv9/davenet 0755 root sys
+#! search ../davenet/i386
+#f none filebench/bin/amd64/davenet 0755 root sys
+! search ../../bin
+f none filebench/bin/filebench 0555 root sys
+! search ../../workloads/build
+d none filebench/workloads 0777 root sys
+f none filebench/workloads/multistreamread.f 0644 root sys
+f none filebench/workloads/bringover.f 0644 root sys
+f none filebench/workloads/copyfiles.f 0644 root sys
+f none filebench/workloads/createfiles.f 0644 root sys
+f none filebench/workloads/deletefiles.f 0644 root sys
+f none filebench/workloads/fileserver.f 0644 root sys
+f none filebench/workloads/mongo.f 0644 root sys
+f none filebench/workloads/oltp.f 0644 root sys
+f none filebench/workloads/randomread.f 0644 root sys
+f none filebench/workloads/multistreamreaddirect.f 0644 root sys
+f none filebench/workloads/multistreamwrite.f 0644 root sys
+f none filebench/workloads/multistreamwritedirect.f 0644 root sys
+f none filebench/workloads/postmark.f 0644 root sys
+f none filebench/workloads/singlestreamwrite.f 0644 root sys
+f none filebench/workloads/singlestreamread.f 0644 root sys
+f none filebench/workloads/tpcso.f 0644 root sys
+f none filebench/workloads/singlestreamreaddirect.f 0644 root sys
+f none filebench/workloads/singlestreamwritedirect.f 0644 root sys
+f none filebench/workloads/varmail.f 0644 root sys
+f none filebench/workloads/webproxy.f 0644 root sys
+f none filebench/workloads/webserver.f 0644 root sys
+f none filebench/workloads/filemicro_create.f 0644 root sys
+f none filebench/workloads/filemicro_delete.f 0644 root sys
+f none filebench/workloads/filemicro_rwritedsync.f 0644 root sys
+f none filebench/workloads/filemicro_rwritefsync.f 0644 root sys
+f none filebench/workloads/filemicro_seqread.f 0644 root sys
+f none filebench/workloads/filemicro_writefsync.f 0644 root sys
+f none filebench/workloads/randomwrite.f 0644 root sys
+f none filebench/workloads/filemicro_createfiles.f 0644 root sys
+f none filebench/workloads/filemicro_createrand.f 0644 root sys
+f none filebench/workloads/filemicro_rread.f 0644 root sys
+f none filebench/workloads/filemicro_rwrite.f 0644 root sys
+f none filebench/workloads/filemicro_seqwrite.f 0644 root sys
+f none filebench/workloads/filemicro_seqwriterand.f 0644 root sys
+#! search ../filemicro
+#d none filebench/filemicro 0755 root sys
+#f none filebench/filemicro/fm_rwrite2kdsync4thread 0755 root sys
+#f none filebench/filemicro/fm_create100files 0755 root sys
+#f none filebench/filemicro/fm_create128k 0755 root sys
+#f none filebench/filemicro/fm_create128kdsync 0755 root sys
+#f none filebench/filemicro/fm_createfsync 0755 root sys
+#f none filebench/filemicro/fm_createfsyncrand 0755 root sys
+#f none filebench/filemicro/fm_rread2k 0755 root sys
+#f none filebench/filemicro/fm_rread2kcached 0755 root sys
+#f none filebench/filemicro/fm_rwrite2kdsync 0755 root sys
+#f none filebench/filemicro/fm_rwrite8kfsynccached 0755 root sys
+#f none filebench/filemicro/fm_seqread32k 0755 root sys
+#f none filebench/filemicro/fm_seqread32kcached 0755 root sys
+#f none filebench/filemicro/fm_seqwrite32k 0755 root sys
+#f none filebench/filemicro/fm_seqwrite32kdsync 0755 root sys
+#f none filebench/filemicro/fm_seqwriterand8k 0755 root sys
+d none filebench/docs 0755 root sys
+! search ../../docs
+f none filebench/docs/README.benchpoint 644 root sys
+! search ../../
+f none filebench/docs/README 0644 root sys
+#d none filebench/runscripts 0777 root sys
+#! search ../../runscripts
+#f none filebench/runscripts/runem.sh 755 root sys
+#f none filebench/runscripts/runem_ufszfs.sh 755 root sys
+#f none filebench/runscripts/runem_tpcso.sh 755 root sys
+#f none filebench/runscripts/runem_solaris.sh 755 root sys
+# Benchpoint
+#
+! search ../../benchpoint/bin
+f none filebench/bin/benchpoint 0555 root other
+! search ../../benchpoint/functions
+f none filebench/config/generic.func 0444 root other
+f none filebench/config/generic_xanadu.func 0444 root other
+f none filebench/config/memsizeloop.func 0444 root other
+f none filebench/config/rateloop.func 0444 root other
+! search ../../benchpoint/profiles
+f none filebench/config/filemacro.prof 0444 root other
+f none filebench/config/filemicro.prof 0444 root other
+f none filebench/config/fileio.prof 0444 root other
+f none filebench/config/randomread.prof 0444 root other
+f none filebench/config/seqread.prof 0444 root other
+f none filebench/config/sample_rate.prof 0444 root other
+! search ../../scripts
+d none filebench/scripts 0777 root other
+f none filebench/scripts/filebench_compare 755 root sys
+f none filebench/scripts/fs_flush 755 root sys
+! search ../../benchpoint/scripts
+f none filebench/scripts/cpustat.sh.us2 0555 root other
+f none filebench/scripts/ndd.ksh 0555 root other
+f none filebench/scripts/collect_cpustat 0555 root other
+f none filebench/scripts/syshw.sh 0555 root other
+f none filebench/scripts/createfs 0755 root other
+f none filebench/scripts/fmtfs 0755 root other
+f none filebench/scripts/c0t0.vtoc 0644 root other
+f none filebench/scripts/collect_davenet 0555 root other
+f none filebench/scripts/kill_stats 0755 root other
+f none filebench/scripts/collect_genstats 0555 root other
+f none filebench/scripts/collect_iostat 0555 root other
+f none filebench/scripts/collect_mpstat 0555 root other
+f none filebench/scripts/collect_lockstat 0555 root other
+f none filebench/scripts/collect_netstat 0555 root other
+f none filebench/scripts/collect_statit 0555 root other
+f none filebench/scripts/collect_vmstat 0555 root other
+f none filebench/scripts/cpustat.opteron 0555 root other
+f none filebench/scripts/cpustat.sh.ch+ 0555 root other
+f none filebench/scripts/cpustat.sh.ch+.post 0555 root other
+f none filebench/scripts/cpustat.sh.us2.post 0555 root other
+f none filebench/scripts/cpustat.sh.us3 0555 root other
+f none filebench/scripts/cpustat.sh.us3.post 0555 root other
+f none filebench/scripts/cpustat.xeon 0555 root other
+f none filebench/scripts/get_config.sh 0555 root other
+f none filebench/scripts/process_results 0555 root other
+f none filebench/scripts/collect_kstat 0555 root other
+! search ../../xanadu
+d none filebench/xanadu 0755 root root
+f none filebench/xanadu/xmlview.jsp 0644 root root
+f none filebench/xanadu/xanadu.war 0644 root root
+f none filebench/xanadu/mergechart.jsp 0644 root root
+f none filebench/xanadu/index.html 0644 root root
+f none filebench/xanadu/header.jsp 0644 root root
+f none filebench/xanadu/error.jsp 0644 root root
+f none filebench/xanadu/customize.jsp 0644 root root
+f none filebench/xanadu/chartview.jsp 0644 root root
+f none filebench/xanadu/advancedview.jsp 0644 root root
+! search ../../xanadu/txt2xml
+d none filebench/xanadu/txt2xml 0755 root root
+f none filebench/xanadu/txt2xml/y.pl 0755 root root
+f none filebench/xanadu/txt2xml/xyy2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/x0.pl 0755 root root
+f none filebench/xanadu/txt2xml/vxstat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/vmstat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/txt2xml.pm 0644 root root
+f none filebench/xanadu/txt2xml/trapstat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/trapmisc.pm 0644 root root
+f none filebench/xanadu/txt2xml/tpccmeta2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/statspack2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/statit2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/stat_doc.dtd 0644 root root
+f none filebench/xanadu/txt2xml/rdtstat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/ps2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/oracle-stats2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/netsum2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/mpstat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/lockstat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/kernel-dis2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/jvmstat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/jvmstat.props 0644 root root
+f none filebench/xanadu/txt2xml/jvmsnap2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/iostat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/dtd2perlmod.pl 0755 root root
+f none filebench/xanadu/txt2xml/davenet2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/crmonitor2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/cpustat2xml.pl 0755 root root
+f none filebench/xanadu/txt2xml/copy2xml.pl 0755 root root
+! search ../../xanadu/txt2xml/cpustat-post
+d none filebench/xanadu/txt2xml/cpustat-post 0755 root root
+#f none filebench/xanadu/txt2xml/cpustat-post/ha_niagara.sh 0644 root root
+#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us4p 0644 root root
+#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us3p 0644 root root
+#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us3 0644 root root
+#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us2 0644 root root
+! search ../../xanadu/scripts
+d none filebench/xanadu/scripts 0755 root root
+f none filebench/xanadu/scripts/xanadu.pl 0755 root root
+f none filebench/xanadu/scripts/xanadu.bat 0644 root root
+f none filebench/xanadu/scripts/xanadu 0755 root root
+f none filebench/xanadu/scripts/wcp-xanadu.pl 0755 root root
+f none filebench/xanadu/scripts/import.pl 0755 root root
+! search ../../xanadu/html
+d none filebench/xanadu/html 0755 root root
+f none filebench/xanadu/html/xanadu2loadDb.html 0644 root root
+f none filebench/xanadu/html/xanadu2form.html 0644 root root
+f none filebench/xanadu/html/xanadu.hdr 0644 root root
+f none filebench/xanadu/html/xanadu.footer 0644 root root
+f none filebench/xanadu/html/xanadu.css 0644 root root
+f none filebench/xanadu/html/a.gif 0644 root root
+! search ../../xanadu/WEB-INF
+d none filebench/xanadu/WEB-INF 0755 root root
+f none filebench/xanadu/WEB-INF/web.xml 0644 root root
+! search ../../xanadu/WEB-INF/lib
+d none filebench/xanadu/WEB-INF/lib 0755 root root
+f none filebench/xanadu/WEB-INF/lib/servlet-api.jar 0644 root root
+f none filebench/xanadu/WEB-INF/lib/jfreechart.jar 0644 root root
+f none filebench/xanadu/WEB-INF/lib/jcommon.jar 0644 root root
+f none filebench/xanadu/WEB-INF/lib/jaxb-rt-1.0-ea.jar 0644 root root
+f none filebench/xanadu/WEB-INF/lib/classes12.jar 0644 root root
+! search ../../xanadu/WEB-INF/classes
+d none filebench/xanadu/WEB-INF/classes 0755 root root
+f none filebench/xanadu/WEB-INF/classes/xanadu_properties 0644 root root
+f none filebench/xanadu/WEB-INF/classes/xanadu_colors 0644 root root
+! search ../../xanadu/WEB-INF/classes/org
+d none filebench/xanadu/WEB-INF/classes/org 0755 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu
+d none filebench/xanadu/WEB-INF/classes/org/xanadu 0755 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/xml
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/xml 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/Xml2Html.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/Xml2ChartData.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/StatGroup.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/StatDoc.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/StatDoc$StatGroupPredicate.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/StatDoc$MetaPredicate.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/StatDoc$1.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/MyStatGroup.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/MyStatDoc.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/MyDimList.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/MyDim.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/MyCellList.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/MyCell.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/Meta.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/DimvalOrdinal.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/DimList.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/DimList$DimPredicate.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/DimList$1.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/Dim.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/Dim$DimvalPredicate.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/Dim$1.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/CellList.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/CellList$CellPredicate.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/CellList$1.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/xml/Cell.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/view
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/view 0755 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/view/utility
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/ZError.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/URLGenerator.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/RequestDB.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/PostfixAdvanced.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/Postfix.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/LRUCache.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/LRUCache$1.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/FileResolver.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/ErrorHelper.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/utility/BSpline.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/view/servlet
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/view/servlet 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/servlet/Xml2Png.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/servlet/XanaduController.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/servlet/SampleDataGenerator.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/servlet/ActionHash.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/view/model
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/view/model 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/model/XmlViewBean.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/model/XanaduBean.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/model/MergeChartBean.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/model/GenericBean.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/model/ChartViewBean.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/view/controller
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/XmlViewAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/SplitChartBeanAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/PNGAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/NoSuchAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/MergeChartAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/DataDumpHTMLAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/DataDumpAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/CustomizeAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/CommandAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/ChartViewAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/AdvancedViewAction.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/ActionForward.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/view/controller/Action.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/txt
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/txt 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/txt/JVMStat2Xml.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/txt/JVMSnap2Xml.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/db
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/db 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/db/QueryParam.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/db/QueryParam$QuerySel.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/db/Query.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/db/DBLoader.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/cmd
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/XmlFileViewCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/SumCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/ReadXmlFileCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/ReadXmlFileCommand$ChartDataNullException.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/MovingAverageCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/HistogramCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/FilterDataCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/ExportThread.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/ExportFromXML.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/CompareXML.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/CompareThread.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/Command.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/ChartDataMergeWrapperCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/ChartDataMergeCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/BSplineCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/AverageXML.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/AverageThread.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/AverageCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/AddAFunctionCommand.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/cmd/AddAFunctionAdvancedCommand.class 0644 root root
+! search ../../xanadu/WEB-INF/classes/org/xanadu/chart
+d none filebench/xanadu/WEB-INF/classes/org/xanadu/chart 0755 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/chart/ZChartColor.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/chart/ViewProperties.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/chart/Theme.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/chart/JFreeChartHelper.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/chart/ChartProperties.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/chart/ChartData.class 0644 root root
+f none filebench/xanadu/WEB-INF/classes/org/xanadu/chart/ChartBean.class 0644 root root
+! search ../../xanadu/META-INF
+d none filebench/xanadu/META-INF 0755 root root
+f none filebench/xanadu/META-INF/MANIFEST.MF 0644 root root 
