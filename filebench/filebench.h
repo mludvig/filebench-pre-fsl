@@ -19,14 +19,14 @@
  * CDDL HEADER END
  */
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
 #ifndef _FB_FILEBENCH_H
 #define	_FB_FILEBENCH_H
 
-#pragma ident	"@(#)filebench.h	1.3	07/11/02 SMI"
+#pragma ident	"@(#)filebench.h	1.4	08/02/20 SMI"
 
 #include "config.h"
 
@@ -66,7 +66,8 @@
 extern "C" {
 #endif
 
-extern pid_t pid;
+extern pid_t my_pid;		/* this process' process id */
+extern procflow_t *my_procflow;	/* if slave process, procflow pointer */
 extern int errno;
 extern char *execname;
 extern int noproc;
@@ -102,11 +103,17 @@ int filebench_randomno64(uint64_t *, uint64_t, uint64_t);
 #define	MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
-#define	FILEBENCH_VERSION	"1.1.0"
+#define	FILEBENCH_VERSION	"1.1.1"
 /*#define	FILEBENCHDIR	"/usr/benchmarks/filebench"*/
 #define	FILEBENCH_PROMPT	"filebench> "
 #define	MAX_LINE_LEN	1024
 #define	MAX_CMD_HIST	128
+#define	SHUTDOWN_WAIT_SECONDS	5 /* time to wait for proc / thrd to quit */
+
+#define	FILEBENCH_DONE	 1
+#define	FILEBENCH_OK	 0
+#define	FILEBENCH_ERROR -1
+#define	FILEBENCH_NORSC -2
 
 /* For MacOSX */
 #ifndef HAVE_OFF64_T

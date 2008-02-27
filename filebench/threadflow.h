@@ -19,14 +19,14 @@
  * CDDL HEADER END
  */
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
 #ifndef _FB_THREADFLOW_H
 #define	_FB_THREADFLOW_H
 
-#pragma ident	"@(#)threadflow.h	1.1	07/10/03 SMI"
+#pragma ident	"@(#)threadflow.h	1.2	08/02/19 SMI"
 
 #include "config.h"
 #include <pthread.h>
@@ -111,7 +111,7 @@ int threadflow_init(procflow_t *);
 void flowop_start(threadflow_t *threadflow);
 void threadflow_usage(void);
 void threadflow_allstarted(pid_t pid, threadflow_t *threadflow);
-void threadflow_delete_all(threadflow_t **threadlist);
+void threadflow_delete_all(threadflow_t **threadlist, int wait_cnt);
 
 #ifdef	__cplusplus
 }

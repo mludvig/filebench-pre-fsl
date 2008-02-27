@@ -19,11 +19,11 @@
  * CDDL HEADER END
  */
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)ipc.c	1.2	07/12/03 SMI"
+#pragma ident	"@(#)ipc.c	1.3	08/02/20 SMI"
 
 #include "config.h"
 
@@ -322,7 +322,8 @@ ipc_init(void)
 
 	(void) memset(filebench_shm, 0, c2 - c1);
 	filebench_shm->epoch = gethrtime();
-	filebench_shm->debug_level = 2;
+	filebench_shm->debug_level = LOG_VERBOSE;
+	filebench_shm->shm_rmode = FILEBENCH_MODE_TIMEOUT;
 	filebench_shm->string_ptr = &filebench_shm->strings[0];
 	filebench_shm->shm_ptr = (char *)filebench_shm->shm_addr;
 	filebench_shm->path_ptr = &filebench_shm->filesetpaths[0];

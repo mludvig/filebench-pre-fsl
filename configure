@@ -12350,7 +12350,7 @@ SRCDIR=$ac_top_srcdir
 
 
 
-                                                                                                              ac_config_files="$ac_config_files Makefile filebench/Makefile fastsu/Makefile workloads/Makefile workloads/build/Makefile scripts/Makefile benchpoint/Makefile benchpoint/bin/Makefile benchpoint/config/Makefile benchpoint/functions/Makefile benchpoint/profiles/Makefile"
+                                                                                                              ac_config_files="$ac_config_files Makefile filebench/Makefile fastsu/Makefile workloads/Makefile workloads/build/Makefile scripts/Makefile benchpoint/Makefile benchpoint/bin/Makefile benchpoint/config/Makefile benchpoint/functions/Makefile benchpoint/profiles/Makefile bin/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -12906,6 +12906,7 @@ do
   "benchpoint/config/Makefile" ) CONFIG_FILES="$CONFIG_FILES benchpoint/config/Makefile" ;;
   "benchpoint/functions/Makefile" ) CONFIG_FILES="$CONFIG_FILES benchpoint/functions/Makefile" ;;
   "benchpoint/profiles/Makefile" ) CONFIG_FILES="$CONFIG_FILES benchpoint/profiles/Makefile" ;;
+  "bin/Makefile" ) CONFIG_FILES="$CONFIG_FILES bin/Makefile" ;;
   "depfiles" ) CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
   "config.h" ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
