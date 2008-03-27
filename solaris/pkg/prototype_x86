@@ -25,20 +25,10 @@ s none filebench/bin/i386=amd64
 d none filebench/bin/amd64 0755 root sys
 f none filebench/bin/amd64/go_filebench 0755 root sys
 f none filebench/bin/i386/fastsu 4755 root sys
-#! search ../build/sparcv9
-#d none filebench/bin/sparcv9 0755 root sys
-#f none filebench/bin/sparcv9/go_filebench 0755 root sys
-#f none filebench/bin/sparcv9/fastsu 4755 root sys
-#! search ../gnuplot/sparcv9
-#f none filebench/bin/sparcv9/gnuplot 0755 root sys
 ! search ../gnuplot/i386
 f none filebench/bin/amd64/gnuplot 0755 root sys
 ! search ../statit/i386
 f none filebench/bin/amd64/statit 0755 root sys
-#! search ../statit/sparcv9
-#f none filebench/bin/sparcv9/statit 0755 root sys
-#! search ../davenet/sparcv9
-#f none filebench/bin/sparcv9/davenet 0755 root sys
 ! search ../davenet/i386
 f none filebench/bin/amd64/davenet 0755 root sys
 ! search ../../bin
@@ -58,6 +48,8 @@ f none filebench/workloads/multistreamreaddirect.f 0644 root sys
 f none filebench/workloads/multistreamwrite.f 0644 root sys
 f none filebench/workloads/multistreamwritedirect.f 0644 root sys
 f none filebench/workloads/postmark.f 0644 root sys
+f none filebench/workloads/filemicro_seqwriterandvargam.f 0644 root sys
+f none filebench/workloads/filemicro_seqwriterandvartab.f 0644 root sys
 f none filebench/workloads/singlestreamwrite.f 0644 root sys
 f none filebench/workloads/singlestreamread.f 0644 root sys
 f none filebench/workloads/tpcso.f 0644 root sys
@@ -79,39 +71,17 @@ f none filebench/workloads/filemicro_rread.f 0644 root sys
 f none filebench/workloads/filemicro_rwrite.f 0644 root sys
 f none filebench/workloads/filemicro_seqwrite.f 0644 root sys
 f none filebench/workloads/filemicro_seqwriterand.f 0644 root sys
-#! search ../filemicro
-#d none filebench/filemicro 0755 root sys
-#f none filebench/filemicro/fm_rwrite2kdsync4thread 0755 root sys
-#f none filebench/filemicro/fm_create100files 0755 root sys
-#f none filebench/filemicro/fm_create128k 0755 root sys
-#f none filebench/filemicro/fm_create128kdsync 0755 root sys
-#f none filebench/filemicro/fm_createfsync 0755 root sys
-#f none filebench/filemicro/fm_createfsyncrand 0755 root sys
-#f none filebench/filemicro/fm_rread2k 0755 root sys
-#f none filebench/filemicro/fm_rread2kcached 0755 root sys
-#f none filebench/filemicro/fm_rwrite2kdsync 0755 root sys
-#f none filebench/filemicro/fm_rwrite8kfsynccached 0755 root sys
-#f none filebench/filemicro/fm_seqread32k 0755 root sys
-#f none filebench/filemicro/fm_seqread32kcached 0755 root sys
-#f none filebench/filemicro/fm_seqwrite32k 0755 root sys
-#f none filebench/filemicro/fm_seqwrite32kdsync 0755 root sys
-#f none filebench/filemicro/fm_seqwriterand8k 0755 root sys
 d none filebench/docs 0755 root sys
 ! search ../../docs
 f none filebench/docs/README.benchpoint 644 root sys
 ! search ../../
 f none filebench/docs/README 0644 root sys
-#d none filebench/runscripts 0777 root sys
-#! search ../../runscripts
-#f none filebench/runscripts/runem.sh 755 root sys
-#f none filebench/runscripts/runem_ufszfs.sh 755 root sys
-#f none filebench/runscripts/runem_tpcso.sh 755 root sys
-#f none filebench/runscripts/runem_solaris.sh 755 root sys
 # Benchpoint
 #
 ! search ../../benchpoint/bin
 f none filebench/bin/benchpoint 0555 root other
 ! search ../../benchpoint/functions
+d none filebench/config 0755 root sys
 f none filebench/config/generic.func 0444 root other
 f none filebench/config/generic_xanadu.func 0444 root other
 f none filebench/config/memsizeloop.func 0444 root other
@@ -197,11 +167,6 @@ f none filebench/xanadu/txt2xml/cpustat2xml.pl 0755 root root
 f none filebench/xanadu/txt2xml/copy2xml.pl 0755 root root
 ! search ../../xanadu/txt2xml/cpustat-post
 d none filebench/xanadu/txt2xml/cpustat-post 0755 root root
-#f none filebench/xanadu/txt2xml/cpustat-post/ha_niagara.sh 0644 root root
-#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us4p 0644 root root
-#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us3p 0644 root root
-#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us3 0644 root root
-#f none filebench/xanadu/txt2xml/cpustat-post/cpustat.post.us2 0644 root root
 ! search ../../xanadu/scripts
 d none filebench/xanadu/scripts 0755 root root
 f none filebench/xanadu/scripts/xanadu.pl 0755 root root

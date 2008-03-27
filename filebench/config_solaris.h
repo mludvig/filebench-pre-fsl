@@ -61,7 +61,7 @@ extern "C" {
 #define	HAVE_UINT64_MAX 1
 #define	HAVE_UINT_T 1
 #define	HAVE_BOOLEAN_T 1
-/*#define	HAVE_LIBTECLA 1*/
+#define	HAVE_LIBTECLA 1
 #define	HAVE_RAW_SUPPORT 1
 #define	USE_PROCESS_MODEL 1
 

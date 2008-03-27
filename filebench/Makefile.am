@@ -9,7 +9,7 @@
 bin_PROGRAMS = go_filebench
 filebench_SOURCES = gamma_dist.c misc.c procflow.c threadflow.c \
                     utils.c flowop.c flowop_library.c ipc.c \
-		    vars.c stats.c eventgen.c fileset.c \
+		    vars.c stats.c eventgen.c fileset.c fb_random.c \
 		    parser_gram.y parser_lex.l
 filebenchdir = $(datadir)/filebench
 INCLUDES = -I../intl -DFILEBENCHDIR=\"$(prefix)/filebench\"

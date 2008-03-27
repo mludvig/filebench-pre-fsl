@@ -19,14 +19,14 @@
  * CDDL HEADER END
  */
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
 #ifndef	_FB_EVENTGEN_H
 #define	_FB_EVENTGEN_H
 
-#pragma ident	"@(#)eventgen.h	1.1	07/10/03 SMI"
+#pragma ident	"@(#)eventgen.h	1.2	08/02/13 SMI"
 
 #include "config.h"
 #include "vars.h"
@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 void eventgen_init(void);
-void eventgen_setrate(vinteger_t rate);
+void eventgen_setrate(fbint_t rate);
 var_t *eventgen_ratevar(var_t *var);
 void eventgen_usage(void);
 void eventgen_reset(void);

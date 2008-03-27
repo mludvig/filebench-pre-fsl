@@ -105,7 +105,7 @@ install_sh = @install_sh@
 bin_PROGRAMS = go_filebench
 filebench_SOURCES = gamma_dist.c misc.c procflow.c threadflow.c \
                     utils.c flowop.c flowop_library.c ipc.c \
-		    vars.c stats.c eventgen.c fileset.c \
+		    vars.c stats.c eventgen.c fileset.c fb_random.c \
 		    parser_gram.y parser_lex.l
 
 filebenchdir = $(datadir)/filebench
@@ -122,7 +122,8 @@ am_filebench_OBJECTS = gamma_dist.$(OBJEXT) misc.$(OBJEXT) \
 	procflow.$(OBJEXT) threadflow.$(OBJEXT) utils.$(OBJEXT) \
 	flowop.$(OBJEXT) flowop_library.$(OBJEXT) ipc.$(OBJEXT) \
 	vars.$(OBJEXT) stats.$(OBJEXT) eventgen.$(OBJEXT) \
-	fileset.$(OBJEXT) parser_gram.$(OBJEXT) parser_lex.$(OBJEXT)
+	fileset.$(OBJEXT) fb_random.$(OBJEXT) parser_gram.$(OBJEXT) \
+	parser_lex.$(OBJEXT)
 filebench_OBJECTS = $(am_filebench_OBJECTS)
 filebench_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -132,6 +133,7 @@ LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/eventgen.Po ./$(DEPDIR)/gamma_dist.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fb_random.Po ./$(DEPDIR)/flowop.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/fileset.Po ./$(DEPDIR)/flowop.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/flowop_library.Po ./$(DEPDIR)/ipc.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/misc.Po ./$(DEPDIR)/parser_gram.Po \
@@ -193,6 +195,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventgen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gamma_dist.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fb_random.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fileset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flowop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flowop_library.Po@am__quote@

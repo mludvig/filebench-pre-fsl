@@ -1,7 +1,9 @@
-#include        <unistd.h>
-#include        <stdio.h>
-#include        <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
 
+void
 main(int argc, char *argv[], char *envp[])
 {
 	char *shell;
@@ -9,17 +11,13 @@ main(int argc, char *argv[], char *envp[])
 
 	*cmd = NULL;
 	shell=getenv("SHELL");
-        *(argv++);
+	*(argv++);
 	argc--;
-	while(argc-- != 0)
-	{       strcat(cmd,*argv);
-	        strcat(cmd," ");
-	        *(argv++);
+	while(argc-- != 0) {
+		(void) strcat(cmd,*argv);
+		(void) strcat(cmd," ");
+		*(argv++);
 	}
 
- execlp(shell, shell, "-c", cmd, (char *) 0);
-
+	execlp(shell, shell, "-c", cmd, (char *) 0);
 }
-
-
-

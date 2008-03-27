@@ -19,20 +19,22 @@
  * CDDL HEADER END
  */
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
 #ifndef	_FB_GAMMA_DIST_H
 #define	_FB_GAMMA_DIST_H
 
-#pragma ident	"@(#)gamma_dist.h	1.1	07/10/03 SMI"
+#pragma ident	"@(#)gamma_dist.h	1.2	08/02/25 SMI"
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
 double gamma_dist_knuth(double a, double b);
+double gamma_dist_knuth_src(double a, double b,
+    double (*src)(unsigned short *), unsigned short *xi);
 
 #ifdef	__cplusplus
 }

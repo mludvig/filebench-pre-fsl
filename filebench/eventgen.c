@@ -19,11 +19,11 @@
  * CDDL HEADER END
  */
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)eventgen.c	1.1	07/10/03 SMI"
+#pragma ident	"@(#)eventgen.c	1.3	08/03/20 SMI"
 
 /*
  * The event generator in this module is the producer half of a
@@ -104,7 +104,8 @@ eventgen_thread(void)
 		count = (filebench_shm->eventgen_hz * delta) / 1000000000;
 
 		filebench_log(LOG_DEBUG_SCRIPT,
-		    "delta %lldms count %d", delta / 1000000, count);
+		    "delta %llums count %d",
+		    (u_longlong_t)(delta / 1000000), count);
 
 		/* Send 'count' events */
 		(void) ipc_mutex_lock(&filebench_shm->eventgen_lock);
@@ -149,18 +150,18 @@ eventgen_init(void)
 var_t *
 eventgen_ratevar(var_t *var)
 {
-	var->var_integer = filebench_shm->eventgen_hz;
+	VAR_SET_INT(var, filebench_shm->eventgen_hz);
 	return (var);
 }
 
 /*
  * Sets the event generator rate to that supplied by
- * vinteger_t rate.
+ * fbint_t rate.
  */
 void
-eventgen_setrate(vinteger_t rate)
+eventgen_setrate(fbint_t rate)
 {
-	filebench_shm->eventgen_hz = rate;
+	filebench_shm->eventgen_hz = (int)rate;
 }
 
 /*

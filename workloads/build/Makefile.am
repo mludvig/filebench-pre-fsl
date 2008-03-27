@@ -25,6 +25,8 @@ workloads_DATA = BUILD \
 	filemicro_seqread.f \
 	filemicro_seqwrite.f \
 	filemicro_seqwriterand.f \
+	filemicro_seqwriterandvargam.f \
+	filemicro_seqwriterandvartab.f \
 	filemicro_writefsync.f \
 	fileserver.f \
 	mongo.f \
