@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)deletefiles.f	1.2	08/02/21 SMI"
+# ident	"@(#)deletefiles.f	1.3	08/03/25 SMI"
 
 set $dir=/tmp
 set $nfiles=50000
@@ -43,7 +43,7 @@ define process name=filedelete,instances=1
   }
 }
 
-echo  "Deletefiles Version 2.1 personality successfully loaded"
+echo  "Deletefiles Version 2.2 personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>    defaults to $filesize"
 usage "       set \$nfiles=<value>     defaults to $nfiles"
@@ -51,4 +51,4 @@ usage "       set \$nthreads=<value>   defaults to $nthreads"
 usage "       set \$meandirwidth=<size> defaults to $meandirwidth"
 usage "(sets mean dir width and dir depth is calculated as log (width, nfiles)"
 usage " "
-usage "       run 0"
+usage "       run"

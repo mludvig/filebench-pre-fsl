@@ -1,10 +1,28 @@
 #
-# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+# CDDL HEADER START
 #
 # The contents of this file are subject to the terms of the
-# Common Development and Distribution License.
-# See the file LICENSING in this distribution for details.
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
 #
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# ident	"@(#)filemicro_delete.f	1.2	08/03/18 SMI"
 
 # delete 1000 files
 
@@ -14,6 +32,8 @@ set $meandirwidth=100
 set $filesize=16k
 set $nthreads=16
 set $count=1000
+
+set mode quit alldone
 
 define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=100
 
@@ -27,7 +47,7 @@ define process name=filedelete,instances=1
   }
 }
 
-echo  "FileMicro-Delete Version 1.7 2005/06/21 21:18:52 personality successfully loaded"
+echo  "FileMicro-Delete Version 2.1 personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>     defaults to $filesize"
 usage "       set \$nfiles=<value>      defaults to $nfiles"
@@ -36,4 +56,5 @@ usage "       set \$count=<value>       defaults to $count"
 usage "       set \$meandirwidth=<size> defaults to $meandirwidth"
 usage "(sets mean dir width and dir depth is calculated as log (width, nfiles)"
 usage " "
-usage "       run runtime (e.g. run 60)"
+usage "       run"
+

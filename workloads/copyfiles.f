@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)copyfiles.f	1.3	08/02/21 SMI"
+# ident	"@(#)copyfiles.f	1.4	08/03/25 SMI"
 
 set $dir=/tmp
 set $nfiles=1000
@@ -49,7 +49,7 @@ define process name=filereader,instances=1
   }
 }
 
-echo  "CopyFiles Version 2.2 personality successfully loaded"
+echo  "CopyFiles Version 2.3 personality successfully loaded"
 usage "Usage: set \$dir=<dir>"
 usage "       set \$filesize=<size>   defaults to $filesize"
 usage "       set \$nfiles=<value>    defaults to $nfiles"
@@ -57,4 +57,4 @@ usage "       set \$iosize=<size>     defaults to $iosize"
 usage "       set \$dirwidth=<value>  defaults to $dirwidth"
 usage "       set \$nthreads=<value>  defaults to $nthreads"
 usage " "
-usage "       run 0"
+usage "       run"

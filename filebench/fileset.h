@@ -26,7 +26,7 @@
 #ifndef _FB_FILESET_H
 #define	_FB_FILESET_H
 
-#pragma ident	"@(#)fileset.h	1.3	08/03/10 SMI"
+#pragma ident	"@(#)fileset.h	1.4	08/03/14 SMI"
 
 #include "config.h"
 
@@ -137,8 +137,6 @@ char *fileset_resolvepath(filesetentry_t *entry);
 void fileset_usage(void);
 void fileset_iter(int (*cmd)(fileset_t *fileset, int first));
 int fileset_print(fileset_t *fileset, int first);
-int fileset_checkraw(fileset_t *fileset);
-
 
 #ifdef	__cplusplus
 }

@@ -26,7 +26,7 @@
 #ifndef _FB_FILEBENCH_H
 #define	_FB_FILEBENCH_H
 
-#pragma ident	"@(#)filebench.h	1.6	08/03/20 SMI"
+#pragma ident	"@(#)filebench.h	1.7	08/03/25 SMI"
 
 #include "config.h"
 
@@ -109,10 +109,8 @@ void filebench_shutdown(int error);
 #define	MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
-#define	FILEBENCH_VERSION	"1.2.1"
-/*
+#define	FILEBENCH_VERSION	"1.2.2"
 #define	FILEBENCHDIR	"/usr/benchmarks/filebench"
-*/
 #define	FILEBENCH_PROMPT	"filebench> "
 #define	MAX_LINE_LEN	1024
 #define	MAX_CMD_HIST	128
