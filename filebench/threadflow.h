@@ -26,7 +26,7 @@
 #ifndef _FB_THREADFLOW_H
 #define	_FB_THREADFLOW_H
 
-#pragma ident	"@(#)threadflow.h	1.3	08/03/03 SMI"
+#pragma ident	"@(#)threadflow.h	1.4	08/04/30 SMI"
 
 #include "config.h"
 #include <pthread.h>
@@ -82,7 +82,7 @@ typedef struct threadflow {
 	pthread_mutex_t	tf_lock;	/* Mutex around threadflow */
 	avd_t		tf_instances;	/* Number of instances for this flow */
 	struct threadflow *tf_next;	/* Next on proc list */
-	struct flowop	*tf_ops;	/* Flowop list */
+	struct flowop	*tf_thrd_fops;	/* Flowop list */
 	caddr_t		tf_mem;		/* Private Memory */
 	avd_t		tf_memsize;	/* Private Memory size attribute */
 	fbint_t		tf_constmemsize; /* constant copy of memory size */

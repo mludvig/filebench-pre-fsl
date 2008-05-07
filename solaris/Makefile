@@ -1,5 +1,5 @@
 
-VERSION		= 1.2.4
+VERSION		= 1.3.0
 
 PSTAMP:sh	= date "+%d %b %y"
 

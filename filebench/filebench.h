@@ -26,7 +26,7 @@
 #ifndef _FB_FILEBENCH_H
 #define	_FB_FILEBENCH_H
 
-#pragma ident	"@(#)filebench.h	1.9	08/04/07 SMI"
+#pragma ident	"@(#)filebench.h	1.10	08/04/16 SMI"
 
 #include "config.h"
 
@@ -109,7 +109,7 @@ void filebench_shutdown(int error);
 #define	MIN(x, y) ((x) < (y) ? (x) : (y))
 #endif
 
-#define	FILEBENCH_VERSION	"1.2.4"
+#define	FILEBENCH_VERSION	"1.3.0"
 /*
 #define	FILEBENCHDIR	"/usr/benchmarks/filebench"
 */

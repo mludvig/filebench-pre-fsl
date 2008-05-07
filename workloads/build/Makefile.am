@@ -11,6 +11,7 @@ workloadsdir = $(filebenchdir)/workloads
 
 workloads_DATA = BUILD \
 	bringover.f \
+	compflow_demo.f \
 	copyfiles.f \
 	createfiles.f \
 	deletefiles.f \

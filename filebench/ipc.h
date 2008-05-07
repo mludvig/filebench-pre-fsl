@@ -26,7 +26,7 @@
 #ifndef _FB_IPC_H
 #define	_FB_IPC_H
 
-#pragma ident	"@(#)ipc.h	1.6	08/04/01 SMI"
+#pragma ident	"@(#)ipc.h	1.7	08/04/16 SMI"
 
 #include "config.h"
 #include <pthread.h>
@@ -98,6 +98,7 @@ typedef struct filebench_shm {
 	var_t		*shm_var_list;
 	var_t		*shm_var_dyn_list;
 	randdist_t	*shm_rand_list;
+	var_t		*shm_var_loc_list;
 	int		shm_debug_level;
 	hrtime_t	shm_epoch;
 	hrtime_t	shm_starttime;

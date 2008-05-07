@@ -36,6 +36,7 @@ f none filebench/bin/filebench 0555 root sys
 d none filebench/workloads 0777 root sys
 f none filebench/workloads/multistreamread.f 0644 root sys
 f none filebench/workloads/bringover.f 0644 root sys
+f none filebench/workloads/compflow_demo.f 0644 root sys
 f none filebench/workloads/copyfiles.f 0644 root sys
 f none filebench/workloads/createfiles.f 0644 root sys
 f none filebench/workloads/deletefiles.f 0644 root sys
