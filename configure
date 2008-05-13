@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE YACC LEX LEXLIB LEX_OUTPUT_ROOT build build_cpu build_vendor build_os host host_cpu host_vendor host_os CPP EGREP LIBOBJS POW_LIB GSLINC GSLLIB GSLCBLAS FARCH MV LDLIBS LFLAGS YFLAGS DEFINES BUILD SRCDIR FILEBENCHDIR FILEBENCHBIN LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM AWK SET_MAKE CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CCDEPMODE YACC LEX LEXLIB LEX_OUTPUT_ROOT build build_cpu build_vendor build_os host host_cpu host_vendor host_os CPP EGREP LIBOBJS POW_LIB FARCH MV LDLIBS LFLAGS YFLAGS DEFINES BUILD SRCDIR FILEBENCHDIR FILEBENCHBIN LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -857,7 +857,6 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-gsl=DIR      use gsl in DIR
 
 Some influential environment variables:
   CC          C compiler command
@@ -3228,6 +3227,15 @@ case "$host_os$host_cpu" in
 cat >>confdefs.h <<\_ACEOF
 #define USE_PROCESS_MODEL 1
 _ACEOF
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_BOOLEAN_T 1
+_ACEOF
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_U_LONGLONG_T 1
+_ACEOF
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_FTRUNCATE64 1
+_ACEOF
 
         FILEBENCHDIR=${prefix}/filebench
         FILEBENCHBIN=${prefix}/filebench/bin
@@ -3243,6 +3251,15 @@ _ACEOF
 cat >>confdefs.h <<\_ACEOF
 #define USE_PROCESS_MODEL 1
 _ACEOF
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_BOOLEAN_T 1
+_ACEOF
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_U_LONGLONG_T 1
+_ACEOF
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_FTRUNCATE64 1
+_ACEOF
 
         FILEBENCHDIR=${prefix}/filebench
         FILEBENCHBIN=${prefix}/filebench/bin
@@ -3254,7 +3271,7 @@ _ACEOF
 	CFLAGS="-g -DYYDEBUG=1"
 	YFLAGS="-d"
         FILEBENCHDIR=${prefix}/filebench
-        FILEBENCHBIN=${prefix}/bin
+        FILEBENCHBIN=${prefix}/filebench/bin
     ;;
   gnu*|linux*)
 	CC=cc
@@ -3268,6 +3285,9 @@ _ACEOF
 
 cat >>confdefs.h <<\_ACEOF
 #define HAVE_OFF64_T 1
+_ACEOF
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_FTRUNCATE64 1
 _ACEOF
 
         FILEBENCHDIR=${prefix}/filebench
@@ -12310,28 +12330,8 @@ echo "${ECHO_T}no" >&6
  *solaris*)
 	FARCH=`isainfo -n`
         BUILD=../solaris/build/${FARCH}
-	GSLINC="../solaris/gsl-1.4"
-	GSLLIB="../solaris/gsl-1.4/${FARCH}"
-	GSLCBLAS="../solaris/gsl-1.4/${FARCH}"
     ;;
 esac
-
-#
-# Specify path to gsl
-#
-
-# Check whether --with-gsl or --without-gsl was given.
-if test "${with_gsl+set}" = set; then
-  withval="$with_gsl"
-  if test "$withval" != no && test "$withval" != yes; then
-    if test -d "$withval"; then
-      GSLINC="$withval"
-      GSLLIB="$withval/.libs"
-      GSLCBLAS="$withval/cblas/.libs"
-    fi
-  fi
-fi;
-
 
 
 
@@ -13041,9 +13041,6 @@ s,@CPP@,$CPP,;t t
 s,@EGREP@,$EGREP,;t t
 s,@LIBOBJS@,$LIBOBJS,;t t
 s,@POW_LIB@,$POW_LIB,;t t
-s,@GSLINC@,$GSLINC,;t t
-s,@GSLLIB@,$GSLLIB,;t t
-s,@GSLCBLAS@,$GSLCBLAS,;t t
 s,@FARCH@,$FARCH,;t t
 s,@MV@,$MV,;t t
 s,@LDLIBS@,$LDLIBS,;t t

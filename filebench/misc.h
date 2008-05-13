@@ -26,7 +26,7 @@
 #ifndef _FB_MISC_H
 #define	_FB_MISC_H
 
-#pragma ident	"@(#)misc.h	1.3	08/03/18 SMI"
+#pragma ident	"@(#)misc.h	1.4	08/05/12 SMI"
 
 #include "config.h"
 
@@ -36,6 +36,8 @@
 #endif
 
 #include <sys/times.h>
+
+#include "vars.h"
 
 #ifdef	__cplusplus
 extern "C" {

@@ -6,8 +6,7 @@
 # See the file LICENSING in this distribution for details.
 #
 
-filebenchdir = $(prefix)/filebench
-configdir = $(filebenchdir)/config
+configdir = $(FILEBENCHDIR)/config
 
 config_SCRIPTS = *.func
 

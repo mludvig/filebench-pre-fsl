@@ -6,8 +6,6 @@
 # See the file LICENSING in this distribution for details.
 #
 
-filebenchdir = $(datadir)/filebench
-
 SUBDIRS = build
 
 pkg: filebench

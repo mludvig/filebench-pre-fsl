@@ -6,8 +6,5 @@
 # See the file LICENSING in this distribution for details.
 #
 
-filebenchdir = $(prefix)/filebench
-scriptsdir = $(filebenchdir)/bin
-
-scripts_SCRIPTS = filebench
+bin_SCRIPTS = filebench
 

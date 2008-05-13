@@ -23,11 +23,12 @@
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)auto_comp.c	1.2	08/04/01 SMI"
+#pragma ident	"@(#)auto_comp.c	1.3	08/05/12 SMI"
 
 #include <sys/types.h>
 #include <dirent.h>
 #include <strings.h>
+
 #include "filebench.h"
 #include "auto_comp.h"
 
@@ -45,10 +46,6 @@
 #define	ATTR_ASSIGN_OP	'='
 #define	VAR_ASSIGN_OP	'='
 #define	VAR_PREFIX	'$'
-
-#ifndef HAVE_BOOLEAN_T
-typedef enum { B_FALSE, B_TRUE } boolean_t;
-#endif
 
 typedef char ac_fname_t[FILENAME_MAXLEN];
 

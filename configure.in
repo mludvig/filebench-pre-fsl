@@ -38,6 +38,12 @@ case "$host_os$host_cpu" in
 	YFLAGS="-d"
         AC_DEFINE(USE_PROCESS_MODEL, 1,
                [ Define if we have can use a process model ])
+	AC_DEFINE(HAVE_BOOLEAN_T, 1,
+               [ Define if we can use boolean_t ])
+	AC_DEFINE(HAVE_U_LONGLONG_T, 1,
+               [ Define if we can use u_longlong_t ])
+	AC_DEFINE(HAVE_FTRUNCATE64, 1,
+               [ Define if you have ftruncate64() ])
         FILEBENCHDIR=${prefix}/filebench
         FILEBENCHBIN=${prefix}/filebench/bin
     ;;
@@ -50,6 +56,12 @@ case "$host_os$host_cpu" in
 	YFLAGS="-d"
         AC_DEFINE(USE_PROCESS_MODEL, 1,
                [ Define if we have can use a process model ])
+	AC_DEFINE(HAVE_BOOLEAN_T, 1,
+               [ Define if we can use boolean_t ])
+	AC_DEFINE(HAVE_U_LONGLONG_T, 1,
+               [ Define if we can use u_longlong_t ])
+	AC_DEFINE(HAVE_FTRUNCATE64, 1,
+               [ Define if you have ftruncate64() ])
         FILEBENCHDIR=${prefix}/filebench
         FILEBENCHBIN=${prefix}/filebench/bin
     ;;
@@ -60,7 +72,7 @@ case "$host_os$host_cpu" in
 	CFLAGS="-g -DYYDEBUG=1"
 	YFLAGS="-d"
         FILEBENCHDIR=${prefix}/filebench
-        FILEBENCHBIN=${prefix}/bin
+        FILEBENCHBIN=${prefix}/filebench/bin
     ;;
   gnu*|linux*)
 	CC=cc
@@ -73,8 +85,10 @@ case "$host_os$host_cpu" in
 	YFLAGS="-d"
         AC_DEFINE(HAVE_OFF64_T, 1,
                [ Define if we can use 64 bit files ])
-        FILEBENCHDIR=${prefix}/filebench
-        FILEBENCHBIN=${prefix}/bin
+	AC_DEFINE(HAVE_FTRUNCATE64, 1,
+               [ Define if you have ftruncate64() ])
+        FILEBENCHDIR=${datadir}/filebench
+        FILEBENCHBIN=${bindir}
     ;;
 esac
 
@@ -217,6 +231,7 @@ AC_CHECK_TYPES([uint_t, off64_t, hrtime_t, caddr_t])
 AC_CHECK_FUNCS([cftime],
     [ AC_DEFINE(HAVE_CFTIME, 1, [ Define if  you have cftime() ])
 ])
+
 AC_CHECK_FUNCS([sigsend])
 AC_CHECK_FUNCS([mkstemp])
 dnl check for aiocb64
@@ -262,7 +277,7 @@ case "$host_os" in
 	minor=`echo $host_os_ver | awk -F\. '{print $2}'`
 	if test $minor -gt 4; then
 	        AC_DEFINE(USE_PROCESS_MODEL, 1,
-       	        [ Define if we have can use a process model ])
+       	        [ Define if we have can use a process model linux])
 	else
 		AC_MSG_WARN([ *** Filebench has only been tested on 2.6+ kernel ***])
 	fi
@@ -287,27 +302,8 @@ case "$host_os" in
  *solaris*)
 	FARCH=`isainfo -n`
         BUILD=../solaris/build/${FARCH}
-	GSLINC="../solaris/gsl-1.4"
-	GSLLIB="../solaris/gsl-1.4/${FARCH}"
-	GSLCBLAS="../solaris/gsl-1.4/${FARCH}"
     ;;
 esac
-
-# 
-# Specify path to gsl
-#
-AC_ARG_WITH(gsl,
-  [  --with-gsl=DIR      use gsl in DIR],
-  [if test "$withval" != no && test "$withval" != yes; then
-    if test -d "$withval"; then
-      GSLINC="$withval"
-      GSLLIB="$withval/.libs"
-      GSLCBLAS="$withval/cblas/.libs"
-    fi
-  fi])
-AC_SUBST(GSLINC)
-AC_SUBST(GSLLIB)
-AC_SUBST(GSLCBLAS)
 
 SRCDIR=$ac_top_srcdir
 
@@ -324,6 +320,6 @@ AC_SUBST(SRCDIR)
 AC_SUBST(FILEBENCHDIR)
 AC_SUBST(FILEBENCHBIN)
 
-AC_CONFIG_FILES([Makefile filebench/Makefile fastsu/Makefile workloads/Makefile workloads/build/Makefile scripts/Makefile benchpoint/Makefile benchpoint/bin/Makefile benchpoint/config/Makefile benchpoint/functions/Makefile benchpoint/profiles/Makefile])
+AC_CONFIG_FILES([Makefile filebench/Makefile fastsu/Makefile workloads/Makefile workloads/build/Makefile scripts/Makefile benchpoint/Makefile benchpoint/bin/Makefile benchpoint/config/Makefile benchpoint/functions/Makefile benchpoint/profiles/Makefile bin/Makefile])
 
 AC_OUTPUT

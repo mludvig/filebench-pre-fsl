@@ -21,9 +21,11 @@
 /*
  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
+ *
+ * Portions Copyright 2008 Denis Cheng
  */
 
-#pragma ident	"@(#)flowop_library.c	1.7	08/04/16 SMI"
+#pragma ident	"@(#)flowop_library.c	1.8	08/05/12 SMI"
 
 #include "config.h"
 
@@ -789,8 +791,7 @@ flowoplib_aiowait(threadflow_t *threadflow, flowop_t *flowop)
 		for (ncompleted = 0, inprogress = 0,
 		    aio = flowop->fo_thread->tf_aiolist;
 		    ncompleted < todo, aio != NULL; aio = aio->al_next) {
-
-			result = aio_error64(&aio->al_aiocb);
+			int result = aio_error64(&aio->al_aiocb);
 
 			if (result == EINPROGRESS) {
 				inprogress++;

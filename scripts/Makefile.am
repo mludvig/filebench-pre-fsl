@@ -6,8 +6,7 @@
 # See the file LICENSING in this distribution for details.
 #
 
-filebenchdir = $(prefix)/filebench
-scriptsdir = $(filebenchdir)/scripts
+scriptsdir = $(FILEBENCHDIR)/scripts
 
 scripts_SCRIPTS = filebench_compare filebench_summary filebench_plot fs_flush
 

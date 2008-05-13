@@ -21,21 +21,23 @@
 /*
  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
+ *
+ * Portions Copyright 2008 Denis Cheng
  */
 
-#pragma ident	"@(#)vars.c	1.5	08/04/24 SMI"
+#pragma ident	"@(#)vars.c	1.6	08/05/12 SMI"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 
+#include "filebench.h"
 #include "vars.h"
 #include "misc.h"
 #include "utils.h"
 #include "stats.h"
 #include "eventgen.h"
-#include "filebench.h"
 #include "fb_random.h"
 
 static var_t *var_find_dynamic(char *name);

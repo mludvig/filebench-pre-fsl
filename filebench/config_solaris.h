@@ -20,14 +20,14 @@
  */
 
 /*
- * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
 #ifndef	_FB_CONFIG_H
 #define	_FB_CONFIG_H
 
-#pragma ident	"@(#)config.h	1.2	07/11/02 SMI"
+#pragma ident	"@(#)config.h	1.3	08/05/12 SMI"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -61,8 +61,10 @@ extern "C" {
 #define	HAVE_UINT64_MAX 1
 #define	HAVE_UINT_T 1
 #define	HAVE_BOOLEAN_T 1
+#define	HAVE_U_LONGLONG_T 1
 #define	HAVE_LIBTECLA 1
 #define	HAVE_RAW_SUPPORT 1
+#define	HAVE_FTRUNCATE64 1
 #define	USE_PROCESS_MODEL 1
 
 /* Define to 1 if you have the <libaio.h> header file. */

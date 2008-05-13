@@ -23,7 +23,7 @@
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)stats.c	1.5	08/03/28 SMI"
+#pragma ident	"@(#)stats.c	1.6	08/05/12 SMI"
 
 #include "config.h"
 
@@ -515,7 +515,7 @@ stats_snap(void)
 
 	flowop = filebench_shm->shm_flowoplist;
 	str = malloc(1048576);
-	*str = NULL;
+	*str = '\0';
 	(void) strcpy(str, "Per-Operation Breakdown\n");
 	while (flowop) {
 		char line[1024];

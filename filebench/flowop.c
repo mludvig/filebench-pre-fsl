@@ -23,7 +23,7 @@
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)flowop.c	1.6	08/05/05 SMI"
+#pragma ident	"@(#)flowop.c	1.7	08/05/12 SMI"
 
 #include "config.h"
 
@@ -584,6 +584,7 @@ flowop_start(threadflow_t *threadflow)
 void
 flowop_init(void)
 {
+	(void) pthread_mutex_init(&controlstats_lock, ipc_mutexattr());
 	flowoplib_init();
 }
 

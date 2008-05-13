@@ -1,6 +1,6 @@
 
 Building Solaris a Solaris Package
-----------------------------------
+-----------------------------------
 
 By default, this builds a x86 only package.  To build a full Solaris
 package, you will need access to a Solaris AMD64 and Solaris SPARC platform.
@@ -15,13 +15,30 @@ If you wish to build a sparcv9 package, then uncomment out the sparcv9
 lines in solaris/pkg/prototype (or just copy "prototype_sparc" over
 "prototype" in solaris/pkg).
 
-Building on Linux and Other
----------------------------
-
-We are currently testing the build on MacOSX and Linux 2.4/2.6.
+Building on Linux
+------------------
 
 To compile:
-
+$ aclocal
+$ autoconf
+$ autoheader
+$ automake --add-missing --copy
 $ ./configure
-$ make install
+$ make
+
+filebench will be installed at:
+1. /usr/bin/{go_filebench, ...}
+2. /usr/share/filebench/...
+3. /usr/share/doc/filebench/...
+
+Building on OSX
+----------------
+
+To compile:
+$ aclocal
+$ autoconf
+$ autoheader
+$ automake --add-missing --copy
+$ ./configure --prefix=/opt --exec_prefix=/opt/filebench --datadir=/opt
+$ sudo make install
 

@@ -21,17 +21,19 @@
 /*
  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
+ *
+ * Portions Copyright 2008 Denis Cheng
  */
 
-#pragma ident	"@(#)procflow.c	1.5	08/04/01 SMI"
+#pragma ident	"@(#)procflow.c	1.6	08/05/12 SMI"
 
 #include <signal.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#include "procflow.h"
 #include "filebench.h"
+#include "procflow.h"
 #include "flowop.h"
 #include "ipc.h"
 
@@ -162,7 +164,7 @@ procflow_createproc(procflow_t *procflow)
 		}
 
 #else
-		if (execl(execname, procname, "-a", procname, "-i",
+		if (execlp(execname, procname, "-a", procname, "-i",
 		    instance, "-s", shmaddr, "-m", shmpath, NULL) < 0) {
 			filebench_log(LOG_ERROR,
 			    "procflow exec proc failed: %s",

@@ -21,9 +21,11 @@
 /*
  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
+ *
+ * Portions Copyright 2008 Denis Cheng
  */
 
-#pragma ident	"@(#)eventgen.c	1.4	08/04/01 SMI"
+#pragma ident	"@(#)eventgen.c	1.5	08/05/12 SMI"
 
 /*
  * The event generator in this module is the producer half of a
@@ -40,9 +42,10 @@
  */
 
 #include <sys/time.h>
+
+#include "filebench.h"
 #include "vars.h"
 #include "eventgen.h"
-#include "filebench.h"
 #include "flowop.h"
 #include "ipc.h"
 

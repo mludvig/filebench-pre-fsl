@@ -26,9 +26,11 @@
 #ifndef	_FB_PARSERTYPES_H
 #define	_FB_PARSERTYPES_H
 
-#pragma ident	"@(#)parsertypes.h	1.2	08/02/25 SMI"
+#pragma ident	"@(#)parsertypes.h	1.3	08/05/12 SMI"
 
 #include "config.h"
+
+#include "filebench.h"
 #include "vars.h"
 
 #ifdef	__cplusplus

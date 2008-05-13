@@ -6,8 +6,7 @@
 # See the file LICENSING in this distribution for details.
 #
 
-filebenchdir = $(prefix)/filebench
-workloadsdir = $(filebenchdir)/workloads
+workloadsdir = $(FILEBENCHDIR)/workloads
 
 workloads_DATA = BUILD \
 	bringover.f \
