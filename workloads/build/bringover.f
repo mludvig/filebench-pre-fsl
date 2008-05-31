@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)bringover.f	1.4	08/03/25 SMI"
+# ident	"@(#)bringover.f	1.5	08/05/21 SMI"
 
 
 set $dir=/tmp
@@ -32,9 +32,9 @@ set $filesize=16k
 set $iosize=1m
 set $nthreads=1
 
-set mode quit alldone
+set mode quit firstdone
 
-define fileset name=srcfiles,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth,prealloc
+define fileset name=srcfiles,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth,prealloc,paralloc
 define fileset name=destfiles,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$dirwidth
 
 define process name=filereader,instances=1
@@ -50,8 +50,8 @@ define process name=filereader,instances=1
   }
 }
 
-echo  "Bringover Version 2.3 personality successfully loaded"
-usage "Usage: set \$dir=<dir>"
+echo  "Bringover Version 2.4 personality successfully loaded"
+usage "Usage: set \$dir=<dir>         defaults to $dir"
 usage "       set \$filesize=<size>   defaults to $filesize"
 usage "       set \$nfiles=<value>    defaults to $nfiles"
 usage "       set \$iosize=<size>     defaults to $iosize"

@@ -23,7 +23,7 @@
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)auto_comp.c	1.3	08/05/12 SMI"
+#pragma ident	"@(#)auto_comp.c	1.4	08/05/27 SMI"
 
 #include <sys/types.h>
 #include <dirent.h>
@@ -454,6 +454,7 @@ static ac_tokval_t fb_cmdnames[] = {
 	{ "system",	NULL },
 	{ "usage",	NULL },
 	{ "vars",	NULL },
+	{ "version",	NULL },
 	{ NULL,		NULL },
 };
 

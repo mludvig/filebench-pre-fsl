@@ -26,7 +26,7 @@
 #ifndef _FB_IPC_H
 #define	_FB_IPC_H
 
-#pragma ident	"@(#)ipc.h	1.7	08/04/16 SMI"
+#pragma ident	"@(#)ipc.h	1.9	08/05/28 SMI"
 
 #include "config.h"
 #include <pthread.h>
@@ -87,6 +87,7 @@ typedef struct filebench_shm {
 	pthread_mutex_t shm_msg_lock;
 	pthread_mutex_t shm_malloc_lock;
 	pthread_mutex_t shm_ism_lock;
+	pthread_mutex_t shm_procs_running_lock;	/* protects shm_procs_running */
 	pthread_rwlock_t shm_run_lock;
 	pthread_rwlock_t shm_flowop_find_lock;
 
@@ -119,7 +120,7 @@ typedef struct filebench_shm {
 	size_t		shm_allocated;
 	caddr_t		shm_addr;
 	char		*shm_ptr;
-	int		shm_running;
+	int		shm_procs_running;
 	int		shm_f_abort;
 	int		shm_rmode;
 	int		shm_1st_err;
@@ -159,7 +160,7 @@ void ipc_seminit(void);
 char *ipc_ismmalloc(size_t size);
 int ipc_ismcreate(size_t size);
 void ipc_ismdelete(void);
-void ipc_cleanup(void);
+void ipc_fini(void);
 
 extern filebench_shm_t *filebench_shm;
 

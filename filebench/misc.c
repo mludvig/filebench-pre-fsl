@@ -23,7 +23,7 @@
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)misc.c	1.6	08/04/01 SMI"
+#pragma ident	"@(#)misc.c	1.7	08/05/21 SMI"
 
 #include <stdio.h>
 #include <fcntl.h>
@@ -341,8 +341,7 @@ filebench_shutdown(int error) {
 		filebench_log(LOG_DEBUG_IMPL, "Shutdown");
 	}
 
-	if (filebench_shm->shm_running)
-		procflow_shutdown();
+	procflow_shutdown();
 
 	(void) unlink("/tmp/filebench_shm");
 	ipc_ismdelete();

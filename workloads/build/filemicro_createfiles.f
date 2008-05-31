@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_createfiles.f	1.3	08/03/31 SMI"
+# ident	"@(#)filemicro_createfiles.f	1.4	08/04/01 SMI"
 
 # Creates a fileset with 20,000 entries ($nfiles), but only preallocates
 # 50% of the files.  Each file's size is set via a gamma distribution with
@@ -30,7 +30,7 @@
 #
 # The single thread then creates a new file and writes the whole file with
 # 1MB I/Os.  The thread stops after 5000 files ($count/num of flowops) have
-been created and written to.
+# been created and written to.
 
 set $dir=/tmp
 set $count=15000

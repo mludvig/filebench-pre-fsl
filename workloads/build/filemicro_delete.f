@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_delete.f	1.4	08/04/07 SMI"
+# ident	"@(#)filemicro_delete.f	1.5	08/05/21 SMI"
 
 # Create a fileset of 50,000 entries ($nfiles), where each file's size is set
 # via a gamma distribution with the median size of 16KB ($filesize).
@@ -36,7 +36,7 @@ set $nfiles=5000
 set $meandirwidth=100
 set $nthreads=16
 
-set mode quit alldone
+set mode quit firstdone
 
 define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=100,paralloc
 
@@ -50,8 +50,8 @@ define process name=filedelete,instances=1
   }
 }
 
-echo  "FileMicro-Delete Version 2.3 personality successfully loaded"
-usage "Usage: set \$dir=<dir>"
+echo  "FileMicro-Delete Version 2.4 personality successfully loaded"
+usage "Usage: set \$dir=<dir>           defaults to $dir"
 usage "       set \$count=<value>       defaults to $count"
 usage "       set \$filesize=<size>     defaults to $filesize"
 usage "       set \$nfiles=<value>      defaults to $nfiles"

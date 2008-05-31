@@ -38,6 +38,7 @@ workloads_DATA = BUILD \
 	postmark.f \
 	randomread.f \
 	randomwrite.f \
+	ratelimcopyfiles.f \
 	singlestreamread.f \
 	singlestreamreaddirect.f \
 	singlestreamwrite.f \

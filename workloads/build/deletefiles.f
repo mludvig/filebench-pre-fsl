@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)deletefiles.f	1.3	08/03/25 SMI"
+# ident	"@(#)deletefiles.f	1.4	08/05/21 SMI"
 
 set $dir=/tmp
 set $nfiles=50000
@@ -30,9 +30,9 @@ set $meandirwidth=100
 set $filesize=16k
 set $nthreads=16
 
-set mode quit alldone
+set mode quit firstdone
 
-define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=100
+define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=100,paralloc
 
 define process name=filedelete,instances=1
 {
@@ -43,8 +43,8 @@ define process name=filedelete,instances=1
   }
 }
 
-echo  "Deletefiles Version 2.2 personality successfully loaded"
-usage "Usage: set \$dir=<dir>"
+echo  "Deletefiles Version 2.3 personality successfully loaded"
+usage "Usage: set \$dir=<dir>          defaults to $dir"
 usage "       set \$filesize=<size>    defaults to $filesize"
 usage "       set \$nfiles=<value>     defaults to $nfiles"
 usage "       set \$nthreads=<value>   defaults to $nthreads"

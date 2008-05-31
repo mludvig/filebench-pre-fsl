@@ -27,7 +27,7 @@
  */
 
 %{
-#pragma	ident	"@(#)parser_lex.l	1.4	08/05/12 SMI"
+#pragma	ident	"@(#)parser_lex.l	1.5	08/05/27 SMI"
 %}
 
 %{
@@ -86,6 +86,7 @@ stats                   { return FSC_STATS; }
 system                  { return FSC_SYSTEM; }
 usage                   { return FSC_USAGE; }
 vars                    { return FSC_VARS; }
+version                 { return FSC_VERSION; }
 quit		        { return FSC_QUIT; }
 
 file[s]*       	        { return FSE_FILE; }
