@@ -26,7 +26,7 @@
 #ifndef	_FB_PARSERTYPES_H
 #define	_FB_PARSERTYPES_H
 
-#pragma ident	"@(#)parsertypes.h	1.3	08/05/12 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include "config.h"
 

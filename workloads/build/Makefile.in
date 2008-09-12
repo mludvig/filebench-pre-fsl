@@ -123,6 +123,7 @@ workloads_DATA = BUILD \
 	filemicro_seqwriterand.f \
 	filemicro_seqwriterandvargam.f \
 	filemicro_seqwriterandvartab.f \
+	filemicro_statfile.f \
 	filemicro_writefsync.f \
 	fileserver.f \
 	mongo.f \

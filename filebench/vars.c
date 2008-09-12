@@ -25,7 +25,7 @@
  * Portions Copyright 2008 Denis Cheng
  */
 
-#pragma ident	"@(#)vars.c	1.6	08/05/12 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include <stdlib.h>
 #include <stdio.h>

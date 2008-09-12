@@ -23,7 +23,7 @@
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)gamma_dist.c	1.2	08/03/05 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include <stdlib.h>
 #include <math.h>

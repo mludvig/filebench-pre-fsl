@@ -26,7 +26,7 @@
 #ifndef _FB_MISC_H
 #define	_FB_MISC_H
 
-#pragma ident	"@(#)misc.h	1.4	08/05/12 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include "config.h"
 

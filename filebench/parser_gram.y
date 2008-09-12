@@ -26,7 +26,7 @@
  */
 
 %{
-#pragma ident	"@(#)parser_gram.y	1.10	08/05/29 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 %}
 
 %{

@@ -26,7 +26,7 @@
 #ifndef _FB_PROCFLOW_H
 #define	_FB_PROCFLOW_H
 
-#pragma ident	"@(#)procflow.h	1.2	08/02/13 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include "config.h"
 

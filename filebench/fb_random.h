@@ -26,7 +26,7 @@
 #ifndef _FB_RANDOM_H
 #define	_FB_RANDOM_H
 
-#pragma ident	"@(#)fb_random.h	1.1	08/03/10 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include "config.h"
 

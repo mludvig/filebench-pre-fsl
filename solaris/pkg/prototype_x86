@@ -73,6 +73,7 @@ f none filebench/workloads/filemicro_rwrite.f 0644 root sys
 f none filebench/workloads/filemicro_seqwrite.f 0644 root sys
 f none filebench/workloads/filemicro_seqwriterand.f 0644 root sys
 f none filebench/workloads/ratelimcopyfiles.f 0644 root sys
+f none filebench/workloads/filemicro_statfile.f 0644 root sys
 d none filebench/docs 0755 root sys
 ! search ../../docs
 f none filebench/docs/README.benchpoint 644 root sys

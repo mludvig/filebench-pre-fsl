@@ -25,7 +25,7 @@
  * Portions Copyright 2008 Denis Cheng
  */
 
-#pragma ident	"@(#)utils.c	1.2	08/05/12 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include <limits.h>
 #include <string.h>

@@ -22,42 +22,34 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_delete.f	1.5	08/05/21 SMI"
 
-# Create a fileset of 50,000 entries ($nfiles), where each file's size is set
-# via a gamma distribution with the median size of 16KB ($filesize).
-# Fire off 16 threads ($nthreads), where each thread stops after
-# deleting 1000 ($count) files.
+#
+# Creates a fileset of $nfiles number of files, then loops through them
+# using $nthreads number of threads, doing "stat" calls on each file.
+#
 
 set $dir=/tmp
-set $count=1000
-set $filesize=16k
-set $nfiles=5000
-set $meandirwidth=100
-set $nthreads=16
+set $nfiles=10000
+set $meandirwidth=20
+set $filesize=128k
+set $nthreads=20
 
-set mode quit firstdone
+define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=100
 
-define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=100,paralloc
-
-define process name=filedelete,instances=1
+define process name=examinefiles,instances=1
 {
-  thread name=filedeletethread,memsize=10m,instances=$nthreads
+  thread name=examinefilethread, memsize=10m,instances=$nthreads
   {
-    flowop deletefile name=deletefile1,filesetname=bigfileset
-    flowop opslimit name=limit
-    flowop finishoncount name=finish,value=$count
+    flowop statfile name=statfile1,filesetname=bigfileset
   }
 }
 
-echo  "FileMicro-Delete Version 2.4 personality successfully loaded"
+echo  "Stat File Version 1.0 personality successfully loaded"
 usage "Usage: set \$dir=<dir>           defaults to $dir"
-usage "       set \$count=<value>       defaults to $count"
 usage "       set \$filesize=<size>     defaults to $filesize"
 usage "       set \$nfiles=<value>      defaults to $nfiles"
-usage "       set \$meandirwidth=<size> defaults to $meandirwidth"
 usage "       set \$nthreads=<value>    defaults to $nthreads"
+usage "       set \$meandirwidth=<size> defaults to $meandirwidth"
 usage "(sets mean dir width and dir depth is calculated as log (width, nfiles)"
 usage " "
-usage "       run"
-
+usage "       run runtime (e.g. run 60)"

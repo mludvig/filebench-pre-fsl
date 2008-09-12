@@ -23,7 +23,7 @@
  * Use is subject to license terms.
  */
 
-#pragma ident	"@(#)fb_random.c	1.2	08/03/20 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include <stdio.h>
 #include <fcntl.h>

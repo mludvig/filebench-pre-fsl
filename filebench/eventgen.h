@@ -26,7 +26,7 @@
 #ifndef	_FB_EVENTGEN_H
 #define	_FB_EVENTGEN_H
 
-#pragma ident	"@(#)eventgen.h	1.3	08/03/31 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #include "config.h"
 #include "vars.h"

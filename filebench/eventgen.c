@@ -25,7 +25,7 @@
  * Portions Copyright 2008 Denis Cheng
  */
 
-#pragma ident	"@(#)eventgen.c	1.5	08/05/12 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 /*
  * The event generator in this module is the producer half of a

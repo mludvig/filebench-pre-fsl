@@ -27,7 +27,7 @@
 #ifndef	_FB_CONFIG_H
 #define	_FB_CONFIG_H
 
-#pragma ident	"@(#)config.h	1.3	08/05/12 SMI"
+#pragma ident	"%Z%%M%	%I%	%E% SMI"
 
 #ifdef  __cplusplus
 extern "C" {
