@@ -19,7 +19,7 @@
  * CDDL HEADER END
  */
 /*
- * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+ * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
  * Use is subject to license terms.
  */
 
@@ -34,6 +34,7 @@
 #include "fileset.h"
 #include "flowop.h"
 #include "fb_random.h"
+#include "fsplug.h"
 #include "filebench.h"
 
 #ifdef	__cplusplus
@@ -146,7 +147,7 @@ typedef struct filebench_shm {
 	/*
 	 * Event generator state
 	 */
-	int		shm_eventgen_hz;   /* number of events per sec. */
+	avd_t		shm_eventgen_hz;   /* number of events per sec. */
 	uint64_t	shm_eventgen_q;    /* count of unclaimed events */
 	pthread_mutex_t	shm_eventgen_lock; /* lock protecting count */
 	pthread_cond_t	shm_eventgen_cv;   /* cv to wait on for more events */
@@ -186,7 +187,16 @@ typedef struct filebench_shm {
 	caddr_t		shm_addr;
 	char		*shm_ptr;
 
-	int		shm_marker;	/* end of pre-zeroed data */
+	/*
+	 * Type of plug-in file system client to use. Defaults to
+	 * local file system, which is type "0".
+	 */
+	fb_plugin_type_t shm_filesys_type;
+
+	/*
+	 * end of pre-zeroed data
+	 */
+	int		shm_marker;
 
 	/*
 	 * actual storage for shared entities.

@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_seqwriterandvartab.f	1.1	08/03/17 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Sequential write() of a 1G file, size picked from a table in
 # the [1K,64K] range with a mean of 5.5K, followed by close(), cached.

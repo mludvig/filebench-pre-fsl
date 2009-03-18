@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_rwritefsync.f	1.2	08/03/31 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Single threaded asynchronous random writes (8KB I/Os) on a 1GB file.
 # A fsync is issued after 16K ($iters) worth of writes.

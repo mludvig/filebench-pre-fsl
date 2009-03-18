@@ -7,10 +7,11 @@
 #
 
 bin_PROGRAMS = go_filebench
-go_filebench_SOURCES = gamma_dist.c misc.c procflow.c threadflow.c \
-                    utils.c flowop.c flowop_library.c ipc.c \
-		    vars.c stats.c eventgen.c fileset.c fb_random.c \
-		    parser_gram.y parser_lex.l
+go_filebench_SOURCES = auto_comp.c eventgen.c fb_avl.c fb_localfs.c \
+		    fb_random.c fileset.c flowop.c flowop_library.c \
+		    gamma_dist.c ipc.c misc.c multi_client_sync.c \
+		    parser_gram.y parser_lex.l procflow.c stats.c \
+		    threadflow.c utils.c vars.c
 INCLUDES = -I../intl -DFILEBENCHDIR=\"$(datadir)/filebench\"
 
 MV=@MV@

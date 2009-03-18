@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)mongo.f	1.4	08/05/21 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 set $dir=/tmp
 set $nfiles=1000

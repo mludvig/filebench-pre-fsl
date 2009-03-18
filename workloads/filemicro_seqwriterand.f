@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_seqwriterand.f	1.2	08/03/31 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Single threaded appends/writes (I/Os of random size in the range
 # of [1B - 8KB]) to a 1GB file.

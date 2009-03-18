@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)ratelimcopyfiles.f	1.1	08/05/22 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # RateLimCopyFiles.f uses the iopslimit flowop with the target attribute
 # set to the writewholefile flowop to limit the rate to one writewholefile

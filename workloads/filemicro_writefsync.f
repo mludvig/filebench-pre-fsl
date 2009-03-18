@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_writefsync.f	1.2	08/03/31 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Single threaded appends/writes (8KB I/Os) to a 1GB file.
 # Each loop iteration does a fsync after 1250 ($iters) appends.

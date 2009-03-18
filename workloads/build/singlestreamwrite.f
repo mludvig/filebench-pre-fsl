@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)singlestreamwrite.f	1.3	08/03/31 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 set $dir=/tmp
 set $directio=false

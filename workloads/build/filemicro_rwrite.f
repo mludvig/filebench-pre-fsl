@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_rwrite.f	1.2	08/03/31 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Single threaded asynchronous ($sync) random writes (2KB I/Os) on a 1GB file.
 # Stops when 128MB ($bytes) has been written.

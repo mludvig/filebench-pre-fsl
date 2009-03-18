@@ -103,10 +103,11 @@ host_os = @host_os@
 install_sh = @install_sh@
 
 bin_PROGRAMS = go_filebench
-filebench_SOURCES = gamma_dist.c misc.c procflow.c threadflow.c \
-                    utils.c flowop.c flowop_library.c ipc.c \
-		    vars.c stats.c eventgen.c fileset.c fb_random.c \
-		    parser_gram.y parser_lex.l
+go_filebench_SOURCES = auto_comp.c eventgen.c fb_avl.c fb_localfs.c \
+		    fb_random.c fileset.c flowop.c flowop_library.c \
+		    gamma_dist.c ipc.c misc.c multi_client_sync.c \
+		    parser_gram.y parser_lex.l procflow.c stats.c \
+		    threadflow.c utils.c vars.c
 
 filebenchdir = $(datadir)/filebench
 INCLUDES = -I../intl -DFILEBENCHDIR=\"$(prefix)/filebench\"
@@ -118,12 +119,13 @@ CONFIG_CLEAN_FILES =
 bin_PROGRAMS = go_filebench$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_filebench_OBJECTS = gamma_dist.$(OBJEXT) misc.$(OBJEXT) \
-	procflow.$(OBJEXT) threadflow.$(OBJEXT) utils.$(OBJEXT) \
-	flowop.$(OBJEXT) flowop_library.$(OBJEXT) ipc.$(OBJEXT) \
-	vars.$(OBJEXT) stats.$(OBJEXT) eventgen.$(OBJEXT) \
-	fileset.$(OBJEXT) fb_random.$(OBJEXT) parser_gram.$(OBJEXT) \
-	parser_lex.$(OBJEXT)
+am_filebench_OBJECTS = auto_comp.$(OBJEXT) eventgen.$(OBJEXT) fb_avl.$(OBJEXT) \
+		    fb_localfs.$(OBJEXT) fb_random.$(OBJEXT) fileset.$(OBJEXT) \
+		    flowop.$(OBJEXT) flowop_library.$(OBJEXT) \
+		    gamma_dist.$(OBJEXT) ipc.$(OBJEXT) misc.$(OBJEXT) \
+		    multi_client_sync.$(OBJEXT) parser_gram.$(OBJEXT) \
+		    parser_lex.$(OBJEXT) procflow.$(OBJEXT) stats.$(OBJEXT) \
+		    threadflow.$(OBJEXT) utils.$(OBJEXT) vars.$(OBJEXT)
 filebench_OBJECTS = $(am_filebench_OBJECTS)
 filebench_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -132,14 +134,16 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/eventgen.Po ./$(DEPDIR)/gamma_dist.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fb_random.Po ./$(DEPDIR)/flowop.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fileset.Po ./$(DEPDIR)/flowop.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/flowop_library.Po ./$(DEPDIR)/ipc.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/misc.Po ./$(DEPDIR)/parser_gram.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/parser_lex.Po ./$(DEPDIR)/procflow.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/stats.Po ./$(DEPDIR)/threadflow.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/utils.Po ./$(DEPDIR)/vars.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/auto_comp.Po ./$(DEPDIR)/eventgen.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fb_avl.Po ./$(DEPDIR)/fb_localfs.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/fb_random.Po ./$(DEPDIR)/fileset.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/flowop.Po ./$(DEPDIR)/flowop_library.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gama_dist.Po ./$(DEPDIR)/ipc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/misc.Po ./$(DEPDIR)/multi_client_sync.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/parser_gram.Po ./$(DEPDIR)/parser_lex.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/procflow.Po ./$(DEPDIR)/stats.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/threadflow.Po ./$(DEPDIR)/utils.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/vars.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -193,14 +197,18 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/auto_comp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventgen.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gamma_dist.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fb_avl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fb_localfs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fb_random.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fileset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flowop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flowop_library.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gamma_dist.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ipc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/multi_client_sync.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser_gram.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser_lex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/procflow.Po@am__quote@

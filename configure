@@ -3219,7 +3219,7 @@ case "$host_os$host_cpu" in
  *solaris*sparc*)
         ac_default_prefix="/opt"
 	CC=cc
-	LDLIBS="-lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread -xarch=v9"
+	LDLIBS="-lm -ll -lkstat -lrt -ltecla -lsocket -lnsl -R/usr/lib/lwp -mt -lpthread -xarch=v9"
 	LFLAGS="-t"
 	CFLAGS="-g -xO3 -xarch=v9 -DYYDEBUG=1"
 	YFLAGS="-d"
@@ -3243,7 +3243,7 @@ _ACEOF
  *solaris*i386*)
         ac_default_prefix="/opt"
 	CC=cc
-	LDLIBS="-lm -ll -lkstat -lrt -R/usr/lib/lwp -mt -lpthread"
+	LDLIBS="-lm -ll -lkstat -lrt -ltecla -lsocket -lnsl -R/usr/lib/lwp -mt -lpthread"
 	LFLAGS="-t"
 	CFLAGS="-g -xO3 -DYYDEBUG=1"
 	YFLAGS="-d"
@@ -3279,7 +3279,7 @@ _ACEOF
 	##DEFINES="-DLINUX_PORT -D_XOPEN_SOURCE=500 -D_LARGEFILE_SOURCE64 -D_FILE_OFFSET_BITS=64 -D__USE_LARGEFILE64 -D__USE_UNIX98"
 	DEFINES="-DLINUX_PORT -D_GNU_SOURCE -D__USE_LARGEFILE64"
 	CFLAGS="${CFLAGS=} -O -I/usr/include/nptl -DYYDEBUG=1"
-	LDLIBS="-lm  -lm -lpthread -laio -lfl -lrt"
+	LDLIBS="-lm  -lm -lpthread -laio -lfl -lrt -ltecla -lsocket -lnsl"
 	LFLAGS="-t"
 	YFLAGS="-d"
 
@@ -9859,6 +9859,7 @@ fi
 
 fi
 
+LIBS="$LIBS -ltecla -lsocket -lnsl"
 
 for ac_func in vprintf
 do

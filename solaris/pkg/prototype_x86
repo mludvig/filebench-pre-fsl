@@ -95,7 +95,9 @@ f none filebench/config/filemicro.prof 0444 root other
 f none filebench/config/fileio.prof 0444 root other
 f none filebench/config/randomread.prof 0444 root other
 f none filebench/config/seqread.prof 0444 root other
-f none filebench/config/sample_rate.prof 0444 root other
+f none filebench/config/multi_fileserver.prof 0444 root other
+f none filebench/config/newfeatures.prof 0444 root other
+f none filebench/config/videoserver.prof 0444 root other
 ! search ../../scripts
 d none filebench/scripts 0777 root other
 f none filebench/scripts/filebench_compare 755 root sys

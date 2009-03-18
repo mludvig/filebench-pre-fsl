@@ -19,13 +19,11 @@
 # CDDL HEADER END
 #
 #
-# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
-#
-# ident	"@(#)webproxy.f	1.2	07/12/07 SMI"
 
 set $dir=/tmp
-set $nfiles=1000
+set $nfiles=10000
 set $meandirwidth=1000000
 set $filesize=16k
 set $nthreads=100

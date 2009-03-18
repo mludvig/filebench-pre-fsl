@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_seqwriterandvargam.f	1.1	08/03/17 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Sequential write() of a 1G file, size picked from a gamma distribution
 # min of 1k and a mean of 5.5K, followed by close(), cached.

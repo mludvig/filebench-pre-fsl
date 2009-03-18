@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_delete.f	1.5	08/05/21 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Create a fileset of 50,000 entries ($nfiles), where each file's size is set
 # via a gamma distribution with the median size of 16KB ($filesize).

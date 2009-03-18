@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)oltp.f	1.3	08/05/12 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # $iosize - iosize for database block access
 # $dir - directory for datafiles

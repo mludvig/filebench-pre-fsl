@@ -22,7 +22,7 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)filemicro_createfiles.f	1.4	08/04/01 SMI"
+# ident	"%Z%%M%	%I%	%E% SMI"
 
 # Creates a fileset with 20,000 entries ($nfiles), but only preallocates
 # 50% of the files.  Each file's size is set via a gamma distribution with
