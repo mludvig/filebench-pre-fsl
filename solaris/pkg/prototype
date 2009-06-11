@@ -58,6 +58,7 @@ f none filebench/workloads/randomread.f 0644 root sys
 f none filebench/workloads/multistreamreaddirect.f 0644 root sys
 f none filebench/workloads/multistreamwrite.f 0644 root sys
 f none filebench/workloads/multistreamwritedirect.f 0644 root sys
+f none filebench/workloads/networkfs.f 0644 root sys
 f none filebench/workloads/postmark.f 0644 root sys
 f none filebench/workloads/filemicro_seqwriterandvargam.f 0644 root sys
 f none filebench/workloads/filemicro_seqwriterandvartab.f 0644 root sys

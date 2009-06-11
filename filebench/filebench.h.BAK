@@ -124,7 +124,7 @@ void filebench_plugin_funcvecinit(void);
 #endif
 
 #define	FILEBENCH_VERSION	"1.4.8"
-/*#define	FILEBENCHDIR	"/usr/benchmarks/filebench" */
+#define	FILEBENCHDIR	"/usr/benchmarks/filebench"
 #define	FILEBENCH_PROMPT	"filebench> "
 #define	MAX_LINE_LEN	1024
 #define	MAX_CMD_HIST	128

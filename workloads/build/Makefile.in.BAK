@@ -131,7 +131,6 @@ workloads_DATA = BUILD \
 	multistreamreaddirect.f \
 	multistreamwrite.f \
 	multistreamwritedirect.f \
-	networkfs.f \
 	oltp.f \
 	postmark.f \
 	randomread.f \

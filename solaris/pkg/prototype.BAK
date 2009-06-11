@@ -25,10 +25,20 @@ s none filebench/bin/i386=amd64
 d none filebench/bin/amd64 0755 root sys
 f none filebench/bin/amd64/go_filebench 0755 root sys
 f none filebench/bin/i386/fastsu 4755 root sys
+#! search ../build/sparcv9
+#d none filebench/bin/sparcv9 0755 root sys
+#f none filebench/bin/sparcv9/go_filebench 0755 root sys
+#f none filebench/bin/sparcv9/fastsu 4755 root sys
+#! search ../gnuplot/sparcv9
+#f none filebench/bin/sparcv9/gnuplot 0755 root sys
 ! search ../gnuplot/i386
 f none filebench/bin/amd64/gnuplot 0755 root sys
 ! search ../statit/i386
 f none filebench/bin/amd64/statit 0755 root sys
+#! search ../statit/sparcv9
+#f none filebench/bin/sparcv9/statit 0755 root sys
+#! search ../davenet/sparcv9
+#f none filebench/bin/sparcv9/davenet 0755 root sys
 ! search ../davenet/i386
 f none filebench/bin/amd64/davenet 0755 root sys
 ! search ../../bin
@@ -48,7 +58,6 @@ f none filebench/workloads/randomread.f 0644 root sys
 f none filebench/workloads/multistreamreaddirect.f 0644 root sys
 f none filebench/workloads/multistreamwrite.f 0644 root sys
 f none filebench/workloads/multistreamwritedirect.f 0644 root sys
-f none filebench/workloads/networkfs.f 0644 root sys
 f none filebench/workloads/postmark.f 0644 root sys
 f none filebench/workloads/filemicro_seqwriterandvargam.f 0644 root sys
 f none filebench/workloads/filemicro_seqwriterandvartab.f 0644 root sys

@@ -10,4 +10,4 @@ NAME=FileBench
 PKG=filebench
 VENDOR=filebench.org
 PSTAMP=XXXXX
-VERSION=1.4.7
+VERSION=1.4.8

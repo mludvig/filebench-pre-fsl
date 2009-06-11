@@ -19,23 +19,20 @@
 # CDDL HEADER END
 #
 #
-# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"%Z%%M%	%I%	%E% SMI"
 
 DEFAULTS {
-	runtime = 120;
-        dir = /tmp;
+        runtime = 300;
+	warmuptime = 300;
+        dir = /export/home/tmp;
         stats = /tmp;
-	filesystem = tmpfs;
-	description = "seqread tmpfs";
+        filesystem = zfs;
+        description = "network file server zfs";
 }
 
-CONFIG seqread1m {
+CONFIG video_server {
 	function = generic;
-	personality = multistreamread;
-	filesize = 40m;
-	iosize = 1m;
-	nthreads = 1;
+	personality = networkfs;
 }
